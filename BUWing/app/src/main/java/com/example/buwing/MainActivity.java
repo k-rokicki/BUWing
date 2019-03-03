@@ -170,7 +170,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                     eventType = parser.next();
                 }
-
             } catch (XmlPullParserException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -181,16 +180,23 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     private void checkLoginSuccess(boolean loggedIn) {
         if (loggedIn) {
             try {
                 saveLoginCredentials();
             } catch (IOException e) {
+                if (loginCredentials.exists()) {
+                    loginCredentials.delete();
+                }
                 e.printStackTrace();
             }
             Intent intent = new Intent(this, LoggedActivity.class);
             startActivity(intent);
         } else {
+            if (loginCredentials.exists()) {
+                loginCredentials.delete();
+            }
             Toast.makeText(getApplicationContext(), "Błąd logowania", Toast.LENGTH_LONG).show();
             setContentView(R.layout.activity_main);
         }
