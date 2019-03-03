@@ -22,36 +22,36 @@ import java.net.URL;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    Button zarejestruj;
-    EditText noweImie, noweNazwisko, nowyNrIndeksu, noweHaslo;
+    Button registerButton;
+    EditText nameTextView, surnameTextView, loginTextView, passwordTextView;
 
     @SuppressLint("StaticFieldLeak")
-    private class Registration extends AsyncTask<Void, Void, Boolean> {
-        private String imie;
-        private String nazwisko;
-        private String nrIndeksu;
-        private String haslo;
+    private class RegistrationTask extends AsyncTask<Void, Void, Boolean> {
+        private String name;
+        private String surname;
+        private String login;
+        private String password;
         private StringBuilder stringBuilder = new StringBuilder();
         private JSONObject obj;
-        private boolean zarejestrowano;
+        private boolean registered;
 
-        Registration(String imie, String nazwisko, String nrIndeksu, String haslo) {
-            this.imie = imie;
-            this.nazwisko = nazwisko;
-            this.nrIndeksu = nrIndeksu;
-            this.haslo = haslo;
+        RegistrationTask(String name, String surname, String login, String password) {
+            this.name = name;
+            this.surname = surname;
+            this.login = login;
+            this.password = password;
         }
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-            stringBuilder.append("http://students.mimuw.edu.pl/~kr394714/buwing/register.php?imie=");
-            stringBuilder.append(imie);
-            stringBuilder.append("&nazwisko=");
-            stringBuilder.append(nazwisko);
-            stringBuilder.append("&nrindeksu=");
-            stringBuilder.append(nrIndeksu);
-            stringBuilder.append("&haslo=");
-            stringBuilder.append(haslo);
+            stringBuilder.append("http://students.mimuw.edu.pl/~kr394714/buwing/register.php?name=");
+            stringBuilder.append(name);
+            stringBuilder.append("&surname=");
+            stringBuilder.append(surname);
+            stringBuilder.append("&login=");
+            stringBuilder.append(login);
+            stringBuilder.append("&password=");
+            stringBuilder.append(password);
             String loginURL = stringBuilder.toString();
             StringBuilder response = new StringBuilder();
 
@@ -90,12 +90,12 @@ public class RegisterActivity extends AppCompatActivity {
                 String result = response.toString();
                 try {
                     obj = new JSONObject(result);
-                    zarejestrowano = obj.get("zarejestrowano").toString().equals("1");
+                    registered = obj.get("registered").toString().equals("1");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
-            return zarejestrowano;
+            return registered;
         }
 
         @Override
@@ -109,33 +109,32 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        zarejestruj = findViewById(R.id.zarejestruj);
-        noweImie = findViewById(R.id.noweImie);
-        noweNazwisko = findViewById(R.id.noweNazwisko);
-        nowyNrIndeksu = findViewById(R.id.nowyNrIndeksu);
-        noweHaslo = findViewById(R.id.noweHaslo);
+        registerButton = findViewById(R.id.registerButton);
+        nameTextView = findViewById(R.id.nameTextView);
+        surnameTextView = findViewById(R.id.surnameTextView);
+        loginTextView = findViewById(R.id.loginTextView);
+        passwordTextView = findViewById(R.id.passwordTextView);
 
-        zarejestruj.setOnClickListener(new View.OnClickListener() {
+        registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String _imie = noweImie.getText().toString();
-                final String _nazwisko = noweNazwisko.getText().toString();
-                final String _nrIndeksu = nowyNrIndeksu.getText().toString();
-                final String _haslo = noweHaslo.getText().toString();
+                final String _name = nameTextView.getText().toString();
+                final String _surname = surnameTextView.getText().toString();
+                final String _login = loginTextView.getText().toString();
+                final String _password = passwordTextView.getText().toString();
 
-                if (_imie.isEmpty() || _nazwisko.isEmpty() || _nrIndeksu.isEmpty() || _haslo.isEmpty()) {
+                if (_name.isEmpty() || _surname.isEmpty() || _login.isEmpty() || _password.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Uzupełnij wszystkie pola", Toast.LENGTH_LONG).show();
                 } else {
-                    RegisterActivity.Registration registration = new RegisterActivity.Registration
-                            (_imie, _nazwisko, _nrIndeksu, _haslo);
-                    registration.execute();
+                    RegistrationTask registrationTask = new RegistrationTask(_name, _surname, _login, _password);
+                    registrationTask.execute();
                 }
             }
         });
     }
 
-    public void checkRegisterSuccess(boolean zarejestrowano) {
-        if (zarejestrowano) {
+    public void checkRegisterSuccess(boolean registered) {
+        if (registered) {
             Toast.makeText(getApplicationContext(), "Pomyślnie zarejestrowano. Zaloguj się", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);

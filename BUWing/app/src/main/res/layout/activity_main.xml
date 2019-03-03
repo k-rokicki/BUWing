@@ -7,7 +7,7 @@
     tools:context=".MainActivity">
 
     <Button
-        android:id="@+id/rejestruj"
+        android:id="@+id/registerButton"
         android:layout_width="141dp"
         android:layout_height="46dp"
         android:layout_marginStart="8dp"
@@ -15,25 +15,26 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:text="załóż konto"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.787"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/loguj"
-        app:layout_constraintVertical_bias="0.675" />
+        app:layout_constraintTop_toBottomOf="@+id/loginButton"
+        app:layout_constraintVertical_bias="0.701" />
 
     <EditText
-        android:id="@+id/nrIndeksu"
+        android:id="@+id/loginTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:ems="10"
-        android:hint="nr indeksu"
-        android:inputType="numberDecimal"
+        android:hint="login"
+        android:inputType="text"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -41,39 +42,38 @@
         app:layout_constraintVertical_bias="0.107" />
 
     <EditText
-        android:id="@+id/haslo"
+        android:id="@+id/passwordTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:ems="10"
         android:hint="hasło"
         android:inputType="textPassword"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nrIndeksu"
+        app:layout_constraintTop_toBottomOf="@+id/loginTextView"
         app:layout_constraintVertical_bias="0.018" />
 
     <Button
-        android:id="@+id/loguj"
+        android:id="@+id/loginButton"
         android:layout_width="141dp"
         android:layout_height="46dp"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:text="zaloguj się"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.787"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/haslo"
-        app:layout_constraintVertical_bias="0.05" />
+        app:layout_constraintTop_toBottomOf="@+id/passwordTextView"
+        app:layout_constraintVertical_bias="0.049" />
 
 </android.support.constraint.ConstraintLayout>

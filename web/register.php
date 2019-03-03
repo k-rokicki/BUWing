@@ -1,35 +1,35 @@
 <?php
-    $imie = $_GET['imie'];
-    $nazwisko = $_GET['nazwisko'];
-    $nrindeksu = $_GET['nrindeksu'];
-    $haslo = $_GET['haslo'];
+    $name = $_GET['name'];
+    $surname = $_GET['surname'];
+    $login = $_GET['login'];
+    $password = $_GET['password'];
 
     $link = pg_connect("host=labdb dbname=bd user=kr394714 password=xyz");
-    $wynik = false;
+    $result = false;
 
-    if (isset($imie) && isset($nazwisko) && isset($nrindeksu) && isset($haslo) &&
-        trim($imie) != "" && trim($nazwisko) != "" && trim($nrindeksu) != "" && trim($haslo) != "" &&
-        $nrIndeksu == preg_replace("/[^0-9 ]/", '', $nrIndeksu) &&
-        mb_strlen($imie, 'utf-8') == strlen(preg_replace("/[^\p{L} ]/", '', $imie)) &&
-        mb_strlen($nazwisko, 'utf-8') == strlen(preg_replace("/[^\p{L}- ]/", '', $nazwisko)) &&
-        mb_strlen($haslo, 'utf-8') == strlen(preg_replace("/[^^\p{L}0-9 ]/", '', $haslo))) {
-        $wynik = pg_query($link,
-                            "INSERT INTO uzytkownicy VALUES (
+    if (isset($name) && isset($surname) && isset($login) && isset($password) &&
+        trim($name) != "" && trim($surname) != "" && trim($login) != "" && trim($password) != "" &&
+        mb_strlen($name, 'utf-8') == strlen(preg_replace("/[^\p{L} ]/", '', $name)) &&
+        mb_strlen($surname, 'utf-8') == strlen(preg_replace("/[^\p{L}- ]/", '', $surname)) &&
+        mb_strlen($login, 'utf-8') == strlen(preg_replace("/[^^\p{L}0-9 ]/", '', $login)) &&
+        mb_strlen($password, 'utf-8') == strlen(preg_replace("/[^^\p{L}0-9 ]/", '', $password))) {
+        $result = pg_query($link,
+                            "INSERT INTO users VALUES (
                             default, '"
-                            . pg_escape_string($nrindeksu) . "', '"
-                            . pg_escape_string($haslo) . "', '"
-                            . pg_escape_string($imie) . "', '"
-                            . pg_escape_string($nazwisko) .
+                            . pg_escape_string($login) . "', '"
+                            . pg_escape_string($password) . "', '"
+                            . pg_escape_string($name) . "', '"
+                            . pg_escape_string($surname) .
                             "')");
     }
 
-    $myObj->zarejestrowano = 0;
-    if ($wynik) {
-        $myObj->zarejestrowano = 1;
+    $JSONobj->registered = 0;
+    if ($result) {
+        $JSONobj->registered = 1;
     }
 
     pg_close($link);
 
-    $myJSON = json_encode($myObj);
-    echo $myJSON;
+    $returnJSON = json_encode($JSONobj);
+    echo $returnJSON;
 ?>

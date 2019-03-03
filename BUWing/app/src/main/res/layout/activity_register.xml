@@ -7,7 +7,7 @@
     tools:context=".RegisterActivity">
 
     <EditText
-        android:id="@+id/noweImie"
+        android:id="@+id/nameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -17,14 +17,16 @@
         android:ems="10"
         android:hint="imię"
         android:inputType="textPersonName"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.071" />
+        app:layout_constraintVertical_bias="0.108" />
 
     <EditText
-        android:id="@+id/noweNazwisko"
+        android:id="@+id/surnameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -34,14 +36,16 @@
         android:ems="10"
         android:hint="nazwisko"
         android:inputType="textPersonName"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/noweImie"
-        app:layout_constraintVertical_bias="0.008" />
+        app:layout_constraintTop_toBottomOf="@+id/nameTextView"
+        app:layout_constraintVertical_bias="0.0" />
 
     <EditText
-        android:id="@+id/nowyNrIndeksu"
+        android:id="@+id/loginTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -49,16 +53,18 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:ems="10"
-        android:hint="nr indeksu"
-        android:inputType="numberDecimal"
+        android:hint="login"
+        android:inputType="text"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/noweNazwisko"
+        app:layout_constraintTop_toBottomOf="@+id/surnameTextView"
         app:layout_constraintVertical_bias="0.0" />
 
     <EditText
-        android:id="@+id/noweHaslo"
+        android:id="@+id/passwordTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -68,25 +74,28 @@
         android:ems="10"
         android:hint="hasło"
         android:inputType="textPassword"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nowyNrIndeksu"
+        app:layout_constraintTop_toBottomOf="@+id/loginTextView"
         app:layout_constraintVertical_bias="0.0" />
 
     <Button
-        android:id="@+id/zarejestruj"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/registerButton"
+        android:layout_width="186dp"
+        android:layout_height="40dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:text="Załóż konto"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.741"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/noweHaslo"
-        app:layout_constraintVertical_bias="0.034" />
+        app:layout_constraintTop_toBottomOf="@+id/passwordTextView"
+        app:layout_constraintVertical_bias="0.086" />
 </android.support.constraint.ConstraintLayout>

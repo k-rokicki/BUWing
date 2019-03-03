@@ -23,31 +23,27 @@ import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button loguj, rejestruj;
-    EditText nrIndeksu, haslo;
-    static String imie;
-    static String nazwisko;
+    Button loginButton, registerButton;
+    EditText loginTextView, passwordTextView;
+    static String name;
+    static String surname;
     static String login;
+    static String password;
 
     @SuppressLint("StaticFieldLeak")
-    private class Authentication extends AsyncTask<Void, Void, Boolean> {
-        private String nrIndeksu;
-        private String haslo;
+    private class AuthenticationTask extends AsyncTask<Void, Void, Boolean> {
         private StringBuilder stringBuilder = new StringBuilder();
         private JSONObject obj;
-        private boolean zalogowano;
+        private boolean loggedIn;
 
-        Authentication(String nrIndeksu, String haslo) {
-            this.nrIndeksu = nrIndeksu;
-            this.haslo = haslo;
-        }
+        AuthenticationTask(){}
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-            stringBuilder.append("http://students.mimuw.edu.pl/~kr394714/buwing/login.php?nrindeksu=");
-            stringBuilder.append(nrIndeksu);
-            stringBuilder.append("&haslo=");
-            stringBuilder.append(haslo);
+            stringBuilder.append("http://students.mimuw.edu.pl/~kr394714/buwing/login.php?login=");
+            stringBuilder.append(login);
+            stringBuilder.append("&password=");
+            stringBuilder.append(password);
             String loginURL = stringBuilder.toString();
             StringBuilder response = new StringBuilder();
 
@@ -86,15 +82,14 @@ public class MainActivity extends AppCompatActivity {
                 String result = response.toString();
                 try {
                     obj = new JSONObject(result);
-                    imie = obj.get("imie").toString();
-                    nazwisko = obj.get("nazwisko").toString();
-                    login = nrIndeksu;
-                    zalogowano = obj.get("zalogowano").toString().equals("1");
+                    name = obj.get("name").toString();
+                    surname = obj.get("surname").toString();
+                    loggedIn = obj.get("loggedin").toString().equals("1");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
-            return zalogowano;
+            return loggedIn;
         }
 
         @Override
@@ -108,20 +103,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        loguj = findViewById(R.id.loguj);
-        rejestruj = findViewById(R.id.rejestruj);
-        nrIndeksu = findViewById(R.id.nrIndeksu);
-        haslo = findViewById(R.id.haslo);
+        loginButton = findViewById(R.id.loginButton);
+        registerButton = findViewById(R.id.registerButton);
+        loginTextView = findViewById(R.id.loginTextView);
+        passwordTextView = findViewById(R.id.passwordTextView);
 
-        loguj.setOnClickListener(new View.OnClickListener() {
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Authentication login = new Authentication(nrIndeksu.getText().toString(), haslo.getText().toString());
-                login.execute();
+                login = loginTextView.getText().toString();
+                password = passwordTextView.getText().toString();
+                AuthenticationTask loginTask = new AuthenticationTask();
+                loginTask.execute();
             }
         });
 
-        rejestruj.setOnClickListener(new View.OnClickListener() {
+        registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getBaseContext(), RegisterActivity.class);
@@ -130,8 +127,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void checkLoginSuccess(boolean zalogowano) {
-        if (zalogowano) {
+    public void checkLoginSuccess(boolean loggedIn) {
+        if (loggedIn) {
             Intent intent = new Intent(this, LoggedActivity.class);
             startActivity(intent);
         } else {

@@ -1,28 +1,28 @@
 <?php
-    $nrindeksu = $_GET['nrindeksu'];
-    $haslo = $_GET['haslo'];
+    $login = $_GET['login'];
+    $password = $_GET['password'];
 
     $link = pg_connect("host=labdb dbname=bd user=kr394714 password=xyz");
-    $wynik = pg_query($link,
-                        "SELECT imie, nazwisko
-                        FROM uzytkownicy
-                        WHERE nrindeksu = '" . pg_escape_string($nrindeksu) .
-                        "' AND haslo = '" . pg_escape_string($haslo) . "'");
-    $ile = pg_numrows($wynik);
+    $result = pg_query($link,
+                        "SELECT name, surname
+                        FROM users
+                        WHERE login = '" . pg_escape_string($login) .
+                        "' AND password = '" . pg_escape_string($password) . "'");
+    $count = pg_numrows($result);
 
-    $myObj->zalogowano = 0;
-    $myObj->imie = "";
-    $myObj->nazwisko = "";
+    $JSONobj->loggedin = 0;
+    $JSONobj->name = "";
+    $JSONobj->surname = "";
 
-    if ($ile == 1) {
-        $wiersz = pg_fetch_array($wynik, 0);
-        $myObj->zalogowano = 1;
-        $myObj->imie = $wiersz["imie"];
-        $myObj->nazwisko = $wiersz["nazwisko"];
+    if ($count == 1) {
+        $row = pg_fetch_array($result, 0);
+        $JSONobj->loggedin = 1;
+        $JSONobj->name = $row["name"];
+        $JSONobj->surname = $row["surname"];
     }
 
     pg_close($link);
 
-    $myJSON = json_encode($myObj);
-    echo $myJSON;
+    $returnJSON = json_encode($JSONobj);
+    echo $returnJSON;
 ?>
