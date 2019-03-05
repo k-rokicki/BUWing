@@ -198,7 +198,6 @@ public class MainActivity extends AppCompatActivity {
                 loginCredentials.delete();
             }
             Toast.makeText(getApplicationContext(), "Błąd logowania", Toast.LENGTH_LONG).show();
-            setContentView(R.layout.activity_main);
         }
     }
 

@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
@@ -20,6 +22,7 @@ import static com.example.buwing.MainActivity.surname;
 public class LoggedActivity extends AppCompatActivity {
 
     TextView msg;
+    TextView openingHoursMsgTextView;
     TextView openingHoursTextView;
 
     @SuppressLint("StaticFieldLeak")
@@ -79,7 +82,12 @@ public class LoggedActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logged);
         msg = findViewById(R.id.welcomeTextView);
+        openingHoursMsgTextView = findViewById(R.id.openingHoursMsgTextView);
         openingHoursTextView = findViewById(R.id.openingHoursTextView);
+
+        SpannableString openingHoursMsgString = new SpannableString("godziny otwarcia");
+        openingHoursMsgString.setSpan(new UnderlineSpan(), 0, openingHoursMsgString.length(), 0);
+        openingHoursMsgTextView.setText(openingHoursMsgString);
 
         GetOpeningHoursTask getOpeningHoursTask = new GetOpeningHoursTask();
         getOpeningHoursTask.execute();
