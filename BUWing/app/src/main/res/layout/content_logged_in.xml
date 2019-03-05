@@ -4,24 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoggedActivity">
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".LoggedInActivity"
+    tools:showIn="@layout/app_bar_logged_in">
 
     <TextView
-        android:id="@+id/welcomeTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:id="@+id/fullnessInfoTextView"
+        android:layout_width="316dp"
+        android:layout_height="97dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:text="Zalogowano"
-        android:textSize="30sp"
+        android:gravity="bottom|right"
+        android:text="- / -"
+        android:textColor="?attr/editTextColor"
+        android:textSize="70sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.034"
+        app:layout_constraintHorizontal_bias="0.946"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.796" />
+        app:layout_constraintVertical_bias="0.31" />
 
     <TextView
         android:id="@+id/openingHoursTextView"
@@ -29,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="408dp"
+        android:layout_marginBottom="8dp"
         android:text="TextView"
         android:textAlignment="textEnd"
         android:textSize="24sp"
@@ -57,5 +61,22 @@
         app:layout_constraintHorizontal_bias="0.966"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.011" />
+        app:layout_constraintVertical_bias="0.012" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="219dp"
+        android:layout_height="49dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="right|top"
+        android:text="miejsc wolnych"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/fullnessInfoTextView"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fullnessInfoTextView"
+        app:layout_constraintVertical_bias="0.0" />
 </android.support.constraint.ConstraintLayout>

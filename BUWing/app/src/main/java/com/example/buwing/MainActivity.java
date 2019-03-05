@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
                 int eventType = parser.getEventType();
 
                 while (eventType != XmlPullParser.END_DOCUMENT) {
-                    String eltName = null;
+                    String eltName;
 
                     switch (eventType) {
                         case XmlPullParser.START_TAG:
@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 e.printStackTrace();
             }
-            Intent intent = new Intent(this, LoggedActivity.class);
+            Intent intent = new Intent(this, LoggedInActivity.class);
             startActivity(intent);
         } else {
             if (loginCredentials.exists()) {

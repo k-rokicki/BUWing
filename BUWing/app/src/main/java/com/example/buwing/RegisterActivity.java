@@ -144,7 +144,7 @@ public class RegisterActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             Toast.makeText(getApplicationContext(), "Pomyślnie zarejestrowano", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(this, LoggedActivity.class);
+            Intent intent = new Intent(this, LoggedInActivity.class);
             startActivity(intent);
         } else {
             Toast.makeText(getApplicationContext(), "Spróbuj ponownie", Toast.LENGTH_LONG).show();
