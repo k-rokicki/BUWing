@@ -20,27 +20,22 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import static com.example.buwing.MainActivity.loginCredentials;
+import static com.example.buwing.MainActivity.saveLoginCredentials;
+
 public class RegisterActivity extends AppCompatActivity {
 
     Button registerButton;
     EditText nameTextView, surnameTextView, loginTextView, passwordTextView;
+    String name, surname, login, password;
 
     @SuppressLint("StaticFieldLeak")
     private class RegistrationTask extends AsyncTask<Void, Void, Boolean> {
-        private String name;
-        private String surname;
-        private String login;
-        private String password;
         private StringBuilder stringBuilder = new StringBuilder();
         private JSONObject obj;
         private boolean registered;
 
-        RegistrationTask(String name, String surname, String login, String password) {
-            this.name = name;
-            this.surname = surname;
-            this.login = login;
-            this.password = password;
-        }
+        RegistrationTask(){}
 
         @Override
         protected Boolean doInBackground(Void... voids) {
@@ -118,25 +113,38 @@ public class RegisterActivity extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String _name = nameTextView.getText().toString();
-                final String _surname = surnameTextView.getText().toString();
-                final String _login = loginTextView.getText().toString();
-                final String _password = passwordTextView.getText().toString();
+                name = nameTextView.getText().toString();
+                surname = surnameTextView.getText().toString();
+                login = loginTextView.getText().toString();
+                password = passwordTextView.getText().toString();
 
-                if (_name.isEmpty() || _surname.isEmpty() || _login.isEmpty() || _password.isEmpty()) {
+                if (name.isEmpty() || surname.isEmpty() || login.isEmpty() || password.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Uzupełnij wszystkie pola", Toast.LENGTH_LONG).show();
                 } else {
-                    RegistrationTask registrationTask = new RegistrationTask(_name, _surname, _login, _password);
+                    RegistrationTask registrationTask = new RegistrationTask();
                     registrationTask.execute();
                 }
             }
         });
     }
 
-    public void checkRegisterSuccess(boolean registered) {
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private void checkRegisterSuccess(boolean registered) {
         if (registered) {
-            Toast.makeText(getApplicationContext(), "Pomyślnie zarejestrowano. Zaloguj się", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(this, MainActivity.class);
+            MainActivity.name = name;
+            MainActivity.surname = surname;
+            MainActivity.login = login;
+            MainActivity.password = password;
+            try {
+                saveLoginCredentials(getBaseContext());
+            } catch (IOException e) {
+                if (loginCredentials.exists()) {
+                    loginCredentials.delete();
+                }
+                e.printStackTrace();
+            }
+            Toast.makeText(getApplicationContext(), "Pomyślnie zarejestrowano", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(this, LoggedActivity.class);
             startActivity(intent);
         } else {
             Toast.makeText(getApplicationContext(), "Spróbuj ponownie", Toast.LENGTH_LONG).show();

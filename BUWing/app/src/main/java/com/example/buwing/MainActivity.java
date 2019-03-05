@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
     private void checkLoginSuccess(boolean loggedIn) {
         if (loggedIn) {
             try {
-                saveLoginCredentials();
+                saveLoginCredentials(getBaseContext());
             } catch (IOException e) {
                 if (loginCredentials.exists()) {
                     loginCredentials.delete();
@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void saveLoginCredentials() throws IOException {
+    public static void saveLoginCredentials(Context context) throws IOException {
         XmlSerializer xmlSerializer = Xml.newSerializer();
         StringWriter writer = new StringWriter();
         xmlSerializer.setOutput(writer);
@@ -217,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
         xmlSerializer.endDocument();
         String content = writer.toString();
         OutputStreamWriter outputStreamWriter = new OutputStreamWriter
-                (getBaseContext().openFileOutput(loginCredentialsFilename, Context.MODE_PRIVATE));
+                (context.openFileOutput(loginCredentialsFilename, Context.MODE_PRIVATE));
         outputStreamWriter.write(content);
         outputStreamWriter.close();
     }
