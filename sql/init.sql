@@ -14,3 +14,9 @@ CREATE TABLE tables(
     PRIMARY KEY (id),
     FOREIGN KEY (userid) REFERENCES users(id)
 );
+
+CREATE TABLE admins(
+    login VARCHAR(30),
+    password VARCHAR(100) NOT NULL,
+    PRIMARY KEY (login)
+);
