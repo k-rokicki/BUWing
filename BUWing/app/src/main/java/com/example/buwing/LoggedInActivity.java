@@ -1,30 +1,20 @@
 package com.example.buwing;
 
-import android.annotation.SuppressLint;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.SpannableString;
-import android.text.style.UnderlineSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.util.List;
 import java.util.Objects;
 
 import static com.example.buwing.MainActivity.name;
@@ -36,143 +26,11 @@ public class LoggedInActivity extends AppCompatActivity
 
     TextView nameTextView;
     TextView nicknameTextView;
-    TextView fullnessInfoTextView;
-    TextView openingHoursMsgTextView;
-    TextView openingHoursTextView;
-    int freeSeatsCount;
-    int allSeatsCount;
-
-    @SuppressLint("StaticFieldLeak")
-    private class GetOpeningHoursTask extends AsyncTask<Void, Void, Void> {
-
-        String openingHoursString;
-
-        GetOpeningHoursTask() {
-            openingHoursString = null;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            String loginURL = "http://students.mimuw.edu.pl/~kr394714/buwing/opening_hours.php";
-
-            HttpURLConnection conn = null;
-
-            try {
-                URL url = new URL(loginURL);
-                conn = (HttpURLConnection) url.openConnection();
-
-                conn.setDoOutput(false);
-                conn.setDoInput(true);
-                conn.setUseCaches(false);
-                conn.setRequestMethod("GET");
-                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-
-                int status = conn.getResponseCode();
-
-                if (status != 200) {
-                    throw new IOException("Post failed with error code " + status);
-                } else {
-                    BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                    openingHoursString = in.readLine();
-                    in.close();
-                }
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (conn != null) {
-                    conn.disconnect();
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            openingHoursTextView.setText(openingHoursString);
-        }
-    }
-
-    private class GetFullnessInfoTask extends AsyncTask<Void, Void, Void> {
-        private JSONObject obj;
-
-        GetFullnessInfoTask(){}
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            String loginURL = "http://students.mimuw.edu.pl/~kr394714/buwing/fullness_info.php";
-            StringBuilder response = new StringBuilder();
-
-            HttpURLConnection conn = null;
-
-            try {
-                URL url = new URL(loginURL);
-                conn = (HttpURLConnection) url.openConnection();
-
-                conn.setDoOutput(false);
-                conn.setDoInput(true);
-                conn.setUseCaches(false);
-                conn.setRequestMethod("GET");
-                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-
-                int status = conn.getResponseCode();
-
-                if (status != 200) {
-                    throw new IOException("Post failed with error code " + status);
-                } else {
-                    BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                    String inputLine;
-                    while ((inputLine = in.readLine()) != null) {
-                        response.append(inputLine);
-                    }
-                    in.close();
-                }
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (conn != null) {
-                    conn.disconnect();
-                }
-                String result = response.toString();
-                try {
-                    obj = new JSONObject(result);
-                    freeSeatsCount = Integer.parseInt(obj.get("freeSeatsCount").toString());
-                    allSeatsCount = Integer.parseInt(obj.get("allSeatsCount").toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-            return null;
-        }
-
-        @SuppressLint("DefaultLocale")
-        @Override
-        protected void onPostExecute(Void result) {
-            fullnessInfoTextView.setText(String.format("%d / %d", freeSeatsCount, allSeatsCount));
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logged_in);
-
-        fullnessInfoTextView = findViewById(R.id.fullnessInfoTextView);
-        openingHoursMsgTextView = findViewById(R.id.openingHoursMsgTextView);
-        openingHoursTextView = findViewById(R.id.openingHoursTextView);
-
-        SpannableString openingHoursMsgString = new SpannableString("godziny otwarcia");
-        openingHoursMsgString.setSpan(new UnderlineSpan(), 0, openingHoursMsgString.length(), 0);
-        openingHoursMsgTextView.setText(openingHoursMsgString);
-
-        GetOpeningHoursTask getOpeningHoursTask = new GetOpeningHoursTask();
-        getOpeningHoursTask.execute();
-
-        GetFullnessInfoTask getFullnessInfoTask = new GetFullnessInfoTask();
-        getFullnessInfoTask.execute();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -193,6 +51,8 @@ public class LoggedInActivity extends AppCompatActivity
 
         nameTextView.setText(String.format("%s %s", name, surname));
         nicknameTextView.setText(login);
+
+        displaySelectedScreen(R.id.nav_mainScreen);
     }
 
     @Override
@@ -202,7 +62,16 @@ public class LoggedInActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            tellFragments();
+            //super.onBackPressed();
+        }
+    }
+
+    private void tellFragments(){
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+        for (Fragment f : fragments) {
+            if(f != null && f instanceof BaseFragment)
+                ((BaseFragment)f).onBackPressed();
         }
     }
 
@@ -233,24 +102,44 @@ public class LoggedInActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
+        displaySelectedScreen(item.getItemId());
+        return true;
+    }
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+    private void displaySelectedScreen(int itemId) {
+        //creating fragment object
+        Fragment fragment = null;
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        //initializing the fragment object which is selected
+        switch (itemId) {
+            case R.id.nav_mainScreen:
+                fragment = new MainScreenFragment();
+                break;
+            case R.id.nav_takeSeat:
+                fragment = new TakeSeatFragment();
+                break;
+            case R.id.nav_friendsInside:
+                fragment = new FriendsInsideFragment();
+                break;
+            case R.id.nav_myProfile:
+                fragment = new MyProfileFragment();
+                break;
+            case R.id.nav_friendsList:
+                fragment = new FriendsListFragment();
+                break;
+            case R.id.nav_logout:
+                fragment = new LogoutFragment();
+                break;
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        //replacing the fragment
+        if (fragment != null) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.content_frame, fragment);
+            ft.commit();
+        }
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 }
