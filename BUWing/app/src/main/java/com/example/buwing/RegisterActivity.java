@@ -36,15 +36,15 @@ public class RegisterActivity extends AppCompatActivity {
     String notAllowedCharacterMessage = "Niedozwolony znak w polu: ";
 
     @SuppressLint("StaticFieldLeak")
-    private class RegistrationTask extends AsyncTask<Void, Void, Boolean> {
+    private class RegistrationTask extends AsyncTask<Void, Void, Integer> {
         private StringBuilder stringBuilder = new StringBuilder();
         private JSONObject obj;
-        private boolean registered;
+        private int registered;
 
         RegistrationTask(){}
 
         @Override
-        protected Boolean doInBackground(Void... voids) {
+        protected Integer doInBackground(Void... voids) {
             stringBuilder.append("http://students.mimuw.edu.pl/~kr394714/buwing/register.php?name=");
             stringBuilder.append(name);
             stringBuilder.append("&surname=");
@@ -91,7 +91,7 @@ public class RegisterActivity extends AppCompatActivity {
                 String result = response.toString();
                 try {
                     obj = new JSONObject(result);
-                    registered = obj.get("registered").toString().equals("1");
+                    registered = Integer.parseInt(obj.get("registered").toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -100,7 +100,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(Boolean result) {
+        protected void onPostExecute(Integer result) {
             checkRegisterSuccess(result);
         }
     }
@@ -145,8 +145,8 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    private void checkRegisterSuccess(boolean registered) {
-        if (registered) {
+    private void checkRegisterSuccess(int registered) {
+        if (registered == 1) {
             MainActivity.name = name;
             MainActivity.surname = surname;
             MainActivity.login = login;
@@ -164,8 +164,10 @@ public class RegisterActivity extends AppCompatActivity {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();
-        } else {
+        } else if (registered == 0){
             Toast.makeText(getApplicationContext(), "Spróbuj ponownie", Toast.LENGTH_LONG).show();
+        } else if (registered == -1) {
+            Toast.makeText(getApplicationContext(), "Login już zajęty", Toast.LENGTH_LONG).show();
         }
     }
 }

@@ -6,22 +6,35 @@
 
     $link = pg_connect("host=labdb dbname=bd user=kr394714 password=xyz");
     $result = false;
+    $JSONobj->registered = 0;
 
     if (isset($name) && isset($surname) && isset($login) && isset($password) &&
         trim($name) != "" && trim($surname) != "" && trim($login) != "" && trim($password) != "") {
+        
         $result = pg_query($link,
-                            "INSERT INTO users VALUES (
-                            default, '"
-                            . pg_escape_string($login) . "', '"
-                            . password_hash($password, PASSWORD_DEFAULT) . "', '"
-                            . pg_escape_string($name) . "', '"
-                            . pg_escape_string($surname) .
-                            "')");
-    }
+                                "SELECT COUNT(*)
+                                FROM users
+                                WHERE login = '" . pg_escape_string($login) . "'");
 
-    $JSONobj->registered = 0;
-    if ($result) {
-        $JSONobj->registered = 1;
+        $row = pg_fetch_array($result, 0);
+        $loginAlreadyUsed = $row[0];
+        
+        if ($loginAlreadyUsed) {
+            $JSONobj->registered = -1;
+        } else {
+            $result = pg_query($link,
+                                    "INSERT INTO users VALUES (
+                                    default, '"
+                                    . pg_escape_string($login) . "', '"
+                                    . password_hash($password, PASSWORD_DEFAULT) . "', '"
+                                    . pg_escape_string($name) . "', '"
+                                    . pg_escape_string($surname) .
+                                    "')");
+
+            if ($result) {
+                $JSONobj->registered = 1;
+            }
+        }
     }
 
     pg_close($link);
