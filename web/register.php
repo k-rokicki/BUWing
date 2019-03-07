@@ -8,16 +8,12 @@
     $result = false;
 
     if (isset($name) && isset($surname) && isset($login) && isset($password) &&
-        trim($name) != "" && trim($surname) != "" && trim($login) != "" && trim($password) != "" &&
-        mb_strlen($name, 'utf-8') == strlen(preg_replace("/[^\p{L} ]/", '', $name)) &&
-        mb_strlen($surname, 'utf-8') == strlen(preg_replace("/[^\p{L}- ]/", '', $surname)) &&
-        mb_strlen($login, 'utf-8') == strlen(preg_replace("/[^^\p{L}0-9 ]/", '', $login)) &&
-        mb_strlen($password, 'utf-8') == strlen(preg_replace("/[^^\p{L}0-9 ]/", '', $password))) {
+        trim($name) != "" && trim($surname) != "" && trim($login) != "" && trim($password) != "") {
         $result = pg_query($link,
                             "INSERT INTO users VALUES (
                             default, '"
                             . pg_escape_string($login) . "', '"
-                            . password_hash(pg_escape_string($password), PASSWORD_DEFAULT) . "', '"
+                            . password_hash($password, PASSWORD_DEFAULT) . "', '"
                             . pg_escape_string($name) . "', '"
                             . pg_escape_string($surname) .
                             "')");

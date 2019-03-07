@@ -19,6 +19,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.example.buwing.MainActivity.loginCredentials;
 import static com.example.buwing.MainActivity.saveLoginCredentials;
@@ -28,6 +30,10 @@ public class RegisterActivity extends AppCompatActivity {
     Button registerButton;
     EditText nameTextView, surnameTextView, loginTextView, passwordTextView;
     String name, surname, login, password;
+
+    String notAllowedCharacterPatternString = "^.*['\"();].*$";
+    Pattern notAllowedCharacterPattern = Pattern.compile(notAllowedCharacterPatternString);
+    String notAllowedCharacterMessage = "Niedozwolony znak w polu: ";
 
     @SuppressLint("StaticFieldLeak")
     private class RegistrationTask extends AsyncTask<Void, Void, Boolean> {
@@ -118,8 +124,18 @@ public class RegisterActivity extends AppCompatActivity {
                 login = loginTextView.getText().toString();
                 password = passwordTextView.getText().toString();
 
+                Matcher nameMatcher = notAllowedCharacterPattern.matcher(name);
+                Matcher surnameMatcher = notAllowedCharacterPattern.matcher(surname);
+                Matcher loginMatcher = notAllowedCharacterPattern.matcher(login);
+
                 if (name.isEmpty() || surname.isEmpty() || login.isEmpty() || password.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Uzupełnij wszystkie pola", Toast.LENGTH_LONG).show();
+                } else if (nameMatcher.find()) {
+                    Toast.makeText(getApplicationContext(), notAllowedCharacterMessage + "imię", Toast.LENGTH_LONG).show();
+                } else if (surnameMatcher.find()) {
+                    Toast.makeText(getApplicationContext(), notAllowedCharacterMessage + "nazwisko", Toast.LENGTH_LONG).show();
+                } else if (loginMatcher.find()) {
+                    Toast.makeText(getApplicationContext(), notAllowedCharacterMessage + "login", Toast.LENGTH_LONG).show();
                 } else {
                     RegistrationTask registrationTask = new RegistrationTask();
                     registrationTask.execute();
