@@ -1,5 +1,6 @@
 package com.example.buwing;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import java.util.List;
 import java.util.Objects;
 
+import static com.example.buwing.MainActivity.loginCredentials;
 import static com.example.buwing.MainActivity.name;
 import static com.example.buwing.MainActivity.surname;
 import static com.example.buwing.MainActivity.login;
@@ -128,7 +130,14 @@ public class LoggedInActivity extends AppCompatActivity
                 fragment = new FriendsListFragment();
                 break;
             case R.id.nav_logout:
-                fragment = new LogoutFragment();
+                if (loginCredentials.exists()) {
+                    //noinspection ResultOfMethodCallIgnored
+                    loginCredentials.delete();
+                }
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
                 break;
         }
 
