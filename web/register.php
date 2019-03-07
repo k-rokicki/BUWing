@@ -17,7 +17,7 @@
                             "INSERT INTO users VALUES (
                             default, '"
                             . pg_escape_string($login) . "', '"
-                            . pg_escape_string($password) . "', '"
+                            . password_hash(pg_escape_string($password), PASSWORD_DEFAULT) . "', '"
                             . pg_escape_string($name) . "', '"
                             . pg_escape_string($surname) .
                             "')");
