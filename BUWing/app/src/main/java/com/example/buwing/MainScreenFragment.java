@@ -29,16 +29,17 @@ public class MainScreenFragment extends BaseFragment {
     TextView fullnessInfoTextView;
     TextView openingHoursMsgTextView;
     TextView openingHoursTextView;
+    int opensHour, opensMinutes, closesHour, closesMinutes;
     int freeSeatsCount;
     int allSeatsCount;
 
     @SuppressLint("StaticFieldLeak")
     private class GetOpeningHoursTask extends AsyncTask<Void, Void, Void> {
-
-        String openingHoursString;
+        private JSONObject obj;
+        private String response;
 
         GetOpeningHoursTask() {
-            openingHoursString = null;
+            response = null;
         }
 
         @Override
@@ -63,7 +64,7 @@ public class MainScreenFragment extends BaseFragment {
                     throw new IOException("Post failed with error code " + status);
                 } else {
                     BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                    openingHoursString = in.readLine();
+                    response = in.readLine();
                     in.close();
                 }
             } catch (MalformedURLException e) {
@@ -74,26 +75,41 @@ public class MainScreenFragment extends BaseFragment {
                 if (conn != null) {
                     conn.disconnect();
                 }
+                try {
+                    obj = new JSONObject(response);
+                    opensHour = Integer.parseInt(obj.get("opensHour").toString());
+                    opensMinutes = Integer.parseInt(obj.get("opensMinutes").toString());
+                    closesHour = Integer.parseInt(obj.get("closesHour").toString());
+                    closesMinutes = Integer.parseInt(obj.get("closesMinutes").toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
             return null;
         }
 
+        @SuppressLint("DefaultLocale")
         @Override
         protected void onPostExecute(Void result) {
-            openingHoursTextView.setText(openingHoursString);
+            if (response != null) {
+                openingHoursTextView.setText(String.format("%d:%02d - %d:%02d",
+                        opensHour, opensMinutes, closesHour, closesMinutes));
+            }
         }
     }
 
     @SuppressLint("StaticFieldLeak")
     private class GetFullnessInfoTask extends AsyncTask<Void, Void, Void> {
         private JSONObject obj;
+        private String response;
 
-        GetFullnessInfoTask(){}
+        GetFullnessInfoTask() {
+            response = null;
+        }
 
         @Override
         protected Void doInBackground(Void... voids) {
             String loginURL = "http://students.mimuw.edu.pl/~kr394714/buwing/fullness_info.php";
-            StringBuilder response = new StringBuilder();
 
             HttpURLConnection conn = null;
 
@@ -113,10 +129,7 @@ public class MainScreenFragment extends BaseFragment {
                     throw new IOException("Post failed with error code " + status);
                 } else {
                     BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                    String inputLine;
-                    while ((inputLine = in.readLine()) != null) {
-                        response.append(inputLine);
-                    }
+                    response = in.readLine();
                     in.close();
                 }
             } catch (MalformedURLException e) {
@@ -127,9 +140,8 @@ public class MainScreenFragment extends BaseFragment {
                 if (conn != null) {
                     conn.disconnect();
                 }
-                String result = response.toString();
                 try {
-                    obj = new JSONObject(result);
+                    obj = new JSONObject(response);
                     freeSeatsCount = Integer.parseInt(obj.get("freeSeatsCount").toString());
                     allSeatsCount = Integer.parseInt(obj.get("allSeatsCount").toString());
                 } catch (JSONException e) {
@@ -142,7 +154,9 @@ public class MainScreenFragment extends BaseFragment {
         @SuppressLint("DefaultLocale")
         @Override
         protected void onPostExecute(Void result) {
-            fullnessInfoTextView.setText(String.format("%d / %d", freeSeatsCount, allSeatsCount));
+            if (response != null) {
+                fullnessInfoTextView.setText(String.format("%d / %d", freeSeatsCount, allSeatsCount));
+            }
         }
     }
 
