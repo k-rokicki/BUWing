@@ -23,15 +23,18 @@
             <item
                 android:id="@+id/nav_myProfile"
                 android:icon="@drawable/ic_menu_share"
-                android:title="mój profil" />
+                android:title="mój profil"
+                android:checkable="true" />
             <item
                 android:id="@+id/nav_friendsList"
                 android:icon="@drawable/ic_menu_send"
-                android:title="lista znajomych" />
+                android:title="lista znajomych"
+                android:checkable="true" />
             <item
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/ic_menu_send"
-                android:title="wyloguj" />
+                android:title="wyloguj"
+                android:checkable="true" />
         </menu>
     </item>
 

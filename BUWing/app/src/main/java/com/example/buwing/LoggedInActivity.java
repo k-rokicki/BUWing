@@ -46,6 +46,7 @@ public class LoggedInActivity extends AppCompatActivity
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getMenu().getItem(0).setChecked(true);
 
         View nameAndNicknameView = navigationView.getHeaderView(0);
         nameTextView = nameAndNicknameView.findViewById(R.id.nameTextView);
@@ -65,14 +66,13 @@ public class LoggedInActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             tellFragments();
-            //super.onBackPressed();
         }
     }
 
     private void tellFragments(){
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
         for (Fragment f : fragments) {
-            if(f != null && f instanceof BaseFragment)
+            if (f != null && f instanceof BaseFragment)
                 ((BaseFragment)f).onBackPressed();
         }
     }
