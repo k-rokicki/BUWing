@@ -36,16 +36,15 @@ public class MainScreenFragment extends BaseFragment {
     static final String defaultFullnessInfoString = "- / -";
     static final String defaultOpeningHoursString = "brak danych";
     static final String defaultFriendsInsideString = "-";
-    static int defaultFullnessInfoColor = Color.parseColor("#727272");
-    static int defaultOpeningHoursColor = Color.parseColor("#727272");
-    static int defaultFriendsInsideColor = Color.parseColor("#727272");
+    static int inactiveColor = Color.parseColor("#727272");
+    static int activeColor = Color.parseColor("#10674F");
 
     static String fullnessInfoString = defaultFullnessInfoString;
-    static int fullnessInfoColor = defaultFullnessInfoColor;
+    static int fullnessInfoColor = inactiveColor;
     static String openingHoursString = defaultOpeningHoursString;
-    static int openingHoursColor = defaultOpeningHoursColor;
+    static int openingHoursColor = inactiveColor;
     static String friendsInsideString = defaultFriendsInsideString;
-    static int friendsInsideColor = defaultFriendsInsideColor;
+    static int friendsInsideColor = inactiveColor;
 
     int opensHour, opensMinutes, closesHour, closesMinutes;
     boolean closesNextDay;
@@ -115,7 +114,7 @@ public class MainScreenFragment extends BaseFragment {
         protected void onPostExecute(Void result) {
             if (response == null) {
                 openingHoursString = defaultOpeningHoursString;
-                openingHoursColor = defaultOpeningHoursColor;
+                openingHoursColor = inactiveColor;
             } else {
                 Calendar rightNow = Calendar.getInstance();
                 int currentHour = rightNow.get(Calendar.HOUR_OF_DAY);
@@ -148,8 +147,8 @@ public class MainScreenFragment extends BaseFragment {
                 } else {
                     fullnessInfoString = defaultFullnessInfoString;
                     friendsInsideString = defaultFriendsInsideString;
-                    fullnessInfoColor = defaultFullnessInfoColor;
-                    friendsInsideColor = defaultFriendsInsideColor;
+                    fullnessInfoColor = inactiveColor;
+                    friendsInsideColor = inactiveColor;
 
                     fullnessInfoTextView.setText(fullnessInfoString);
                     friendsInsideTextView.setText(friendsInsideString);
@@ -159,7 +158,7 @@ public class MainScreenFragment extends BaseFragment {
 
                 openingHoursString = String.format("%d:%02d - %d:%02d",
                         opensHour, opensMinutes, closesHour, closesMinutes);
-                openingHoursColor = isLibraryOpen ? Color.parseColor("#DD000000") : defaultOpeningHoursColor;
+                openingHoursColor = isLibraryOpen ? activeColor : inactiveColor;
             }
 
             openingHoursTextView.setText(openingHoursString);
@@ -225,10 +224,10 @@ public class MainScreenFragment extends BaseFragment {
         protected void onPostExecute(Void result) {
             if (response == null) {
                 fullnessInfoString = defaultFullnessInfoString;
-                fullnessInfoColor = defaultFullnessInfoColor;
+                fullnessInfoColor = inactiveColor;
             } else {
                 fullnessInfoString = String.format("%d / %d", freeSeatsCount, allSeatsCount);
-                fullnessInfoColor = Color.parseColor("#DD000000");
+                fullnessInfoColor = activeColor;
             }
             fullnessInfoTextView.setText(fullnessInfoString);
             fullnessInfoTextView.setTextColor(fullnessInfoColor);
