@@ -1,8 +1,8 @@
 <?php
-    $name = $_GET['name'];
-    $surname = $_GET['surname'];
-    $login = $_GET['login'];
-    $password = $_GET['password'];
+    $name = $_POST["name"];
+    $surname = $_POST["surname"];
+    $login = $_POST["login"];
+    $password = $_POST["password"];
 
     $link = pg_connect("host=labdb dbname=bd user=kr394714 password=xyz");
     $result = false;

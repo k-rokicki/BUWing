@@ -1,6 +1,6 @@
 <?php
-    $login = $_GET['login'];
-    $password = $_GET['password'];
+    $login = $_POST["login"];
+    $password = $_POST["password"];
 
     $JSONobj->loggedin = 0;
     $JSONobj->name = "";

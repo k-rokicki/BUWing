@@ -27,9 +27,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -46,53 +47,42 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("StaticFieldLeak")
     private class AuthenticationTask extends AsyncTask<Void, Void, Boolean> {
-        private StringBuilder stringBuilder = new StringBuilder();
-        private JSONObject obj;
         private boolean loggedIn = false;
 
         AuthenticationTask(){}
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-            stringBuilder.append("http://students.mimuw.edu.pl/~kr394714/buwing/login.php?login=");
-            stringBuilder.append(login);
-            stringBuilder.append("&password=");
-            stringBuilder.append(password);
-            String loginURL = stringBuilder.toString();
+            JSONObject obj;
+            String loginURL = "http://students.mimuw.edu.pl/~kr394714/buwing/login.php";
             StringBuilder response = new StringBuilder();
-
-            HttpURLConnection conn = null;
+            URLConnection conn;
 
             try {
+                String POSTdata = URLEncoder.encode("login", "UTF-8")
+                        + "=" + URLEncoder.encode(login, "UTF-8")
+                        + "&" + URLEncoder.encode("password", "UTF-8")
+                        + "=" + URLEncoder.encode(password, "UTF-8");
                 URL url = new URL(loginURL);
-                conn = (HttpURLConnection) url.openConnection();
 
-                conn.setDoOutput(false);
-                conn.setDoInput(true);
-                conn.setUseCaches(false);
-                conn.setRequestMethod("GET");
-                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+                conn = url.openConnection();
+                conn.setDoOutput(true);
+                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+                wr.write(POSTdata);
+                wr.flush();
 
-                int status = conn.getResponseCode();
-
-                if (status != 200) {
-                    throw new IOException("Post failed with error code " + status);
-                } else {
-                    BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                    String inputLine;
-                    while ((inputLine = in.readLine()) != null) {
-                        response.append(inputLine);
-                    }
-                    in.close();
+                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                String inputLine;
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
                 }
+                in.close();
+
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
-                if (conn != null) {
-                    conn.disconnect();
-                }
                 String result = response.toString();
                 try {
                     obj = new JSONObject(result);
