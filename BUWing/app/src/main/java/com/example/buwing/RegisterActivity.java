@@ -30,7 +30,7 @@ import static com.example.buwing.MainActivity.saveLoginCredentials;
 public class RegisterActivity extends AppCompatActivity {
 
     Button registerButton;
-    EditText nameTextView, surnameTextView, loginTextView, passwordTextView;
+    EditText nameTextView, surnameTextView, loginTextView, passwordTextView, passwordRepeatTextView;
     String name, surname, login, password;
 
     String notAllowedCharacterPatternString = "^.*['\"();].*$";
@@ -106,6 +106,7 @@ public class RegisterActivity extends AppCompatActivity {
         surnameTextView = findViewById(R.id.surnameTextView);
         loginTextView = findViewById(R.id.loginTextView);
         passwordTextView = findViewById(R.id.passwordTextView);
+        passwordRepeatTextView = findViewById(R.id.passwordRepeatTextView);
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,6 +115,7 @@ public class RegisterActivity extends AppCompatActivity {
                 surname = surnameTextView.getText().toString();
                 login = loginTextView.getText().toString();
                 password = passwordTextView.getText().toString();
+                String passwordRepeat = passwordRepeatTextView.getText().toString();
 
                 Matcher nameMatcher = notAllowedCharacterPattern.matcher(name);
                 Matcher surnameMatcher = notAllowedCharacterPattern.matcher(surname);
@@ -127,6 +129,8 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), notAllowedCharacterMessage + "nazwisko", Toast.LENGTH_LONG).show();
                 } else if (loginMatcher.find()) {
                     Toast.makeText(getApplicationContext(), notAllowedCharacterMessage + "login", Toast.LENGTH_LONG).show();
+                } else if (!password.equals(passwordRepeat)) {
+                    Toast.makeText(getApplicationContext(), "Hasła nie są takie same", Toast.LENGTH_LONG).show();
                 } else {
                     RegistrationTask registrationTask = new RegistrationTask();
                     registrationTask.execute();

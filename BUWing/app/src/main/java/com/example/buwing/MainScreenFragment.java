@@ -253,7 +253,7 @@ public class MainScreenFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         Objects.requireNonNull(getActivity()).setTitle("ekran główny");
 
-        fullnessInfoTextView = Objects.requireNonNull(getView()).findViewById(R.id.fullnessInfoTextView);
+        fullnessInfoTextView = Objects.requireNonNull(getView()).findViewById(R.id.nameTextView);
         openingHoursMsgTextView = Objects.requireNonNull(getView()).findViewById(R.id.openingHoursMsgTextView);
         openingHoursTextView = Objects.requireNonNull(getView()).findViewById(R.id.openingHoursTextView);
         friendsInsideTextView = Objects.requireNonNull(getView()).findViewById(R.id.friendsInsideTextView);

@@ -23,10 +23,10 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/nicknameTextView"
+        android:id="@+id/loginTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="nickname"
+        android:text="login"
         android:textSize="24sp" />
 
 </LinearLayout>
