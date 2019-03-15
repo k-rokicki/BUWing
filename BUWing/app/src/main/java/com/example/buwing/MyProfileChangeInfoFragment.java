@@ -1,7 +1,6 @@
 package com.example.buwing;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -160,14 +159,14 @@ public class MyProfileChangeInfoFragment extends BaseFragment {
         }
 
         @Override
-        protected void onPostExecute(Boolean result) {
-            checkUpdateSuccess(result);
+        protected void onPostExecute(Boolean updated) {
+            checkUpdateSuccess(updated);
         }
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    private void checkUpdateSuccess(boolean registered) {
-        if (registered) {
+    private void checkUpdateSuccess(boolean updated) {
+        if (updated) {
             MainActivity.name = newName;
             MainActivity.surname = newSurname;
             MainActivity.login = newLogin;

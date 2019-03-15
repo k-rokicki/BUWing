@@ -15,7 +15,7 @@ public class MyProfileFragment extends BaseFragment {
 
     TextView nameMsgTextView, surnameMsgTextView, loginMsgTextView;
     TextView nameTextView, surnameTextView, loginTextView;
-    Button changeInfoButton;
+    Button changeInfoButton, changePasswordButton;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,6 +37,7 @@ public class MyProfileFragment extends BaseFragment {
         loginTextView = Objects.requireNonNull(getActivity()).findViewById(R.id.loginTextView);
 
         changeInfoButton = Objects.requireNonNull(getActivity()).findViewById(R.id.changeInfoButton);
+        changePasswordButton = Objects.requireNonNull(getActivity()).findViewById(R.id.changePasswordButton);
 
         nameTextView.setText(MainActivity.name);
         surnameTextView.setText(MainActivity.surname);
@@ -46,6 +47,20 @@ public class MyProfileFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 Fragment fragment = new MyProfileChangeInfoFragment();
+                FragmentTransaction ft =
+                        Objects.requireNonNull(getActivity()).getSupportFragmentManager().
+                                beginTransaction().
+                                setCustomAnimations
+                                        (android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                ft.replace(R.id.content_frame, fragment);
+                ft.commit();
+            }
+        });
+
+        changePasswordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = new MyProfileChangePasswordFragment();
                 FragmentTransaction ft =
                         Objects.requireNonNull(getActivity()).getSupportFragmentManager().
                                 beginTransaction().
