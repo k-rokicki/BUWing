@@ -42,7 +42,7 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
-        android:id="@+id/nameTextView"
+        android:id="@+id/fullnessInfoTextView"
         android:layout_width="314dp"
         android:layout_height="92dp"
         android:layout_marginStart="8dp"
@@ -73,7 +73,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.946"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameTextView"
+        app:layout_constraintTop_toBottomOf="@+id/fullnessInfoTextView"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
