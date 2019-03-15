@@ -26,8 +26,8 @@ import static com.example.buwing.MainActivity.login;
 public class LoggedInActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    TextView nameTextView;
-    TextView loginTextView;
+    static TextView nameTextView;
+    static TextView loginTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,5 +150,10 @@ public class LoggedInActivity extends AppCompatActivity
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+    }
+
+    public static void updateUserInfo() {
+        nameTextView.setText(String.format("%s %s", name, surname));
+        loginTextView.setText(login);
     }
 }
