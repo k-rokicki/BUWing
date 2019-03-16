@@ -13,8 +13,7 @@ import java.util.Objects;
 
 public class MyProfileFragment extends BaseFragment {
 
-    TextView nameMsgTextView, surnameMsgTextView, loginMsgTextView;
-    TextView nameTextView, surnameTextView, loginTextView;
+    TextView nameTextView, surnameTextView, loginTextView, emailTextView;
     Button changeInfoButton, changePasswordButton;
 
     @Override
@@ -28,13 +27,10 @@ public class MyProfileFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        nameMsgTextView = Objects.requireNonNull(getActivity()).findViewById(R.id.nameMsgTextView);
-        surnameMsgTextView = Objects.requireNonNull(getActivity()).findViewById(R.id.surnameMsgTextView);
-        loginMsgTextView = Objects.requireNonNull(getActivity()).findViewById(R.id.loginMsgTextView);
-
         nameTextView = Objects.requireNonNull(getActivity()).findViewById(R.id.nameTextView);
         surnameTextView = Objects.requireNonNull(getActivity()).findViewById(R.id.surnameTextView);
         loginTextView = Objects.requireNonNull(getActivity()).findViewById(R.id.loginTextView);
+        emailTextView = Objects.requireNonNull(getActivity()).findViewById(R.id.emailTextView);
 
         changeInfoButton = Objects.requireNonNull(getActivity()).findViewById(R.id.changeInfoButton);
         changePasswordButton = Objects.requireNonNull(getActivity()).findViewById(R.id.changePasswordButton);
@@ -42,6 +38,7 @@ public class MyProfileFragment extends BaseFragment {
         nameTextView.setText(MainActivity.name);
         surnameTextView.setText(MainActivity.surname);
         loginTextView.setText(MainActivity.login);
+        emailTextView.setText(MainActivity.email);
 
         changeInfoButton.setOnClickListener(new View.OnClickListener() {
             @Override

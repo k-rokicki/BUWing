@@ -1,6 +1,7 @@
 package com.example.buwing;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,7 +11,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -34,11 +34,10 @@ import static com.example.buwing.MainActivity.saveLoginCredentials;
 
 public class MyProfileChangeInfoFragment extends BaseFragment {
 
-    TextView nameMsgTextView, surnameMsgTextView, loginMsgTextView;
-    EditText nameEditText, surnameEditText, loginEditText;
+    EditText nameEditText, surnameEditText, loginEditText, emailEditText;
     Button confirmButton;
 
-    String newName, newSurname, newLogin;
+    String newName, newSurname, newLogin, newEmail;
 
     String notAllowedCharacterPatternString = "^.*['\"();].*$";
     Pattern notAllowedCharacterPattern = Pattern.compile(notAllowedCharacterPatternString);
@@ -55,19 +54,17 @@ public class MyProfileChangeInfoFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        nameMsgTextView = Objects.requireNonNull(getActivity()).findViewById(R.id.nameMsgTextView);
-        surnameMsgTextView = Objects.requireNonNull(getActivity()).findViewById(R.id.surnameMsgTextView);
-        loginMsgTextView = Objects.requireNonNull(getActivity()).findViewById(R.id.loginMsgTextView);
-
         nameEditText = Objects.requireNonNull(getActivity()).findViewById(R.id.nameEditText);
         surnameEditText = Objects.requireNonNull(getActivity()).findViewById(R.id.surnameEditText);
         loginEditText = Objects.requireNonNull(getActivity()).findViewById(R.id.loginEditText);
+        emailEditText = Objects.requireNonNull(getActivity()).findViewById(R.id.emailEditText);
 
         confirmButton = Objects.requireNonNull(getActivity()).findViewById(R.id.confirmButton);
 
         nameEditText.setText(MainActivity.name);
         surnameEditText.setText(MainActivity.surname);
         loginEditText.setText(MainActivity.login);
+        emailEditText.setText(MainActivity.email);
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,12 +72,13 @@ public class MyProfileChangeInfoFragment extends BaseFragment {
                 newName = nameEditText.getText().toString();
                 newSurname = surnameEditText.getText().toString();
                 newLogin = loginEditText.getText().toString();
+                newEmail = emailEditText.getText().toString();
 
                 Matcher nameMatcher = notAllowedCharacterPattern.matcher(newName);
                 Matcher surnameMatcher = notAllowedCharacterPattern.matcher(newSurname);
                 Matcher loginMatcher = notAllowedCharacterPattern.matcher(newLogin);
 
-                if (newName.isEmpty() || newSurname.isEmpty() || newLogin.isEmpty()) {
+                if (newName.isEmpty() || newSurname.isEmpty() || newLogin.isEmpty() || newEmail.isEmpty()) {
                     Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
                             "Uzupełnij wszystkie pola", Toast.LENGTH_LONG).show();
                 } else if (nameMatcher.find()) {
@@ -92,6 +90,9 @@ public class MyProfileChangeInfoFragment extends BaseFragment {
                 } else if (loginMatcher.find()) {
                     Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
                             notAllowedCharacterMessage + "login", Toast.LENGTH_LONG).show();
+                } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(newEmail).matches()) {
+                    Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
+                            "Nieprawidłowy adres email", Toast.LENGTH_LONG).show();
                 } else {
                     UpdateInfoTask updateInfoTask = new UpdateInfoTask();
                     updateInfoTask.execute();
@@ -123,7 +124,9 @@ public class MyProfileChangeInfoFragment extends BaseFragment {
                         + "&" + URLEncoder.encode("newSurname", "UTF-8")
                         + "=" + URLEncoder.encode(newSurname, "UTF-8")
                         + "&" + URLEncoder.encode("newLogin", "UTF-8")
-                        + "=" + URLEncoder.encode(newLogin, "UTF-8");
+                        + "=" + URLEncoder.encode(newLogin, "UTF-8")
+                        + "&" + URLEncoder.encode("newEmail", "UTF-8")
+                        + "=" + URLEncoder.encode(newEmail, "UTF-8");
                 URL url = new URL(updateURL);
 
                 conn = url.openConnection();
@@ -151,6 +154,7 @@ public class MyProfileChangeInfoFragment extends BaseFragment {
                     newName = obj.getString("name");
                     newSurname = obj.getString("surname");
                     newLogin = obj.getString("login");
+                    newEmail = obj.getString("email");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -167,6 +171,8 @@ public class MyProfileChangeInfoFragment extends BaseFragment {
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private void checkUpdateSuccess(boolean updated) {
         if (updated) {
+            boolean logout = (!newEmail.equals(MainActivity.email));
+
             MainActivity.name = newName;
             MainActivity.surname = newSurname;
             MainActivity.login = newLogin;
@@ -178,24 +184,35 @@ public class MyProfileChangeInfoFragment extends BaseFragment {
                 }
             });
 
-            try {
-                saveLoginCredentials(Objects.requireNonNull(getActivity()).getBaseContext());
-            } catch (IOException e) {
+            if (!logout) {
+                try {
+                    saveLoginCredentials(Objects.requireNonNull(getActivity()).getBaseContext());
+                } catch (IOException e) {
+                    if (loginCredentials.exists()) {
+                        loginCredentials.delete();
+                    }
+                    e.printStackTrace();
+                }
+                Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
+                        "Pomyślnie zmieniono dane", Toast.LENGTH_LONG).show();
+                Fragment fragment = new MyProfileFragment();
+                FragmentTransaction ft =
+                        Objects.requireNonNull(getActivity()).getSupportFragmentManager().
+                                beginTransaction().
+                                setCustomAnimations
+                                        (android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                ft.replace(R.id.content_frame, fragment);
+                ft.commit();
+            } else {
                 if (loginCredentials.exists()) {
                     loginCredentials.delete();
                 }
-                e.printStackTrace();
+                Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
+                        "Pomyślnie zmieniono dane. Aktywuj konto klikając w link z maila", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
             }
-            Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
-                    "Pomyślnie zmieniono dane", Toast.LENGTH_LONG).show();
-            Fragment fragment = new MyProfileFragment();
-            FragmentTransaction ft =
-                    Objects.requireNonNull(getActivity()).getSupportFragmentManager().
-                            beginTransaction().
-                            setCustomAnimations
-                                    (android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-            ft.replace(R.id.content_frame, fragment);
-            ft.commit();
         } else {
             Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
                     "Spróbuj ponownie", Toast.LENGTH_LONG).show();

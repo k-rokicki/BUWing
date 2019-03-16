@@ -159,7 +159,7 @@ public class MyProfileChangePasswordFragment extends BaseFragment {
                 loginCredentials.delete();
             }
             Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
-                    "Pomyślnie zmieniono hasło", Toast.LENGTH_LONG).show();
+                    "Aby potwierdzić zmianę hasła, kliknij w link z maila", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(getActivity(), MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);

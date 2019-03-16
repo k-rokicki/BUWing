@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     static String name;
     static String surname;
     static String login;
+    static String email;
     static String password;
     static String loginCredentialsFilename;
     static String loginCredentialsPath;
@@ -88,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
                     obj = new JSONObject(result);
                     name = obj.get("name").toString();
                     surname = obj.get("surname").toString();
+                    email = obj.get("email").toString();
                     loggedIn = obj.get("loggedin").toString().equals("1");
                 } catch (JSONException e) {
                     e.printStackTrace();
