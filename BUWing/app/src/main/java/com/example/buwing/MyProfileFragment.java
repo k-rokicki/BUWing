@@ -48,7 +48,7 @@ public class MyProfileFragment extends BaseFragment {
                         Objects.requireNonNull(getActivity()).getSupportFragmentManager().
                                 beginTransaction().
                                 setCustomAnimations
-                                        (android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                                        (R.anim.slide_in_right, R.anim.slide_out_left);
                 ft.replace(R.id.content_frame, fragment);
                 ft.commit();
             }
@@ -62,7 +62,7 @@ public class MyProfileFragment extends BaseFragment {
                         Objects.requireNonNull(getActivity()).getSupportFragmentManager().
                                 beginTransaction().
                                 setCustomAnimations
-                                        (android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                                        (R.anim.slide_in_right, R.anim.slide_out_left);
                 ft.replace(R.id.content_frame, fragment);
                 ft.commit();
             }

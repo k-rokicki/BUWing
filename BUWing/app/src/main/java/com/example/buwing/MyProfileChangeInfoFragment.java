@@ -101,6 +101,18 @@ public class MyProfileChangeInfoFragment extends BaseFragment {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        Fragment fragment = new MyProfileFragment();
+        FragmentTransaction ft =
+                Objects.requireNonNull(getActivity()).getSupportFragmentManager().
+                        beginTransaction().
+                        setCustomAnimations
+                                (android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        ft.replace(R.id.content_frame, fragment);
+        ft.commit();
+    }
+
     @SuppressLint("StaticFieldLeak")
     private class UpdateInfoTask extends AsyncTask<Void, Void, Boolean> {
         private boolean updated;

@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,12 +25,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static com.example.buwing.MainActivity.loginCredentials;
-import static com.example.buwing.MainActivity.password;
-import static com.example.buwing.MainActivity.saveLoginCredentials;
 
 public class MyProfileChangePasswordFragment extends BaseFragment {
 
@@ -77,6 +72,18 @@ public class MyProfileChangePasswordFragment extends BaseFragment {
                 }
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        Fragment fragment = new MyProfileFragment();
+        FragmentTransaction ft =
+                Objects.requireNonNull(getActivity()).getSupportFragmentManager().
+                        beginTransaction().
+                        setCustomAnimations
+                                (android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        ft.replace(R.id.content_frame, fragment);
+        ft.commit();
     }
 
     @SuppressLint("StaticFieldLeak")
