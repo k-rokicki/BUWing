@@ -47,7 +47,7 @@ public class FriendsListFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        loginEditText = Objects.requireNonNull(getActivity()).findViewById(R.id.nameEditText);
+        loginEditText = Objects.requireNonNull(getActivity()).findViewById(R.id.loginEditText);
         searchButton = Objects.requireNonNull(getActivity()).findViewById(R.id.searchButton);
 
         searchButton.setOnClickListener(new View.OnClickListener() {
@@ -83,7 +83,7 @@ public class FriendsListFragment extends BaseFragment {
         @Override
         protected Boolean doInBackground(Void... voids) {
             JSONObject obj;
-            String addURL = "http://students.mimuw.edu.pl/~kr394714/buwing/add_friend.php";
+            String addURL = "http://students.mimuw.edu.pl/~mk394389/buwing/add_friend.php";
             StringBuilder response = new StringBuilder();
             URLConnection conn;
 

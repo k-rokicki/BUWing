@@ -9,27 +9,32 @@
   $JSONobj->sent = false;
 
   $link = pg_connect("host=labdb dbname=bd user=kr394714 password=xyz");
+  $result = pg_query($link, "SELECT id FROM users WHERE login = '" . pg_escape_string($my_login) . "'");
+  $row = pg_fetch_array($result, 0);
+  $my_id = $row["id"];
   $result = pg_query($link,
-                      "SELECT login, name, surname
+                      "SELECT id, name, surname, email
                       FROM users
-                      WHERE login = "'" . pg_escape_string($friend_login) . "'");
+                      WHERE login = '" . pg_escape_string($friend_login) . "'");
   $count = pg_num_rows($result);
 
   if ($count == 1) {
     $row = pg_fetch_array($result, 0);
-    $friend_name = $result["name"];
-    $friend_surname = $result["surname"];
+    $friend_id = $row["id"];
+    $friend_name = $row["name"];
+    $friend_surname = $row["surname"];
+    $friend_email = $row["email"];
     $result = pg_query($link,
-                        "SELECT inviter, invitee, status
+                        "SELECT inviterid, inviteeid, status
                         FROM friends
-                        WHERE inviter = '" . pg_escape_string($my_login) . "'
-                        AND invitee = '" . pg_escape_string($friend_login) . "'")
+                        WHERE inviterid = '" . pg_escape_string($my_id) . "'
+                        AND inviteeid = '" . pg_escape_string($friend_id) . "'");
     $count = pg_num_rows($result);
 
-    if ($count = 1) {
+    if ($count == 1) {
       $row = pg_fetch_array($result, 0);
-      $status = $row["status"];
-      if ($status == 0) {
+      $status = ($row["status"] == 't');
+      if (!$status) {
         $JSONobj->status = "already_sent";
       }
       else {
@@ -38,16 +43,16 @@
     }
     else {
       $result = pg_query($link,
-                          "SELECT inviter, invitee, status
+                          "SELECT inviterid, inviteeid, status
                           FROM friends
-                          WHERE inviter = '" . pg_escape_string($friend_login) . "'
-                          AND invitee = '" . pg_escape_string($my_login) . "'")
+                          WHERE inviterid = '" . pg_escape_string($friend_id) . "'
+                          AND inviteeid = '" . pg_escape_string($my_id) . "'");
       $count = pg_num_rows($result);
 
       if ($count == 1) {
         $row = pg_fetch_array($result, 0);
-        $status = $row["status"];
-        if ($status == 0) {
+        $status = ($row["status"] == 't');
+        if (!$status) {
           $JSONobj->status = "pending_inivitation";
         }
         else {
@@ -56,10 +61,10 @@
       }
       else {
         $result = pg_query($link,
-                    "UPDATE friends
-                    SET inviter = '" . pg_escape_string($my_login) . "'
-                    , invitee = '" . pg_escape_string($friend_login) . "'
-                    , status = 0");
+                    "INSERT INTO friends
+                    VALUES ('" . pg_escape_string($my_id) . "'
+                    , '" . pg_escape_string($friend_id) . "'
+                    , default)");
         if ($result) {
           $JSONobj->sent = true;
           $subject = "Nowe zaproszenie do znajomych w BUWing";
@@ -71,7 +76,7 @@
           $message = '<p>' . $friend_name . ' ' . $friend_surname . ', użytkownik ' . $my_name . ' ' . $my_surname . ' wysłał Ci zaproszenie do znajomych w BUWing.</p>
                      <p>Potwierdź zaproszenie w aplikacji mobilnej.</p>';
 
-          mail($newEmail, $subject, $message, $headers);
+          mail($friend_email, $subject, $message, $headers);
         }
       }
     }
