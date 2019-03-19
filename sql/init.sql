@@ -37,3 +37,10 @@ CREATE TABLE pendingPasswordChanges(
     PRIMARY KEY (userid),
     FOREIGN KEY (userid) REFERENCES users(id)
 );
+
+CREATE TABLE resetPasswordTokens(
+    userid INTEGER NOT NULL,
+    token VARCHAR(50) NOT NULL,
+    PRIMARY KEY (userid),
+    FOREIGN KEY (userid) REFERENCES users(id)
+);

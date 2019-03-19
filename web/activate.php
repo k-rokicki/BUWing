@@ -1,3 +1,20 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <title>BUWing - aktywowanie konta</title>
+        <meta charset="UTF-8">
+        <meta name="author" content="Kacper Rokicki">
+    </head>
+
+<body>
+
+<style> body {text-align:center;} </style>
+<br><br><br>
+<h2>BUWing - aktywowanie konta</h2>
+<br><br><br>
+
 <?php
 
     $userid = $_GET["userid"];
@@ -62,3 +79,6 @@
         echo "Wystąpił błąd. Spróbuj ponownie.";
     }
 ?>
+
+</body>
+</html>

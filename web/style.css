@@ -1,0 +1,35 @@
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 24px;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: 700;
+	line-height: 26.4px;
+    color: rgb(247, 247, 247);
+    background-color: rgb(177, 188, 206)
+}
+
+a {
+    color: 	rgb(32, 32, 223);
+    text-decoration: none;
+}
+
+a:hover {
+    color: rgb(204, 0, 0);
+    text-decoration: none;
+}
+
+
+.submitLink {
+    background-color: transparent;
+    text-decoration: none;
+    border: none;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 24px;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 700;
+    line-height: 26.4px;
+    color: rgb(32, 32, 223);
+    cursor: pointer;
+}
