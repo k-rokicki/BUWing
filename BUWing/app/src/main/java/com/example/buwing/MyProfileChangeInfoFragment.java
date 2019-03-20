@@ -103,7 +103,7 @@ public class MyProfileChangeInfoFragment extends BaseFragment {
 
     @Override
     public void onBackPressed() {
-        Fragment fragment = new MyProfileFragment();
+        Fragment fragment = new MyProfileChangeFragment();
         FragmentTransaction ft =
                 Objects.requireNonNull(getActivity()).getSupportFragmentManager().
                         beginTransaction().

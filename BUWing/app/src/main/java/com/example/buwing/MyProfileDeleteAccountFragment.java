@@ -28,18 +28,18 @@ import java.util.Objects;
 
 import static com.example.buwing.MainActivity.loginCredentials;
 
-public class MyProfileChangePasswordFragment extends BaseFragment {
+public class MyProfileDeleteAccountFragment extends BaseFragment {
 
-    TextView oldPasswordTextView, newPasswordTextView, newPasswordRepeatTextView;
+    TextView passwordTextView, repeatPasswordTextView;
     Button confirmButton;
 
-    String oldPassword, newPassword, newPasswordRepeat;
+    String password, repeatPassword;
     int attempts = 0;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        _layout = R.layout.fragment_my_profile_change_password;
-        title = "mój profil - zmiana hasła";
+        _layout = R.layout.fragment_my_profile_delete_account;
+        title = "mój profil - usuwanie konta";
         super.onCreate(savedInstanceState);
     }
 
@@ -47,28 +47,26 @@ public class MyProfileChangePasswordFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        oldPasswordTextView = Objects.requireNonNull(getActivity()).findViewById(R.id.oldPasswordTextView);
-        newPasswordTextView = Objects.requireNonNull(getActivity()).findViewById(R.id.newPasswordTextView);
-        newPasswordRepeatTextView = Objects.requireNonNull(getActivity()).findViewById(R.id.newPasswordRepeatTextView);
+        passwordTextView = Objects.requireNonNull(getActivity()).findViewById(R.id.passwordTextView);
+        repeatPasswordTextView = Objects.requireNonNull(getActivity()).findViewById(R.id.passwordRepeatTextView);
 
         confirmButton = Objects.requireNonNull(getActivity()).findViewById(R.id.confirmButton);
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                oldPassword = oldPasswordTextView.getText().toString();
-                newPassword = newPasswordTextView.getText().toString();
-                newPasswordRepeat = newPasswordRepeatTextView.getText().toString();
+                password = passwordTextView.getText().toString();
+                repeatPassword = repeatPasswordTextView.getText().toString();
 
-                if (oldPassword.isEmpty() || newPassword.isEmpty() || newPasswordRepeat.isEmpty()) {
+                if (password.isEmpty() || repeatPassword.isEmpty()) {
                     Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
                             "Uzupełnij wszystkie pola", Toast.LENGTH_LONG).show();
-                } else if (!newPassword.equals(newPasswordRepeat)) {
+                } else if (!password.equals(repeatPassword)) {
                     Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
                              "Hasła nie są takie same", Toast.LENGTH_LONG).show();
                 } else {
-                    UpdatePasswordTask updatePasswordTask = new UpdatePasswordTask();
-                    updatePasswordTask.execute();
+                    DeleteAccountTask deleteAccountTask = new DeleteAccountTask();
+                    deleteAccountTask.execute();
                 }
             }
         });
@@ -87,25 +85,23 @@ public class MyProfileChangePasswordFragment extends BaseFragment {
     }
 
     @SuppressLint("StaticFieldLeak")
-    private class UpdatePasswordTask extends AsyncTask<Void, Void, Integer> {
-        private int updated;
+    private class DeleteAccountTask extends AsyncTask<Void, Void, Integer> {
+        private int deleted;
 
-        UpdatePasswordTask(){}
+        DeleteAccountTask(){}
 
         @Override
         protected Integer doInBackground(Void... voids) {
             JSONObject obj;
-            String updateURL = "http://students.mimuw.edu.pl/~kr394714/buwing/update_profile_password.php";
+            String updateURL = "http://students.mimuw.edu.pl/~kr394714/buwing/delete_account.php";
             StringBuilder response = new StringBuilder();
             URLConnection conn;
 
             try {
                 String POSTdata = URLEncoder.encode("login", "UTF-8")
                         + "=" + URLEncoder.encode(MainActivity.login, "UTF-8")
-                        + "&" + URLEncoder.encode("oldPassword", "UTF-8")
-                        + "=" + URLEncoder.encode(oldPassword, "UTF-8")
-                        + "&" + URLEncoder.encode("newPassword", "UTF-8")
-                        + "=" + URLEncoder.encode(newPassword, "UTF-8");
+                        + "&" + URLEncoder.encode("password", "UTF-8")
+                        + "=" + URLEncoder.encode(password, "UTF-8");
                 URL url = new URL(updateURL);
 
                 conn = url.openConnection();
@@ -129,24 +125,24 @@ public class MyProfileChangePasswordFragment extends BaseFragment {
                 String result = response.toString();
                 try {
                     obj = new JSONObject(result);
-                    updated = Integer.parseInt(obj.get("updated").toString());
+                    deleted = Integer.parseInt(obj.get("deleted").toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
-            return updated;
+            return deleted;
         }
 
         @Override
-        protected void onPostExecute(Integer updated) {
-            checkUpdateSuccess(updated);
+        protected void onPostExecute(Integer deleted) {
+            checkUpdateSuccess(deleted);
         }
     }
 
     @SuppressLint("DefaultLocale")
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    private void checkUpdateSuccess(int updated) {
-        if (updated == -1) {
+    private void checkUpdateSuccess(int deleted) {
+        if (deleted == -1) {
             attempts++;
             Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
                     String.format("Błędne hasło. Pozostało prób: %d", 3 - attempts), Toast.LENGTH_LONG).show();
@@ -158,15 +154,15 @@ public class MyProfileChangePasswordFragment extends BaseFragment {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
-        } else if (updated == 0) {
+        } else if (deleted == 0) {
             Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
                     "Spróbuj ponownie", Toast.LENGTH_LONG).show();
-        } else if (updated == 1) {
+        } else if (deleted == 1) {
             if (loginCredentials.exists()) {
                 loginCredentials.delete();
             }
             Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
-                    "Aby potwierdzić zmianę hasła, kliknij w link z maila", Toast.LENGTH_LONG).show();
+                    "Aby potwierdzić usunięcie konta, kliknij w link z maila", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(getActivity(), MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
