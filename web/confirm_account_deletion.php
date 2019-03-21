@@ -21,7 +21,7 @@
     $token = $_GET["token"];
     
     $link = pg_connect("host=labdb dbname=bd user=kr394714 password=xyz");
-    $activated = false;
+    $success = 0;
     
     if (isset($userid) && isset($token) &&
         trim($userid) != "" && trim($token)) {
@@ -33,14 +33,12 @@
 
         $count = pg_num_rows($result);
 
-        if ($count == 0) {
-            echo "Wystąpił błąd. Spróbuj ponownie.";
-        } else {
+        if ($count != 0) {
             $row = pg_fetch_array($result, 0);
             $activeToken = $row["token"];
             
             if ($activeToken != $token) {
-                echo "Ten link nie jest aktywny.";
+                $success = -1;
             } else {
                 $result = pg_query($link,
                                     "DELETE
@@ -49,25 +47,26 @@
 
                 if ($result) {
                     $result = pg_query($link,
-                                            "DELETE FROM friends
-                                            WHERE inviterid = " . $userid . "
-                                            OR inviteeid = " . $userid);
-
-                    if ($result) {
+                                            "UPDATE tables
+                                            SET taken = false, userid = null
+                                            WHERE userid = " . $userid);
+                    
+                    if ($result) {                    
                         $result = pg_query($link,
-                                                "DELETE FROM users
-                                                WHERE id = " . $userid);
+                                                "DELETE FROM friends
+                                                WHERE inviterid = " . $userid . "
+                                                OR inviteeid = " . $userid);
 
                         if ($result) {
-                            echo "Pomyślnie usunięto konto.";
-                        } else {
-                            echo "Wystąpił błąd. Spróbuj ponownie.";
+                            $result = pg_query($link,
+                                                    "DELETE FROM users
+                                                    WHERE id = " . $userid);
+
+                            if ($result) {
+                                $success = 1;
+                            }
                         }
-                    } else {
-                        echo "Wystąpił błąd. Spróbuj ponownie.";
                     }
-                } else {
-                    echo "Wystąpił błąd. Spróbuj ponownie.";
                 }
             }
         }
@@ -75,6 +74,14 @@
 
     pg_close($link);
 
+    if ($success == 1) {
+        echo "Pomyślnie usunięto konto.";
+    } elseif ($success == -1) {
+        echo "Ten link nie jest aktywny.";
+    } else {
+        echo "Wystąpił błąd. Spróbuj ponownie.";
+    }
+    
 ?>
 
 </body>
