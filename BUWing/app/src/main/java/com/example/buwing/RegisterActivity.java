@@ -25,13 +25,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.example.buwing.MainActivity.loginCredentials;
-import static com.example.buwing.MainActivity.saveLoginCredentials;
 
 public class RegisterActivity extends AppCompatActivity {
 
     Button registerButton;
-    EditText nameTextView, surnameTextView, loginTextView, passwordTextView;
-    String name, surname, login, password;
+    EditText nameTextView, surnameTextView, loginTextView, emailTextView, passwordTextView, passwordRepeatTextView;
+    String name, surname, login, email, password;
 
     String notAllowedCharacterPatternString = "^.*['\"();].*$";
     Pattern notAllowedCharacterPattern = Pattern.compile(notAllowedCharacterPatternString);
@@ -57,6 +56,8 @@ public class RegisterActivity extends AppCompatActivity {
                         + "=" + URLEncoder.encode(surname, "UTF-8")
                         + "&" + URLEncoder.encode("login", "UTF-8")
                         + "=" + URLEncoder.encode(login, "UTF-8")
+                        + "&" + URLEncoder.encode("email", "UTF-8")
+                        + "=" + URLEncoder.encode(email, "UTF-8")
                         + "&" + URLEncoder.encode("password", "UTF-8")
                         + "=" + URLEncoder.encode(password, "UTF-8");
                 URL url = new URL(loginURL);
@@ -100,12 +101,19 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        setTitle("BUWing - załóż konto");
 
         registerButton = findViewById(R.id.registerButton);
         nameTextView = findViewById(R.id.nameTextView);
         surnameTextView = findViewById(R.id.surnameTextView);
         loginTextView = findViewById(R.id.loginTextView);
+        emailTextView = findViewById(R.id.emailTextView);
         passwordTextView = findViewById(R.id.passwordTextView);
+        passwordRepeatTextView = findViewById(R.id.passwordRepeatTextView);
+
+        if (loginCredentials.exists()) {
+            loginCredentials.delete();
+        }
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,13 +121,15 @@ public class RegisterActivity extends AppCompatActivity {
                 name = nameTextView.getText().toString();
                 surname = surnameTextView.getText().toString();
                 login = loginTextView.getText().toString();
+                email = emailTextView.getText().toString();
                 password = passwordTextView.getText().toString();
+                String passwordRepeat = passwordRepeatTextView.getText().toString();
 
                 Matcher nameMatcher = notAllowedCharacterPattern.matcher(name);
                 Matcher surnameMatcher = notAllowedCharacterPattern.matcher(surname);
                 Matcher loginMatcher = notAllowedCharacterPattern.matcher(login);
 
-                if (name.isEmpty() || surname.isEmpty() || login.isEmpty() || password.isEmpty()) {
+                if (name.isEmpty() || surname.isEmpty() || login.isEmpty() || email.isEmpty() || password.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Uzupełnij wszystkie pola", Toast.LENGTH_LONG).show();
                 } else if (nameMatcher.find()) {
                     Toast.makeText(getApplicationContext(), notAllowedCharacterMessage + "imię", Toast.LENGTH_LONG).show();
@@ -127,6 +137,10 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), notAllowedCharacterMessage + "nazwisko", Toast.LENGTH_LONG).show();
                 } else if (loginMatcher.find()) {
                     Toast.makeText(getApplicationContext(), notAllowedCharacterMessage + "login", Toast.LENGTH_LONG).show();
+                } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                    Toast.makeText(getApplicationContext(), "Nieprawidłowy adres email", Toast.LENGTH_LONG).show();
+                } else if (!password.equals(passwordRepeat)) {
+                    Toast.makeText(getApplicationContext(), "Hasła nie są takie same", Toast.LENGTH_LONG).show();
                 } else {
                     RegistrationTask registrationTask = new RegistrationTask();
                     registrationTask.execute();
@@ -138,27 +152,16 @@ public class RegisterActivity extends AppCompatActivity {
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private void checkRegisterSuccess(int registered) {
         if (registered == 1) {
-            MainActivity.name = name;
-            MainActivity.surname = surname;
-            MainActivity.login = login;
-            MainActivity.password = password;
-            try {
-                saveLoginCredentials(getBaseContext());
-            } catch (IOException e) {
-                if (loginCredentials.exists()) {
-                    loginCredentials.delete();
-                }
-                e.printStackTrace();
-            }
-            Toast.makeText(getApplicationContext(), "Pomyślnie zarejestrowano", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(this, LoggedInActivity.class);
+            Toast.makeText(getApplicationContext(),
+                    "Pomyślnie zarejestrowano. Aktywuj konto klikając w link z maila", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();
         } else if (registered == 0){
             Toast.makeText(getApplicationContext(), "Spróbuj ponownie", Toast.LENGTH_LONG).show();
         } else if (registered == -1) {
-            Toast.makeText(getApplicationContext(), "Login już zajęty", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Login lub email już zajęty", Toast.LENGTH_LONG).show();
         }
     }
 }
