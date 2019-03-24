@@ -53,7 +53,7 @@
         $row = pg_fetch_array($result, 0);
         $status = ($row["status"] == 't');
         if (!$status) {
-          $JSONobj->status = "pending_inivitation";
+          $JSONobj->status = "pending_invitation";
         }
         else {
           $JSONobj->status = "already_friends";
