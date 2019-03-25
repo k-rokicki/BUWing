@@ -5,9 +5,16 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -17,18 +24,26 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 public class FriendsListFragment extends BaseFragment {
 
     EditText loginEditText;
-    Button searchButton;
+    Button searchButton, invitButton;
+
+    ArrayList<String> arr = new ArrayList<>();
+    ListView listView;
 
     String friend_login, status;
 
@@ -41,6 +56,21 @@ public class FriendsListFragment extends BaseFragment {
         _layout = R.layout.fragment_friends_list;
         title = "lista znajomych";
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        arr.add("mkozlowski");
+        arr.add("kacperosky");
+        arr.add("asia");
+        arr.add("ola");
+        arr.add("koksu");
+
+        listView = Objects.requireNonNull(getActivity()).findViewById(R.id.invitationListView);
+        InvitationAdapter adapter = new InvitationAdapter(getActivity(), R.layout.invitation_row, arr);
+        listView.setAdapter(adapter);
     }
 
     @Override
@@ -70,7 +100,6 @@ public class FriendsListFragment extends BaseFragment {
 
             }
         });
-
     }
 
     @SuppressLint("StaticFieldLeak")
