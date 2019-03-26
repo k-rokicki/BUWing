@@ -25,8 +25,15 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.Objects;
+import java.util.regex.Matcher;
 
 import static com.example.buwing.MainActivity.loginCredentials;
+import static com.example.buwing.RegisterActivity.minPasswordLength;
+import static com.example.buwing.RegisterActivity.specialCharacters;
+import static com.example.buwing.RegisterActivity.uppercaseLetterPattern;
+import static com.example.buwing.RegisterActivity.lowercaseLetterPattern;
+import static com.example.buwing.RegisterActivity.digitPattern;
+import static com.example.buwing.RegisterActivity.specialCharacterPattern;
 
 public class MyProfileChangePasswordFragment extends BaseFragment {
 
@@ -54,11 +61,17 @@ public class MyProfileChangePasswordFragment extends BaseFragment {
         confirmButton = Objects.requireNonNull(getActivity()).findViewById(R.id.confirmButton);
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("DefaultLocale")
             @Override
             public void onClick(View v) {
                 oldPassword = oldPasswordTextView.getText().toString();
                 newPassword = newPasswordTextView.getText().toString();
                 newPasswordRepeat = newPasswordRepeatTextView.getText().toString();
+
+                Matcher uppercaseLetterMatcher = uppercaseLetterPattern.matcher(newPassword);
+                Matcher lowercaseLetterMatcher = lowercaseLetterPattern.matcher(newPassword);
+                Matcher digitMatcher = digitPattern.matcher(newPassword);
+                Matcher specialCharacterMatcher = specialCharacterPattern.matcher(newPassword);
 
                 if (oldPassword.isEmpty() || newPassword.isEmpty() || newPasswordRepeat.isEmpty()) {
                     Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
@@ -66,6 +79,21 @@ public class MyProfileChangePasswordFragment extends BaseFragment {
                 } else if (!newPassword.equals(newPasswordRepeat)) {
                     Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
                              "Hasła nie są takie same", Toast.LENGTH_LONG).show();
+                } else if (!uppercaseLetterMatcher.find()) {
+                    Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
+                            "Hasło musi zawierać wielką literę", Toast.LENGTH_LONG).show();
+                } else if (!lowercaseLetterMatcher.find()) {
+                    Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
+                            "Hasło musi zawierać małą literę", Toast.LENGTH_LONG).show();
+                } else if (!digitMatcher.find()) {
+                    Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
+                            "Hasło musi zawierać cyfrę", Toast.LENGTH_LONG).show();
+                } else if (!specialCharacterMatcher.find()) {
+                    Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
+                            String.format("Hasło musi zawierać znak specjalny: %s", specialCharacters), Toast.LENGTH_LONG).show();
+                } else if (newPassword.length() < minPasswordLength) {
+                    Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
+                            String.format("Hasło musi mieć co najmniej %d znaków", minPasswordLength), Toast.LENGTH_LONG).show();
                 } else {
                     UpdatePasswordTask updatePasswordTask = new UpdatePasswordTask();
                     updatePasswordTask.execute();

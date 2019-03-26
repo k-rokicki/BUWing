@@ -32,17 +32,17 @@ public class RegisterActivity extends AppCompatActivity {
     EditText nameTextView, surnameTextView, loginTextView, emailTextView, passwordTextView, passwordRepeatTextView;
     String name, surname, login, email, password;
 
-    String specialCharacters = "@$!%*?&,.;";
+    static String specialCharacters = "@$!%*?&,.;";
 
-    String notAllowedCharacterPatternString = "^.*['\"();].*$";
-    Pattern notAllowedCharacterPattern = Pattern.compile(notAllowedCharacterPatternString);
-    String notAllowedCharacterMessage = "Niedozwolony znak w polu: ";
-    Pattern uppercaseLetterPattern = Pattern.compile("[A-Z]+");
-    Pattern lowercaseLetterPattern = Pattern.compile("[a-z]+");
-    Pattern digitPattern = Pattern.compile("[0-9]+");
-    Pattern specialCharacterPattern = Pattern.compile(String.format("[%s]", specialCharacters));
+    static String notAllowedCharacterPatternString = "^.*['\"();].*$";
+    static Pattern notAllowedCharacterPattern = Pattern.compile(notAllowedCharacterPatternString);
+    static String notAllowedCharacterMessage = "Niedozwolony znak w polu: ";
+    static Pattern uppercaseLetterPattern = Pattern.compile("[A-Z]+");
+    static Pattern lowercaseLetterPattern = Pattern.compile("[a-z]+");
+    static Pattern digitPattern = Pattern.compile("[0-9]+");
+    static Pattern specialCharacterPattern = Pattern.compile(String.format("[%s]", specialCharacters));
 
-    final int minPasswordLength = 8;
+    static final int minPasswordLength = 8;
 
     @SuppressLint("StaticFieldLeak")
     private class RegistrationTask extends AsyncTask<Void, Void, Integer> {
