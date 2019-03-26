@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,9 +26,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Array;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,7 +43,7 @@ import java.util.regex.Pattern;
 public class FriendsListFragment extends BaseFragment {
 
     EditText loginEditText;
-    Button searchButton, invitButton;
+    Button searchButton;
 
     ArrayList<String> arr = new ArrayList<>();
     ListView listView;
@@ -51,55 +54,65 @@ public class FriendsListFragment extends BaseFragment {
     Pattern notAllowedCharacterPattern = Pattern.compile(notAllowedCharacterPatternString);
     String notAllowedCharacterMessage = "Niedozwolony znak w polu login";
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        _layout = R.layout.fragment_friends_list;
-        title = "lista znajomych";
-        super.onCreate(savedInstanceState);
-    }
+    @SuppressLint("StaticFieldLeak")
+    private class GetInvitation extends AsyncTask<Void, Void, Void> {
+        private int amount = 0;
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+        GetInvitation() {}
 
-        arr.add("mkozlowski");
-        arr.add("kacperosky");
-        arr.add("asia");
-        arr.add("ola");
-        arr.add("koksu");
+        @Override
+        protected Void doInBackground(Void... voids) {
+            JSONObject obj;
+            JSONArray array;
+            StringBuilder response = new StringBuilder();
+            String invitationURL = "https://students.mimuw.edu.pl/~mk394389/buwing/invitation_info.php";
 
-        listView = Objects.requireNonNull(getActivity()).findViewById(R.id.invitationListView);
-        InvitationAdapter adapter = new InvitationAdapter(getActivity(), R.layout.invitation_row, arr);
-        listView.setAdapter(adapter);
-    }
+            URLConnection conn;
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+            try {
+                String POSTdata = URLEncoder.encode("login", "UTF-8")
+                        + "=" + URLEncoder.encode(MainActivity.login, "UTF-8");
+                URL url = new URL(invitationURL);
+                conn = url.openConnection();
 
-        loginEditText = Objects.requireNonNull(getActivity()).findViewById(R.id.loginEditText);
-        searchButton = Objects.requireNonNull(getActivity()).findViewById(R.id.searchButton);
+                conn.setDoOutput(true);
+                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+                wr.write(POSTdata);
+                wr.flush();
 
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                friend_login = loginEditText.getText().toString();
+                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                String inputLine;
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                String result = response.toString();
+                try {
+                    obj = new JSONObject(result);
+                    array = obj.getJSONArray("users");
+                    amount = Integer.parseInt(obj.getString("amount"));
+                    for (int i = 0; i < array.length(); i++) {
+                        arr.add(array.getString(i));
+                    }
 
-                Matcher loginMatcher = notAllowedCharacterPattern.matcher(friend_login);
-
-                if (friend_login.isEmpty()) {
-                    Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
-                            "Uzupełnij pole login", Toast.LENGTH_LONG).show();
-                } else if (loginMatcher.find()) {
-                    Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
-                            notAllowedCharacterMessage, Toast.LENGTH_LONG).show();
-                } else {
-                    AddFriendTask addFriendTask = new AddFriendTask();
-                    addFriendTask.execute();
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
 
             }
-        });
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            InvitationAdapter adapter = new InvitationAdapter(getActivity(), R.layout.invitation_row, arr);
+            listView.setAdapter(adapter);
+        }
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -186,5 +199,47 @@ public class FriendsListFragment extends BaseFragment {
             Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
                     "Pomyślnie wysłano zaproszenie", Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        _layout = R.layout.fragment_friends_list;
+        title = "lista znajomych";
+        super.onCreate(savedInstanceState);
+    }
+
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        GetInvitation getInvitation = new GetInvitation();
+        getInvitation.execute();
+
+        listView = Objects.requireNonNull(getActivity()).findViewById(R.id.invitationListView);
+
+        loginEditText = Objects.requireNonNull(getActivity()).findViewById(R.id.loginEditText);
+        searchButton = Objects.requireNonNull(getActivity()).findViewById(R.id.searchButton);
+
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                friend_login = loginEditText.getText().toString();
+
+                Matcher loginMatcher = notAllowedCharacterPattern.matcher(friend_login);
+
+                if (friend_login.isEmpty()) {
+                    Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
+                            "Uzupełnij pole login", Toast.LENGTH_LONG).show();
+                } else if (loginMatcher.find()) {
+                    Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
+                            notAllowedCharacterMessage, Toast.LENGTH_LONG).show();
+                } else {
+                    AddFriendTask addFriendTask = new AddFriendTask();
+                    addFriendTask.execute();
+                }
+
+            }
+        });
     }
 }
