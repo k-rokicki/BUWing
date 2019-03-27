@@ -11,13 +11,15 @@
         return $str;
     }
 
+    $ini = parse_ini_file("database_credentials.ini");
+
     $name = $_POST["name"];
     $surname = $_POST["surname"];
     $login = $_POST["login"];
     $email = $_POST["email"];
     $password = $_POST["password"];
 
-    $link = pg_connect("host=labdb dbname=bd user=kr394714 password=xyz");
+    $link = pg_connect("host=labdb dbname=bd user=" . $ini['db_user'] . " password=" . $ini['db_password']);
     $result = false;
     $JSONobj->registered = 0;
 

@@ -1,4 +1,6 @@
 <?php
+    $ini = parse_ini_file("database_credentials.ini");
+
     $login = $_POST["login"];
     $password = $_POST["password"];
 
@@ -6,7 +8,7 @@
     $JSONobj->name = "";
     $JSONobj->surname = "";
 
-    $link = pg_connect("host=labdb dbname=bd user=kr394714 password=xyz");
+    $link = pg_connect("host=labdb dbname=bd user=" . $ini['db_user'] . " password=" . $ini['db_password']);
     $result = pg_query($link,
                         "SELECT password, activated
                         FROM users

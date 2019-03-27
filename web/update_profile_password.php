@@ -11,13 +11,15 @@
         return $str;
     }
 
+    $ini = parse_ini_file("database_credentials.ini");
+
     $login = $_POST["login"];
     $oldPassword = $_POST["oldPassword"];
     $newPassword = $_POST["newPassword"];
 
     $JSONobj->updated = 0;
 
-    $link = pg_connect("host=labdb dbname=bd user=kr394714 password=xyz");
+    $link = pg_connect("host=labdb dbname=bd user=" . $ini['db_user'] . " password=" . $ini['db_password']);
     $result = pg_query($link,
                         "SELECT id, name, surname, email, password
                         FROM users

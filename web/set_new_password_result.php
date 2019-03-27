@@ -16,12 +16,13 @@
 <br><br><br>
 
 <?php
+    $ini = parse_ini_file("database_credentials.ini");
 
     $userid = $_POST["userid"];
     $newPassword = $_POST["newPassword"];
     $newPasswordRepeat = $_POST["newPasswordRepeat"];
 
-    $link = pg_connect("host=labdb dbname=bd user=kr394714 password=xyz");
+    $link = pg_connect("host=labdb dbname=bd user=" . $ini['db_user'] . " password=" . $ini['db_password']);
 
     if (isset($userid) && isset($newPassword) && isset($newPasswordRepeat) && 
         trim($userid) != "" && trim($newPassword) != "" && trim($newPasswordRepeat) != "") {
