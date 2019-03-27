@@ -32,9 +32,17 @@ public class RegisterActivity extends AppCompatActivity {
     EditText nameTextView, surnameTextView, loginTextView, emailTextView, passwordTextView, passwordRepeatTextView;
     String name, surname, login, email, password;
 
-    String notAllowedCharacterPatternString = "^.*['\"();].*$";
-    Pattern notAllowedCharacterPattern = Pattern.compile(notAllowedCharacterPatternString);
-    String notAllowedCharacterMessage = "Niedozwolony znak w polu: ";
+    static String specialCharacters = "@$!%*?&,.;";
+
+    static String notAllowedCharacterPatternString = "^.*['\"();].*$";
+    static Pattern notAllowedCharacterPattern = Pattern.compile(notAllowedCharacterPatternString);
+    static String notAllowedCharacterMessage = "Niedozwolony znak w polu: ";
+    static Pattern uppercaseLetterPattern = Pattern.compile("[A-Z]+");
+    static Pattern lowercaseLetterPattern = Pattern.compile("[a-z]+");
+    static Pattern digitPattern = Pattern.compile("[0-9]+");
+    static Pattern specialCharacterPattern = Pattern.compile(String.format("[%s]", specialCharacters));
+
+    static final int minPasswordLength = 8;
 
     @SuppressLint("StaticFieldLeak")
     private class RegistrationTask extends AsyncTask<Void, Void, Integer> {
@@ -116,6 +124,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         registerButton.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("DefaultLocale")
             @Override
             public void onClick(View v) {
                 name = nameTextView.getText().toString();
@@ -128,6 +137,10 @@ public class RegisterActivity extends AppCompatActivity {
                 Matcher nameMatcher = notAllowedCharacterPattern.matcher(name);
                 Matcher surnameMatcher = notAllowedCharacterPattern.matcher(surname);
                 Matcher loginMatcher = notAllowedCharacterPattern.matcher(login);
+                Matcher uppercaseLetterMatcher = uppercaseLetterPattern.matcher(password);
+                Matcher lowercaseLetterMatcher = lowercaseLetterPattern.matcher(password);
+                Matcher digitMatcher = digitPattern.matcher(password);
+                Matcher specialCharacterMatcher = specialCharacterPattern.matcher(password);
 
                 if (name.isEmpty() || surname.isEmpty() || login.isEmpty() || email.isEmpty() || password.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Uzupełnij wszystkie pola", Toast.LENGTH_LONG).show();
@@ -141,6 +154,16 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Nieprawidłowy adres email", Toast.LENGTH_LONG).show();
                 } else if (!password.equals(passwordRepeat)) {
                     Toast.makeText(getApplicationContext(), "Hasła nie są takie same", Toast.LENGTH_LONG).show();
+                } else if (!uppercaseLetterMatcher.find()) {
+                    Toast.makeText(getApplicationContext(), "Hasło musi zawierać wielką literę", Toast.LENGTH_LONG).show();
+                } else if (!lowercaseLetterMatcher.find()) {
+                    Toast.makeText(getApplicationContext(), "Hasło musi zawierać małą literę", Toast.LENGTH_LONG).show();
+                } else if (!digitMatcher.find()) {
+                    Toast.makeText(getApplicationContext(), "Hasło musi zawierać cyfrę", Toast.LENGTH_LONG).show();
+                } else if (!specialCharacterMatcher.find()) {
+                    Toast.makeText(getApplicationContext(), String.format("Hasło musi zawierać znak specjalny: %s", specialCharacters), Toast.LENGTH_LONG).show();
+                } else if (password.length() < minPasswordLength) {
+                    Toast.makeText(getApplicationContext(), String.format("Hasło musi mieć co najmniej %d znaków", minPasswordLength), Toast.LENGTH_LONG).show();
                 } else {
                     RegistrationTask registrationTask = new RegistrationTask();
                     registrationTask.execute();
