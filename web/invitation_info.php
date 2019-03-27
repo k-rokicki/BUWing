@@ -13,7 +13,6 @@
                             AND status = 'f'");
   $count = pg_num_rows($result);
 
-  $JSONobj->amount = $count;
   $array;
 
   for ($i = 0; $i < $count; $i++) {

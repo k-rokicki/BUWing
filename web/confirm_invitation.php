@@ -18,7 +18,7 @@
 
   $result = pg_query($link, "UPDATE Friends SET status = 't'
                             WHERE inviterid = '" . pg_escape_string($inviterId) . "'
-                            AND inviteeid = '" . pg_escape_string($myId) . "'");
+                            AND inviteeid = '" . pg_escape_string($myId) . "' AND status = 'f'");
 
   if ($result) {
     $JSONobj->success = true;
