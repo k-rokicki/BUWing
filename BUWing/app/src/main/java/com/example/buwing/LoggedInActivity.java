@@ -126,6 +126,9 @@ public class LoggedInActivity extends AppCompatActivity
             case R.id.nav_myProfile:
                 fragment = new MyProfileFragment();
                 break;
+            case R.id.nav_invitationList:
+                fragment = new InvitationListFragment();
+                break;
             case R.id.nav_friendsList:
                 fragment = new FriendsListFragment();
                 break;

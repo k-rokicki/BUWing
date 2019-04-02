@@ -23,7 +23,8 @@
         <activity
             android:name=".LoggedInActivity"
             android:label="@string/title_activity_logged_in"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
     </application>
 
 </manifest>

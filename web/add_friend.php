@@ -8,7 +8,9 @@
   $JSONobj->status = "no_user";
   $JSONobj->sent = false;
 
-  $link = pg_connect("host=labdb dbname=bd user=kr394714 password=xyz");
+  $ini = parse_ini_file("database_credentials.ini");
+
+  $link = pg_connect("host=labdb dbname=bd user=" . $ini['db_user'] . " password=" . $ini['db_password']);
   $result = pg_query($link, "SELECT id FROM users WHERE login = '" . pg_escape_string($my_login) . "'");
   $row = pg_fetch_array($result, 0);
   $my_id = $row["id"];

@@ -1,5 +1,8 @@
 <?php
-  $link = pg_connect("host=labdb dbname=bd user=kr394714 password=xyz");
+
+  $ini = parse_ini_file("database_credentials.ini");
+  
+  $link = pg_connect("host=labdb dbname=bd user=" . $ini['db_user'] . " password=" . $ini['db_password']);
 
   $login = $_POST["login"];
   $result = pg_query($link, "SELECT id FROM users
@@ -12,8 +15,6 @@
                             WHERE inviteeid = '" . pg_escape_string($userId) . "'
                             AND status = 'f'");
   $count = pg_num_rows($result);
-
-  $array;
 
   for ($i = 0; $i < $count; $i++) {
     $row = pg_fetch_array($result, $i);

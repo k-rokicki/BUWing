@@ -26,10 +26,15 @@
                 android:title="mój profil"
                 android:checkable="true" />
             <item
-                android:id="@+id/nav_friendsList"
+                android:id="@+id/nav_invitationList"
+                android:checkable="true"
                 android:icon="@drawable/ic_menu_send"
-                android:title="lista znajomych"
-                android:checkable="true" />
+                android:title="zaproszenia" />
+            <item
+                android:id="@+id/nav_friendsList"
+                android:checkable="true"
+                android:icon="@drawable/ic_menu_send"
+                android:title="lista znajomych" />
             <item
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/ic_menu_send"
