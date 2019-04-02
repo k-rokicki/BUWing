@@ -17,12 +17,6 @@ CREATE TABLE tables(
     FOREIGN KEY (userid) REFERENCES users(id)
 );
 
-CREATE TABLE admins(
-    login VARCHAR(30),
-    password VARCHAR(255) NOT NULL,
-    PRIMARY KEY (login)
-);
-
 CREATE TABLE activationTokens(
     userid INTEGER NOT NULL,
     token VARCHAR(50) NOT NULL,
