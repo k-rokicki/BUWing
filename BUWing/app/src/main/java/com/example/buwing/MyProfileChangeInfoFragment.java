@@ -122,7 +122,7 @@ public class MyProfileChangeInfoFragment extends BaseFragment {
         @Override
         protected Boolean doInBackground(Void... voids) {
             JSONObject obj;
-            String updateURL = "http://students.mimuw.edu.pl/~kr394714/buwing/update_profile_info.php";
+            String updateURL = Constants.webserviceURL + "update_profile_info.php";
             StringBuilder response = new StringBuilder();
             URLConnection conn;
 

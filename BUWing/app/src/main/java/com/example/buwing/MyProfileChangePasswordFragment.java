@@ -123,7 +123,7 @@ public class MyProfileChangePasswordFragment extends BaseFragment {
         @Override
         protected Integer doInBackground(Void... voids) {
             JSONObject obj;
-            String updateURL = "http://students.mimuw.edu.pl/~kr394714/buwing/update_profile_password.php";
+            String updateURL = Constants.webserviceURL + "update_profile_password.php";
             StringBuilder response = new StringBuilder();
             URLConnection conn;
 

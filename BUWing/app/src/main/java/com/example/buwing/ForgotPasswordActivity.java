@@ -21,8 +21,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static com.example.buwing.MainActivity.loginCredentials;
 
@@ -41,7 +39,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(Void... voids) {
             JSONObject obj;
-            String loginURL = "http://students.mimuw.edu.pl/~kr394714/buwing/reset_password.php";
+            String loginURL = Constants.webserviceURL + "reset_password.php";
             StringBuilder response = new StringBuilder();
             URLConnection conn;
 

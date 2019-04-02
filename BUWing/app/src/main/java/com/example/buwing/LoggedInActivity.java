@@ -1,5 +1,6 @@
 package com.example.buwing;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -26,7 +27,9 @@ import static com.example.buwing.MainActivity.login;
 public class LoggedInActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    @SuppressLint("StaticFieldLeak")
     static TextView nameTextView;
+    @SuppressLint("StaticFieldLeak")
     static TextView loginTextView;
 
     @Override

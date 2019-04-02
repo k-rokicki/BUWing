@@ -53,7 +53,7 @@ public class RegisterActivity extends AppCompatActivity {
         @Override
         protected Integer doInBackground(Void... voids) {
             JSONObject obj;
-            String loginURL = "http://students.mimuw.edu.pl/~kr394714/buwing/register.php";
+            String loginURL = Constants.webserviceURL + "register.php";
             StringBuilder response = new StringBuilder();
             URLConnection conn;
 
