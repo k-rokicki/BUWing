@@ -33,6 +33,8 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.regex.Matcher;
 
+import static com.example.buwing.RegisterActivity.notAllowedCharacterPattern;
+import static com.example.buwing.RegisterActivity.notAllowedCharacterMessage;
 
 public class InvitationListFragment extends BaseFragment {
 
