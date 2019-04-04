@@ -1,9 +1,27 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <title>BUWing - zmiana hasła</title>
+        <meta charset="UTF-8">
+        <meta name="author" content="Kacper Rokicki">
+    </head>
+
+<body>
+
+<style> body {text-align:center;} </style>
+<br><br><br>
+<h2>BUWing - zmiana hasła</h2>
+<br><br><br>
+
 <?php
+    $ini = parse_ini_file("database_credentials.ini");
 
     $userid = $_GET["userid"];
     $token = $_GET["token"];
     
-    $link = pg_connect("host=labdb dbname=bd user=kr394714 password=xyz");
+    $link = pg_connect("host=labdb dbname=bd user=" . $ini['db_user'] . " password=" . $ini['db_password']);
     $activated = false;
     
     if (isset($userid) && isset($token) &&
@@ -44,7 +62,7 @@
                         $surname = $row["surname"];
                         $email = $row["email"];
 
-                        echo "Potwierdzono zmianę hasła.";
+                        echo "Pomyślnie zmieniono hasła.";
 
                         $subject = "Zmiana hasła w BUWing";
 
@@ -68,3 +86,6 @@
     pg_close($link);
 
 ?>
+
+</body>
+</html>

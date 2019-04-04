@@ -20,13 +20,17 @@
         android:text="Imię Nazwisko"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textSize="28sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:ellipsize="end"
+        android:maxLines="1" />
 
     <TextView
         android:id="@+id/loginTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="login"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        android:ellipsize="end"
+        android:maxLines="1" />
 
 </LinearLayout>

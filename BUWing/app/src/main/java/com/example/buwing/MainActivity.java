@@ -35,7 +35,7 @@ import java.net.URLEncoder;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button loginButton, registerButton;
+    Button loginButton, registerButton, forgotPasswordButton;
     EditText loginTextView, passwordTextView;
     static String name;
     static String surname;
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(Void... voids) {
             JSONObject obj;
-            String loginURL = "http://students.mimuw.edu.pl/~kr394714/buwing/login.php";
+            String loginURL = Constants.webserviceURL + "login.php";
             StringBuilder response = new StringBuilder();
             URLConnection conn;
 
@@ -117,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
         registerButton = findViewById(R.id.registerButton);
         loginTextView = findViewById(R.id.loginTextView);
         passwordTextView = findViewById(R.id.passwordTextView);
+        forgotPasswordButton = findViewById(R.id.forgotPasswordButton);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,6 +133,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getBaseContext(), RegisterActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        forgotPasswordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getBaseContext(), ForgotPasswordActivity.class);
                 startActivity(intent);
             }
         });

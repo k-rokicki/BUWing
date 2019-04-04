@@ -14,10 +14,9 @@
     $ini = parse_ini_file("database_credentials.ini");
 
     $login = $_POST["login"];
-    $oldPassword = $_POST["oldPassword"];
-    $newPassword = $_POST["newPassword"];
+    $password = $_POST["password"];
 
-    $JSONobj->updated = 0;
+    $JSONobj->deleted = 0;
 
     $link = pg_connect("host=labdb dbname=bd user=" . $ini['db_user'] . " password=" . $ini['db_password']);
     $result = pg_query($link,
@@ -34,10 +33,10 @@
         $email = $row["email"];
         $hashedPassword = $row["password"];
         
-        if (password_verify($oldPassword, $hashedPassword)) {
+        if (password_verify($password, $hashedPassword)) {
             $result = pg_query($link,
                         "SELECT COUNT(*)
-                        FROM pendingPasswordChanges
+                        FROM pendingAccountDeletions
                         WHERE userid = " . $userid);
             $row = pg_fetch_array($result, 0);
             $alreadyPending = $row[0];
@@ -46,37 +45,35 @@
             
             if ($alreadyPending == 0) {
                 $result = pg_query($link,
-                            "INSERT INTO pendingPasswordChanges VALUES (" .
+                            "INSERT INTO pendingAccountDeletions VALUES (" .
                             $userid . ", '" .
-                            password_hash($newPassword, PASSWORD_DEFAULT) . "', '" .
                             $token . "')");
             } else {
                 $result = pg_query($link,
-                            "UPDATE pendingPasswordChanges
-                            SET password = '" . password_hash($newPassword, PASSWORD_DEFAULT) .
-                            "', token = '" . $token .
+                            "UPDATE pendingAccountDeletions
+                            SET token = '" . $token .
                             "' WHERE userid = " . $userid);
             }
 
             if ($result) {
-                $JSONobj->updated = 1;
+                $JSONobj->deleted = 1;
 
-                $confirmationLink = "http://students.mimuw.edu.pl/~kr394714/buwing/confirm_password_change.php?userid="
+                $confirmationLink = "http://students.mimuw.edu.pl/~kr394714/buwing/confirm_account_deletion.php?userid="
                                         . $userid . "&token=" . $token;
 
-                $subject = "Próba zmiany hasła w BUWing";
+                $subject = "Próba usunięcia konta w BUWing";
 
                 $headers = "From: noreply@buwing.com\r\n";
                 $headers .= "MIME-Version: 1.0\r\n";
                 $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 
-                $message = '<p>' . $name . ' ' . $surname . ', odnotowaliśmy próbę zmiany hasła do konta w BUWing.</p>
-                            <p>Aby potwierdzić zmianę kliknij w ten <a href="' . $confirmationLink . '">link</a></p>';
+                $message = '<p>' . $name . ' ' . $surname . ', odnotowaliśmy próbę usunięcia Twojego konta w BUWing.</p>
+                            <p>Aby potwierdzić chęć usunięcia konta, kliknij w ten <a href="' . $confirmationLink . '">link</a></p>';
 
                 mail($email, $subject, $message, $headers);
             }
         } else {
-            $JSONobj->updated = -1;
+            $JSONobj->deleted = -1;
         }
     }
 

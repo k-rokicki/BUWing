@@ -9,18 +9,21 @@ CREATE TABLE users(
     PRIMARY KEY (id)
 );
 
+CREATE TABLE friends(
+    inviterid INTEGER NOT NULL,
+    inviteeid INTEGER NOT NULL,
+    status BOOLEAN NOT NULL DEAFAULT false,
+    PRIMARY KEY (inviterid, inviteeid),
+    FOREIGN KEY (inviterid) REFERENCES users(id),
+    FOREIGN KEY (inviteeid) REFERENCES users(id)
+);
+
 CREATE TABLE tables(
     id serial,
     taken BOOLEAN NOT NULL DEFAULT false,
     userid INTEGER,
     PRIMARY KEY (id),
     FOREIGN KEY (userid) REFERENCES users(id)
-);
-
-CREATE TABLE admins(
-    login VARCHAR(30),
-    password VARCHAR(255) NOT NULL,
-    PRIMARY KEY (login)
 );
 
 CREATE TABLE activationTokens(
@@ -38,11 +41,16 @@ CREATE TABLE pendingPasswordChanges(
     FOREIGN KEY (userid) REFERENCES users(id)
 );
 
-CREATE TABLE friends(
-    inviterid INTEGER NOT NULL,
-    inviteeid INTEGER NOT NULL,
-    status BOOLEAN NOT NULL DEAFAULT false,
-    PRIMARY KEY (inviterid, inviteeid),
-    FOREIGN KEY (inviterid) REFERENCES users(id),
-    FOREIGN KEY (inviteeid) REFERENCES users(id)
+CREATE TABLE resetPasswordTokens(
+    userid INTEGER NOT NULL,
+    token VARCHAR(50) NOT NULL,
+    PRIMARY KEY (userid),
+    FOREIGN KEY (userid) REFERENCES users(id)
+);
+
+CREATE TABLE pendingAccountDeletions(
+    userid INTEGER NOT NULL,
+    token VARCHAR(50) NOT NULL,
+    PRIMARY KEY (userid),
+    FOREIGN KEY (userid) REFERENCES users(id)
 );

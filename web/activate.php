@@ -1,9 +1,27 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <title>BUWing - aktywowanie konta</title>
+        <meta charset="UTF-8">
+        <meta name="author" content="Kacper Rokicki">
+    </head>
+
+<body>
+
+<style> body {text-align:center;} </style>
+<br><br><br>
+<h2>BUWing - aktywowanie konta</h2>
+<br><br><br>
+
 <?php
+    $ini = parse_ini_file("database_credentials.ini");
 
     $userid = $_GET["userid"];
     $token = $_GET["token"];
     
-    $link = pg_connect("host=labdb dbname=bd user=kr394714 password=xyz");
+    $link = pg_connect("host=labdb dbname=bd user=" . $ini['db_user'] . " password=" . $ini['db_password']);
     $activated = false;
     
     if (isset($userid) && isset($token) &&
@@ -62,3 +80,6 @@
         echo "Wystąpił błąd. Spróbuj ponownie.";
     }
 ?>
+
+</body>
+</html>

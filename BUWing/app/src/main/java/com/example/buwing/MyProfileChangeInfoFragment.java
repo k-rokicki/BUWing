@@ -26,11 +26,12 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.Objects;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static com.example.buwing.MainActivity.loginCredentials;
 import static com.example.buwing.MainActivity.password;
 import static com.example.buwing.MainActivity.saveLoginCredentials;
+import static com.example.buwing.RegisterActivity.notAllowedCharacterMessage;
+import static com.example.buwing.RegisterActivity.notAllowedCharacterPattern;
 
 public class MyProfileChangeInfoFragment extends BaseFragment {
 
@@ -38,10 +39,6 @@ public class MyProfileChangeInfoFragment extends BaseFragment {
     Button confirmButton;
 
     String newName, newSurname, newLogin, newEmail;
-
-    String notAllowedCharacterPatternString = "^.*['\"();].*$";
-    Pattern notAllowedCharacterPattern = Pattern.compile(notAllowedCharacterPatternString);
-    String notAllowedCharacterMessage = "Niedozwolony znak w polu: ";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -101,6 +98,18 @@ public class MyProfileChangeInfoFragment extends BaseFragment {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        Fragment fragment = new MyProfileChangeFragment();
+        FragmentTransaction ft =
+                Objects.requireNonNull(getActivity()).getSupportFragmentManager().
+                        beginTransaction().
+                        setCustomAnimations
+                                (android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        ft.replace(R.id.content_frame, fragment);
+        ft.commit();
+    }
+
     @SuppressLint("StaticFieldLeak")
     private class UpdateInfoTask extends AsyncTask<Void, Void, Boolean> {
         private boolean updated;
@@ -110,7 +119,7 @@ public class MyProfileChangeInfoFragment extends BaseFragment {
         @Override
         protected Boolean doInBackground(Void... voids) {
             JSONObject obj;
-            String updateURL = "http://students.mimuw.edu.pl/~kr394714/buwing/update_profile_info.php";
+            String updateURL = Constants.webserviceURL + "update_profile_info.php";
             StringBuilder response = new StringBuilder();
             URLConnection conn;
 
