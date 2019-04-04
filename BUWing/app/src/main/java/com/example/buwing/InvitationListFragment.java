@@ -32,7 +32,6 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 public class InvitationListFragment extends BaseFragment {
@@ -45,12 +44,10 @@ public class InvitationListFragment extends BaseFragment {
     ListView listView;
     InvitationAdapter adapter;
 
-    String friend_login, status;
+    String friendLogin, status;
     String noInvitation = "Brak zaproszeń";
 
-    String notAllowedCharacterPatternString = "^.*['\"();].*$";
-    Pattern notAllowedCharacterPattern = Pattern.compile(notAllowedCharacterPatternString);
-    String notAllowedCharacterMessage = "Niedozwolony znak w polu login";
+    String emptyFieldMessage = "Uzupełnij pole login";
 
     @SuppressLint("StaticFieldLeak")
     private class GetInvitation extends AsyncTask<Void, Void, Void> {
@@ -62,7 +59,7 @@ public class InvitationListFragment extends BaseFragment {
             JSONObject obj;
             JSONArray array;
             StringBuilder response = new StringBuilder();
-            String invitationURL = "https://students.mimuw.edu.pl/~kr394714/buwing/invitation_info.php";
+            String invitationURL = Constants.webserviceURL + "invitation_info.php";
 
             URLConnection conn;
 
@@ -126,7 +123,7 @@ public class InvitationListFragment extends BaseFragment {
         protected Boolean doInBackground(String... strings) {
             JSONObject obj;
             String response = null;
-            String confirmURL = "http://students.mimuw.edu.pl/~kr394714/buwing/confirm_invitation.php";
+            String confirmURL = Constants.webserviceURL + "confirm_invitation.php";
             URLConnection conn;
             inviterLogin = strings[0];
 
@@ -188,7 +185,7 @@ public class InvitationListFragment extends BaseFragment {
         protected Boolean doInBackground(String... strings) {
             JSONObject obj;
             String response = null;
-            String confirmURL = "http://students.mimuw.edu.pl/~kr394714/buwing/delete_invitation.php";
+            String confirmURL = Constants.webserviceURL + "delete_invitation.php";
             URLConnection conn;
             inviterLogin = strings[0];
 
@@ -248,7 +245,7 @@ public class InvitationListFragment extends BaseFragment {
         @Override
         protected Boolean doInBackground(Void... voids) {
             JSONObject obj;
-            String addURL = "http://students.mimuw.edu.pl/~kr394714/buwing/add_friend.php";
+            String addURL = Constants.webserviceURL + "add_friend.php";
             StringBuilder response = new StringBuilder();
             URLConnection conn;
 
@@ -260,7 +257,7 @@ public class InvitationListFragment extends BaseFragment {
                         + "&" + URLEncoder.encode("mySurname", "UTF-8")
                         + "=" + URLEncoder.encode(MainActivity.surname, "UTf-8")
                         + "&" + URLEncoder.encode("friendLogin", "UTF-8")
-                        + "=" + URLEncoder.encode(friend_login, "UTF-8");
+                        + "=" + URLEncoder.encode(friendLogin, "UTF-8");
                 URL url = new URL(addURL);
 
                 conn = url.openConnection();
@@ -420,16 +417,16 @@ public class InvitationListFragment extends BaseFragment {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                friend_login = loginEditText.getText().toString();
+                friendLogin = loginEditText.getText().toString();
 
-                Matcher loginMatcher = notAllowedCharacterPattern.matcher(friend_login);
+                Matcher loginMatcher = notAllowedCharacterPattern.matcher(friendLogin);
 
-                if (friend_login.isEmpty()) {
+                if (friendLogin.isEmpty()) {
                     Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
-                            "Uzupełnij pole login", Toast.LENGTH_LONG).show();
+                            emptyFieldMessage, Toast.LENGTH_LONG).show();
                 } else if (loginMatcher.find()) {
                     Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
-                            notAllowedCharacterMessage, Toast.LENGTH_LONG).show();
+                            notAllowedCharacterMessage + "login", Toast.LENGTH_LONG).show();
                 } else {
                     AddFriendTask addFriendTask = new AddFriendTask();
                     addFriendTask.execute();

@@ -47,7 +47,7 @@ public class FriendsListFragment extends BaseFragment {
             JSONObject obj;
             JSONArray array;
             StringBuilder response = new StringBuilder();
-            String friendsURL = "https://students.mimuw.edu.pl/~kr394714/buwing/friends_info.php";
+            String friendsURL = Constants.webserviceURL + "friends_info.php";
 
             URLConnection conn;
 
@@ -107,7 +107,7 @@ public class FriendsListFragment extends BaseFragment {
         protected Boolean doInBackground(String... strings) {
             JSONObject obj;
             String response = null;
-            String confirmURL = "http://students.mimuw.edu.pl/~kr394714/buwing/delete_friend.php";
+            String confirmURL = Constants.webserviceURL + "delete_friend.php";
             URLConnection conn;
             friendLogin = strings[0];
 
