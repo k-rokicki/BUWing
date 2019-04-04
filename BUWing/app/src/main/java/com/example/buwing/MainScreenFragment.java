@@ -64,7 +64,7 @@ public class MainScreenFragment extends BaseFragment {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            String loginURL = "http://students.mimuw.edu.pl/~kr394714/buwing/opening_hours.php";
+            String loginURL = Constants.webserviceURL + "opening_hours.php";
 
             HttpURLConnection conn = null;
 
@@ -177,7 +177,7 @@ public class MainScreenFragment extends BaseFragment {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            String loginURL = "http://students.mimuw.edu.pl/~kr394714/buwing/fullness_info.php";
+            String loginURL = Constants.webserviceURL + "fullness_info.php";
 
             HttpURLConnection conn = null;
 

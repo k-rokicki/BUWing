@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(Void... voids) {
             JSONObject obj;
-            String loginURL = "http://students.mimuw.edu.pl/~kr394714/buwing/login.php";
+            String loginURL = Constants.webserviceURL + "login.php";
             StringBuilder response = new StringBuilder();
             URLConnection conn;
 
