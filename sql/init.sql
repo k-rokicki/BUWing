@@ -9,6 +9,15 @@ CREATE TABLE users(
     PRIMARY KEY (id)
 );
 
+CREATE TABLE friends(
+    inviterid INTEGER NOT NULL,
+    inviteeid INTEGER NOT NULL,
+    status BOOLEAN NOT NULL DEAFAULT false,
+    PRIMARY KEY (inviterid, inviteeid),
+    FOREIGN KEY (inviterid) REFERENCES users(id),
+    FOREIGN KEY (inviteeid) REFERENCES users(id)
+);
+
 CREATE TABLE tables(
     id serial,
     taken BOOLEAN NOT NULL DEFAULT false,
