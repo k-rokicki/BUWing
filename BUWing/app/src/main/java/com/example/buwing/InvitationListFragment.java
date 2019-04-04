@@ -1,5 +1,8 @@
 package com.example.buwing;
 
+import static com.example.buwing.RegisterActivity.notAllowedCharacterPattern;
+import static com.example.buwing.RegisterActivity.notAllowedCharacterMessage;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
