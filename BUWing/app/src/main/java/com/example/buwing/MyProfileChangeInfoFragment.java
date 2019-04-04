@@ -26,11 +26,12 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.Objects;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static com.example.buwing.MainActivity.loginCredentials;
 import static com.example.buwing.MainActivity.password;
 import static com.example.buwing.MainActivity.saveLoginCredentials;
+import static com.example.buwing.RegisterActivity.notAllowedCharacterMessage;
+import static com.example.buwing.RegisterActivity.notAllowedCharacterPattern;
 
 public class MyProfileChangeInfoFragment extends BaseFragment {
 
@@ -38,10 +39,6 @@ public class MyProfileChangeInfoFragment extends BaseFragment {
     Button confirmButton;
 
     String newName, newSurname, newLogin, newEmail;
-
-    String notAllowedCharacterPatternString = "^.*['\"();].*$";
-    Pattern notAllowedCharacterPattern = Pattern.compile(notAllowedCharacterPatternString);
-    String notAllowedCharacterMessage = "Niedozwolony znak w polu: ";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
