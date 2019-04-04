@@ -1,8 +1,5 @@
 package com.example.buwing;
 
-import static com.example.buwing.RegisterActivity.notAllowedCharacterPattern;
-import static com.example.buwing.RegisterActivity.notAllowedCharacterMessage;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -36,6 +33,8 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.regex.Matcher;
 
+import static com.example.buwing.RegisterActivity.notAllowedCharacterPattern;
+import static com.example.buwing.RegisterActivity.notAllowedCharacterMessage;
 
 public class InvitationListFragment extends BaseFragment {
 
