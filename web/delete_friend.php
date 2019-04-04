@@ -20,10 +20,9 @@
 
   $result = pg_query($link, "DELETE FROM Friends
                             WHERE (inviterid = " . pg_escape_string($myId) . "
-                            AND inviteeid = " . pg_escape_string($friendId) . " AND
-			    status = 't') OR (inviteeid = " . pg_escape_string($myId) . "
-			    AND inviterid = " . pg_escape_string($friendId) . " AND status
-			    = 't')");
+                            AND inviteeid = " . pg_escape_string($friendId) . ")
+                            OR (inviteeid = " . pg_escape_string($myId) . "
+                            AND inviterid = " . pg_escape_string($friendId) . ")");
 
   if ($result) {
     $JSONobj->success = true;

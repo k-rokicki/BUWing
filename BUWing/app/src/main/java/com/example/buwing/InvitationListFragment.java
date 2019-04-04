@@ -62,7 +62,7 @@ public class InvitationListFragment extends BaseFragment {
             JSONObject obj;
             JSONArray array;
             StringBuilder response = new StringBuilder();
-            String invitationURL = "https://students.mimuw.edu.pl/~mk394389/buwing/invitation_info.php";
+            String invitationURL = "https://students.mimuw.edu.pl/~kr394714/buwing/invitation_info.php";
 
             URLConnection conn;
 
@@ -126,7 +126,7 @@ public class InvitationListFragment extends BaseFragment {
         protected Boolean doInBackground(String... strings) {
             JSONObject obj;
             String response = null;
-            String confirmURL = "http://students.mimuw.edu.pl/~mk394389/buwing/confirm_invitation.php";
+            String confirmURL = "http://students.mimuw.edu.pl/~kr394714/buwing/confirm_invitation.php";
             URLConnection conn;
             inviterLogin = strings[0];
 
@@ -188,7 +188,7 @@ public class InvitationListFragment extends BaseFragment {
         protected Boolean doInBackground(String... strings) {
             JSONObject obj;
             String response = null;
-            String confirmURL = "http://students.mimuw.edu.pl/~mk394389/buwing/delete_invitation.php";
+            String confirmURL = "http://students.mimuw.edu.pl/~kr394714/buwing/delete_invitation.php";
             URLConnection conn;
             inviterLogin = strings[0];
 
@@ -248,18 +248,18 @@ public class InvitationListFragment extends BaseFragment {
         @Override
         protected Boolean doInBackground(Void... voids) {
             JSONObject obj;
-            String addURL = "http://students.mimuw.edu.pl/~mk394389/buwing/add_friend.php";
+            String addURL = "http://students.mimuw.edu.pl/~kr394714/buwing/add_friend.php";
             StringBuilder response = new StringBuilder();
             URLConnection conn;
 
             try {
-                String POSTdata = URLEncoder.encode("my_login", "UTF-8")
+                String POSTdata = URLEncoder.encode("myLogin", "UTF-8")
                         + "=" + URLEncoder.encode(MainActivity.login, "UTF-8")
-                        + "&" + URLEncoder.encode("my_name", "UTF-8")
+                        + "&" + URLEncoder.encode("myName", "UTF-8")
                         + "=" + URLEncoder.encode(MainActivity.name, "UTF-8")
-                        + "&" + URLEncoder.encode("my_surname", "UTF-8")
+                        + "&" + URLEncoder.encode("mySurname", "UTF-8")
                         + "=" + URLEncoder.encode(MainActivity.surname, "UTf-8")
-                        + "&" + URLEncoder.encode("friend_login", "UTF-8")
+                        + "&" + URLEncoder.encode("friendLogin", "UTF-8")
                         + "=" + URLEncoder.encode(friend_login, "UTF-8");
                 URL url = new URL(addURL);
 
@@ -316,6 +316,10 @@ public class InvitationListFragment extends BaseFragment {
             else if (status.equals("already_friends")) {
                 Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
                         "Już jesteście znajomymi", Toast.LENGTH_LONG).show();
+            }
+            else if (status.equals("myself")) {
+                Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
+                        "Nie możesz zaprosić samego siebie", Toast.LENGTH_LONG).show();
             }
         }
         else {

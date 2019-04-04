@@ -1,9 +1,9 @@
 <?php
 
-  $friend_login = $_POST["friend_login"];
-  $my_login = $_POST["my_login"];
-  $my_name = $_POST["my_name"];
-  $my_surname = $_POST["my_surname"];
+  $friendLogin = $_POST["friendLogin"];
+  $myLogin = $_POST["myLogin"];
+  $myName = $_POST["myName"];
+  $mySurname = $_POST["mySurname"];
 
   $JSONobj->status = "no_user";
   $JSONobj->sent = false;
@@ -11,51 +11,37 @@
   $ini = parse_ini_file("database_credentials.ini");
 
   $link = pg_connect("host=labdb dbname=bd user=" . $ini['db_user'] . " password=" . $ini['db_password']);
-  $result = pg_query($link, "SELECT id FROM users WHERE login = '" . pg_escape_string($my_login) . "'");
+  $result = pg_query($link, "SELECT id FROM users WHERE login = '" . pg_escape_string($myLogin) . "'");
   $row = pg_fetch_array($result, 0);
-  $my_id = $row["id"];
+  $myId = $row["id"];
   $result = pg_query($link,
                       "SELECT id, name, surname, email
                       FROM users
-                      WHERE login = '" . pg_escape_string($friend_login) . "'");
+                      WHERE login = '" . pg_escape_string($friendLogin) . "'");
   $count = pg_num_rows($result);
 
   if ($count == 1) {
     $row = pg_fetch_array($result, 0);
-    $friend_id = $row["id"];
-    $friend_name = $row["name"];
-    $friend_surname = $row["surname"];
-    $friend_email = $row["email"];
-    $result = pg_query($link,
-                        "SELECT inviterid, inviteeid, status
-                        FROM friends
-                        WHERE inviterid = '" . pg_escape_string($my_id) . "'
-                        AND inviteeid = '" . pg_escape_string($friend_id) . "'");
-    $count = pg_num_rows($result);
-
-    if ($count == 1) {
-      $row = pg_fetch_array($result, 0);
-      $status = ($row["status"] == 't');
-      if (!$status) {
-        $JSONobj->status = "already_sent";
-      }
-      else {
-        $JSONobj->status = "already_friends";
-      }
+    $friendId = $row["id"];
+    $friendName = $row["name"];
+    $friendSurname = $row["surname"];
+    $friendEmail = $row["email"];
+    if ($friendId == $myId) {
+      $JSONobj->status = "myself";
     }
     else {
       $result = pg_query($link,
                           "SELECT inviterid, inviteeid, status
                           FROM friends
-                          WHERE inviterid = '" . pg_escape_string($friend_id) . "'
-                          AND inviteeid = '" . pg_escape_string($my_id) . "'");
+                          WHERE inviterid = '" . pg_escape_string($myId) . "'
+                          AND inviteeid = '" . pg_escape_string($friendId) . "'");
       $count = pg_num_rows($result);
 
       if ($count == 1) {
         $row = pg_fetch_array($result, 0);
         $status = ($row["status"] == 't');
         if (!$status) {
-          $JSONobj->status = "pending_invitation";
+          $JSONobj->status = "already_sent";
         }
         else {
           $JSONobj->status = "already_friends";
@@ -63,22 +49,41 @@
       }
       else {
         $result = pg_query($link,
-                    "INSERT INTO friends
-                    VALUES ('" . pg_escape_string($my_id) . "'
-                    , '" . pg_escape_string($friend_id) . "'
-                    , default)");
-        if ($result) {
-          $JSONobj->sent = true;
-          $subject = "Nowe zaproszenie do znajomych w BUWing";
+                            "SELECT inviterid, inviteeid, status
+                            FROM friends
+                            WHERE inviterid = '" . pg_escape_string($friendId) . "'
+                            AND inviteeid = '" . pg_escape_string($myId) . "'");
+        $count = pg_num_rows($result);
 
-          $headers = "From: noreply@buwing.com\r\n";
-          $headers .= "MIME-Version: 1.0\r\n";
-          $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+        if ($count == 1) {
+          $row = pg_fetch_array($result, 0);
+          $status = ($row["status"] == 't');
+          if (!$status) {
+            $JSONobj->status = "pending_invitation";
+          }
+          else {
+            $JSONobj->status = "already_friends";
+          }
+        }
+        else {
+          $result = pg_query($link,
+                      "INSERT INTO friends
+                      VALUES ('" . pg_escape_string($myId) . "'
+                      , '" . pg_escape_string($friendId) . "'
+                      , default)");
+          if ($result) {
+            $JSONobj->sent = true;
+            $subject = "Nowe zaproszenie do znajomych w BUWing";
 
-          $message = '<p>' . $friend_name . ' ' . $friend_surname . ', użytkownik ' . $my_name . ' ' . $my_surname . ' wysłał Ci zaproszenie do znajomych w BUWing.</p>
-                     <p>Potwierdź zaproszenie w aplikacji mobilnej.</p>';
+            $headers = "From: noreply@buwing.com\r\n";
+            $headers .= "MIME-Version: 1.0\r\n";
+            $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 
-          mail($friend_email, $subject, $message, $headers);
+            $message = '<p>' . $friendName . ' ' . $friendSurname . ', użytkownik ' . $myName . ' ' . $mySurname . ' wysłał Ci zaproszenie do znajomych w BUWing.</p>
+                       <p>Potwierdź zaproszenie w aplikacji mobilnej.</p>';
+
+            mail($friendEmail, $subject, $message, $headers);
+          }
         }
       }
     }

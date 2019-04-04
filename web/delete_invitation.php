@@ -18,7 +18,7 @@
   $row = pg_fetch_array($result, 0);
   $inviterId = $row["id"];
 
-  $result = pg_query($link, "DELETE FROM Friends
+  $result = pg_query($link, "DELETE FROM friends
                             WHERE inviterid = '" . pg_escape_string($inviterId) . "'
                             AND inviteeid = '" . pg_escape_string($myId) . "' AND status = 'f'");
 
