@@ -1,3 +1,4 @@
 .DS_Store
 database_credentials.ini
+reset_fullness_passphrase.ini
 .htaccess
