@@ -20,10 +20,12 @@ CREATE TABLE friends(
 
 CREATE TABLE tables(
     id serial,
+    floor INTEGER NOT NULL,
     taken BOOLEAN NOT NULL DEFAULT false,
-    userid INTEGER,
+    userid INTEGER DEFAULT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (userid) REFERENCES users(id)
+    FOREIGN KEY (userid) REFERENCES users(id),
+    CHECK(floor BETWEEN 1 AND 3)
 );
 
 CREATE TABLE activationTokens(

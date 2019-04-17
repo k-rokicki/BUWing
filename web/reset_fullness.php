@@ -21,7 +21,8 @@
             if (password_verify($password, $hashedPassword)) {
                 $result = pg_query($link,
                             "UPDATE tables
-                            SET taken = FALSE");
+                            SET taken = FALSE,
+                                userid = NULL");
             }
         }
     
