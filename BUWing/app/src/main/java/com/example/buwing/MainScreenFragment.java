@@ -20,11 +20,20 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.Calendar;
-import java.util.Objects;
+
+import static com.example.buwing.MainActivity.login;
+import static com.example.buwing.MainActivity.password;
+import static com.example.buwing.MainActivity.seatTaken;
+import static com.example.buwing.MainActivity.takenSeatFloor;
+import static com.example.buwing.MainActivity.takenSeatId;
+import static java.util.Objects.requireNonNull;
 
 public class MainScreenFragment extends BaseFragment {
 
@@ -234,6 +243,57 @@ public class MainScreenFragment extends BaseFragment {
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
+    protected static class CheckSeatTakenTask extends AsyncTask<Void, Void, Void> {
+
+        CheckSeatTakenTask() {}
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            JSONObject obj;
+            String checkURL = Constants.webserviceURL + "seat_taken.php";
+            StringBuilder response = new StringBuilder();
+            URLConnection conn;
+
+            try {
+                String POSTdata = URLEncoder.encode("login", "UTF-8")
+                        + "=" + URLEncoder.encode(login, "UTF-8")
+                        + "&" + URLEncoder.encode("password", "UTF-8")
+                        + "=" + URLEncoder.encode(password, "UTF-8");
+                URL url = new URL(checkURL);
+
+                conn = url.openConnection();
+                conn.setDoOutput(true);
+                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+                wr.write(POSTdata);
+                wr.flush();
+
+                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                String inputLine;
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                String result = response.toString();
+                try {
+                    obj = new JSONObject(result);
+                    seatTaken = Boolean.parseBoolean(obj.get("taken").toString());
+                    takenSeatId = Integer.parseInt(obj.get("seatId").toString());
+                    takenSeatFloor = Integer.parseInt(obj.get("seatFloor").toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         _layout = R.layout.fragment_my_profile;
@@ -251,12 +311,12 @@ public class MainScreenFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Objects.requireNonNull(getActivity()).setTitle("ekran główny");
+        requireNonNull(getActivity()).setTitle("ekran główny");
 
-        fullnessInfoTextView = Objects.requireNonNull(getView()).findViewById(R.id.fullnessInfoTextView);
-        openingHoursMsgTextView = Objects.requireNonNull(getView()).findViewById(R.id.openingHoursMsgTextView);
-        openingHoursTextView = Objects.requireNonNull(getView()).findViewById(R.id.openingHoursTextView);
-        friendsInsideTextView = Objects.requireNonNull(getView()).findViewById(R.id.friendsInsideTextView);
+        fullnessInfoTextView = requireNonNull(getView()).findViewById(R.id.fullnessInfoTextView);
+        openingHoursMsgTextView = requireNonNull(getView()).findViewById(R.id.openingHoursMsgTextView);
+        openingHoursTextView = requireNonNull(getView()).findViewById(R.id.openingHoursTextView);
+        friendsInsideTextView = requireNonNull(getView()).findViewById(R.id.friendsInsideTextView);
 
         SpannableString openingHoursMsgString = new SpannableString("godziny otwarcia");
         openingHoursMsgString.setSpan(new UnderlineSpan(), 0, openingHoursMsgString.length(), 0);
@@ -272,6 +332,9 @@ public class MainScreenFragment extends BaseFragment {
 
         GetOpeningHoursTask getOpeningHoursTask = new GetOpeningHoursTask();
         getOpeningHoursTask.execute();
+
+        CheckSeatTakenTask checkSeatTakenTask = new CheckSeatTakenTask();
+        checkSeatTakenTask.execute();
     }
 
     @Override
