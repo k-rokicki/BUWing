@@ -66,9 +66,9 @@ RETURNS TABLE (
             SELECT inviterid
             FROM friends
             WHERE inviteeid = userId
-            UNION
-            (   SELECT inviteeid
-                FROM friends
-                WHERE inviterid = userId);
+                UNION (
+                        SELECT inviteeid
+                        FROM friends
+                        WHERE inviterid = userId);
     END;
 $$ language plpgsql;
