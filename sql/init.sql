@@ -56,3 +56,19 @@ CREATE TABLE pendingAccountDeletions(
     PRIMARY KEY (userid),
     FOREIGN KEY (userid) REFERENCES users(id)
 );
+
+CREATE OR REPLACE FUNCTION getFriendsId(userId INTEGER)
+RETURNS TABLE (
+    id INTEGER
+) AS $$
+    BEGIN
+        RETURN QUERY
+            SELECT inviterid
+            FROM friends
+            WHERE inviteeid = userId
+            UNION
+            (   SELECT inviteeid
+                FROM friends
+                WHERE inviterid = userId);
+    END;
+$$ language plpgsql;

@@ -40,11 +40,14 @@ public class MainScreenFragment extends BaseFragment {
     TextView fullnessInfoTextView;
     TextView openingHoursMsgTextView;
     TextView openingHoursTextView;
+    TextView friendsInsideMsgTextView;
     TextView friendsInsideTextView;
 
     static final String defaultFullnessInfoString = "- / -";
     static final String defaultOpeningHoursString = "brak danych";
     static final String defaultFriendsInsideString = "-";
+    static final String defaultFriendsInsideMsgString_more = "znajomych w BUW";
+    static final String defaultFriendsInsideMsgString_one = "znajomy w BUW";
     static int inactiveColor = Color.parseColor("#727272");
     static int activeColor = Color.parseColor("#10674F");
 
@@ -54,6 +57,7 @@ public class MainScreenFragment extends BaseFragment {
     static int openingHoursColor = inactiveColor;
     static String friendsInsideString = defaultFriendsInsideString;
     static int friendsInsideColor = inactiveColor;
+    static String friendsInsideMsgString = defaultFriendsInsideMsgString_more;
 
     int opensHour, opensMinutes, closesHour, closesMinutes;
     boolean closesNextDay;
@@ -63,16 +67,14 @@ public class MainScreenFragment extends BaseFragment {
     int friendsInsideCount;
 
     @SuppressLint("StaticFieldLeak")
-    private class GetOpeningHoursTask extends AsyncTask<Void, Void, Void> {
+    private class GetOpeningHoursTask extends AsyncTask<Void, Void, Boolean> {
         private JSONObject obj;
         private String response;
 
-        GetOpeningHoursTask() {
-            response = null;
-        }
+        GetOpeningHoursTask() {}
 
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected Boolean doInBackground(Void... voids) {
             String loginURL = Constants.webserviceURL + "opening_hours.php";
 
             HttpURLConnection conn = null;
@@ -111,17 +113,18 @@ public class MainScreenFragment extends BaseFragment {
                     closesHour = Integer.parseInt(obj.getString("closesHour"));
                     closesMinutes = Integer.parseInt(obj.getString("closesMinutes"));
                     closesNextDay = Boolean.parseBoolean(obj.getString("closesNextDay"));
+                    return true;
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
-            return null;
+            return false;
         }
 
         @SuppressLint("DefaultLocale")
         @Override
-        protected void onPostExecute(Void result) {
-            if (response == null) {
+        protected void onPostExecute(Boolean result) {
+            if (!result) {
                 openingHoursString = defaultOpeningHoursString;
                 openingHoursColor = inactiveColor;
             } else {
@@ -152,7 +155,10 @@ public class MainScreenFragment extends BaseFragment {
                 if (isLibraryOpen) {
                     GetFullnessInfoTask getFullnessInfoTask = new GetFullnessInfoTask();
                     getFullnessInfoTask.execute();
-                    //TODO GetFriendsInsideInfoTask
+                    CheckSeatTakenTask checkSeatTakenTask = new CheckSeatTakenTask();
+                    checkSeatTakenTask.execute();
+                    GetFriendsInsideCountTask getFriendsInsideCountTask = new GetFriendsInsideCountTask();
+                    getFriendsInsideCountTask.execute();
                 } else {
                     fullnessInfoString = defaultFullnessInfoString;
                     friendsInsideString = defaultFriendsInsideString;
@@ -176,16 +182,14 @@ public class MainScreenFragment extends BaseFragment {
     }
 
     @SuppressLint("StaticFieldLeak")
-    private class GetFullnessInfoTask extends AsyncTask<Void, Void, Void> {
-        private JSONObject obj;
-        private String response;
+    private class GetFullnessInfoTask extends AsyncTask<Void, Void, Boolean> {
 
-        GetFullnessInfoTask() {
-            response = null;
-        }
+        GetFullnessInfoTask() {}
 
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected Boolean doInBackground(Void... voids) {
+            JSONObject obj;
+            String response = null;
             String loginURL = Constants.webserviceURL + "fullness_info.php";
 
             HttpURLConnection conn = null;
@@ -221,17 +225,18 @@ public class MainScreenFragment extends BaseFragment {
                     obj = new JSONObject(response);
                     freeSeatsCount = Integer.parseInt(obj.get("freeSeatsCount").toString());
                     allSeatsCount = Integer.parseInt(obj.get("allSeatsCount").toString());
+                    return true;
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
-            return null;
+            return false;
         }
 
         @SuppressLint("DefaultLocale")
         @Override
-        protected void onPostExecute(Void result) {
-            if (response == null) {
+        protected void onPostExecute(Boolean result) {
+            if (!result) {
                 fullnessInfoString = defaultFullnessInfoString;
                 fullnessInfoColor = inactiveColor;
             } else {
@@ -244,15 +249,15 @@ public class MainScreenFragment extends BaseFragment {
     }
 
     @SuppressLint("StaticFieldLeak")
-    protected static class CheckSeatTakenTask extends AsyncTask<Void, Void, Void> {
+    protected static class CheckSeatTakenTask extends AsyncTask<Void, Void, Boolean> {
 
         CheckSeatTakenTask() {}
 
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected Boolean doInBackground(Void... voids) {
             JSONObject obj;
-            String checkURL = Constants.webserviceURL + "seat_taken.php";
             StringBuilder response = new StringBuilder();
+            String checkURL = Constants.webserviceURL + "seat_taken.php";
             URLConnection conn;
 
             try {
@@ -286,11 +291,82 @@ public class MainScreenFragment extends BaseFragment {
                     seatTaken = Boolean.parseBoolean(obj.get("taken").toString());
                     takenSeatId = Integer.parseInt(obj.get("seatId").toString());
                     takenSeatFloor = Integer.parseInt(obj.get("seatFloor").toString());
+                    return true;
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
-            return null;
+            return false;
+        }
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private class GetFriendsInsideCountTask extends AsyncTask<Void, Void, Boolean> {
+        GetFriendsInsideCountTask() {}
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            JSONObject obj;
+            StringBuilder response = new StringBuilder();
+            String checkURL = Constants.webserviceURL + "friends_inside_count.php";
+            URLConnection conn;
+
+            try {
+                String POSTdata = URLEncoder.encode("login", "UTF-8")
+                        + "=" + URLEncoder.encode(login, "UTF-8")
+                        + "&" + URLEncoder.encode("password", "UTF-8")
+                        + "=" + URLEncoder.encode(password, "UTF-8");
+                URL url = new URL(checkURL);
+
+                conn = url.openConnection();
+                conn.setDoOutput(true);
+                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+                wr.write(POSTdata);
+                wr.flush();
+
+                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                String inputLine;
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                String result = response.toString();
+                try {
+                    obj = new JSONObject(result);
+                    friendsInsideCount = Integer.parseInt(obj.get("friendsCount").toString());
+                    return true;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            return false;
+        }
+
+        @SuppressLint("DefaultLocale")
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (!result) {
+                friendsInsideString = defaultFriendsInsideString;
+                friendsInsideColor = inactiveColor;
+                friendsInsideMsgString = defaultFriendsInsideMsgString_more;
+            } else {
+                friendsInsideString = String.format("%d", friendsInsideCount);
+                friendsInsideColor = activeColor;
+                if (friendsInsideCount != 1) {
+                    friendsInsideMsgString = defaultFriendsInsideMsgString_more;
+                } else {
+                    friendsInsideMsgString = defaultFriendsInsideMsgString_one;
+                }
+            }
+            friendsInsideTextView.setText(friendsInsideString);
+            friendsInsideTextView.setTextColor(friendsInsideColor);
+            friendsInsideMsgTextView.setText(friendsInsideMsgString);
         }
     }
 
@@ -316,6 +392,7 @@ public class MainScreenFragment extends BaseFragment {
         fullnessInfoTextView = requireNonNull(getView()).findViewById(R.id.fullnessInfoTextView);
         openingHoursMsgTextView = requireNonNull(getView()).findViewById(R.id.openingHoursMsgTextView);
         openingHoursTextView = requireNonNull(getView()).findViewById(R.id.openingHoursTextView);
+        friendsInsideMsgTextView = requireNonNull(getView().findViewById(R.id.friendsInsideMsgTextView));
         friendsInsideTextView = requireNonNull(getView()).findViewById(R.id.friendsInsideTextView);
 
         SpannableString openingHoursMsgString = new SpannableString("godziny otwarcia");
@@ -329,12 +406,10 @@ public class MainScreenFragment extends BaseFragment {
         fullnessInfoTextView.setText(fullnessInfoString);
         openingHoursTextView.setText(openingHoursString);
         friendsInsideTextView.setText(friendsInsideString);
+        friendsInsideMsgTextView.setText(friendsInsideMsgString);
 
         GetOpeningHoursTask getOpeningHoursTask = new GetOpeningHoursTask();
         getOpeningHoursTask.execute();
-
-        CheckSeatTakenTask checkSeatTakenTask = new CheckSeatTakenTask();
-        checkSeatTakenTask.execute();
     }
 
     @Override
