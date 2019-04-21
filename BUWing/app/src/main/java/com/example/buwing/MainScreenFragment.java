@@ -48,6 +48,7 @@ public class MainScreenFragment extends BaseFragment {
     static final String defaultFriendsInsideString = "-";
     static final String defaultFriendsInsideMsgString_more = "znajomych w BUW";
     static final String defaultFriendsInsideMsgString_one = "znajomy w BUW";
+    static final String defaultInvitationsMenuItemString = "zaproszenia";
     static int inactiveColor = Color.parseColor("#727272");
     static int activeColor = Color.parseColor("#10674F");
 
@@ -59,12 +60,15 @@ public class MainScreenFragment extends BaseFragment {
     static int friendsInsideColor = inactiveColor;
     static String friendsInsideMsgString = defaultFriendsInsideMsgString_more;
 
+    static String invitationsMenuItemString = defaultInvitationsMenuItemString;
+
     int opensHour, opensMinutes, closesHour, closesMinutes;
     boolean closesNextDay;
     static boolean isLibraryOpen;
     int freeSeatsCount;
     int allSeatsCount;
     int friendsInsideCount;
+    static int pendingInvitationsCount = 0;
 
     @SuppressLint("StaticFieldLeak")
     private class GetOpeningHoursTask extends AsyncTask<Void, Void, Boolean> {
@@ -178,6 +182,8 @@ public class MainScreenFragment extends BaseFragment {
 
             openingHoursTextView.setText(openingHoursString);
             openingHoursTextView.setTextColor(openingHoursColor);
+            GetPendingInvitationsCountTask getPendingInvitationsCountTask = new GetPendingInvitationsCountTask();
+            getPendingInvitationsCountTask.execute();
         }
     }
 
@@ -367,6 +373,67 @@ public class MainScreenFragment extends BaseFragment {
             friendsInsideTextView.setText(friendsInsideString);
             friendsInsideTextView.setTextColor(friendsInsideColor);
             friendsInsideMsgTextView.setText(friendsInsideMsgString);
+        }
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    protected static class GetPendingInvitationsCountTask extends AsyncTask<Void, Void, Boolean> {
+
+        GetPendingInvitationsCountTask() {}
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            JSONObject obj;
+            StringBuilder response = new StringBuilder();
+            String checkURL = Constants.webserviceURL + "pending_invitations_count.php";
+            URLConnection conn;
+
+            try {
+                String POSTdata = URLEncoder.encode("login", "UTF-8")
+                        + "=" + URLEncoder.encode(login, "UTF-8")
+                        + "&" + URLEncoder.encode("password", "UTF-8")
+                        + "=" + URLEncoder.encode(password, "UTF-8");
+                URL url = new URL(checkURL);
+
+                conn = url.openConnection();
+                conn.setDoOutput(true);
+                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+                wr.write(POSTdata);
+                wr.flush();
+
+                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                String inputLine;
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                String result = response.toString();
+                try {
+                    obj = new JSONObject(result);
+                    pendingInvitationsCount = Integer.parseInt(obj.get("invitationsCount").toString());
+                    return true;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            return false;
+        }
+
+        @SuppressLint("DefaultLocale")
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (result && pendingInvitationsCount != 0) {
+                invitationsMenuItemString = String.format("%s (%d)", defaultInvitationsMenuItemString, pendingInvitationsCount);
+            } else {
+                invitationsMenuItemString = defaultInvitationsMenuItemString;
+            }
+            LoggedInActivity.updateInvitationMenuItem();
         }
     }
 
