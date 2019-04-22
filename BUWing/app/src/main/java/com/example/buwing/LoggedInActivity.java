@@ -109,8 +109,8 @@ public class LoggedInActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         MainScreenFragment.GetPendingInvitationsCountTask getPendingInvitationsCountTask = new MainScreenFragment.GetPendingInvitationsCountTask();
         getPendingInvitationsCountTask.execute();
-        MainScreenFragment.CheckSeatTakenTask checkSeatTakenTask = new MainScreenFragment.CheckSeatTakenTask();
-        checkSeatTakenTask.execute();
+        MainScreenFragment.GetOpeningHoursTask getOpeningHoursTask = new MainScreenFragment.GetOpeningHoursTask();
+        getOpeningHoursTask.execute();
         // Handle navigation view item clicks here.
         displaySelectedScreen(item.getItemId());
         return true;
