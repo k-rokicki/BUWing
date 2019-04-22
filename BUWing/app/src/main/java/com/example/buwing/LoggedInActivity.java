@@ -29,7 +29,7 @@ public class LoggedInActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     @SuppressLint("StaticFieldLeak")
-    private static NavigationView navigationView;
+    static NavigationView navigationView;
     @SuppressLint("StaticFieldLeak")
     static TextView nameTextView;
     @SuppressLint("StaticFieldLeak")
@@ -109,6 +109,8 @@ public class LoggedInActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         MainScreenFragment.GetPendingInvitationsCountTask getPendingInvitationsCountTask = new MainScreenFragment.GetPendingInvitationsCountTask();
         getPendingInvitationsCountTask.execute();
+        MainScreenFragment.CheckSeatTakenTask checkSeatTakenTask = new MainScreenFragment.CheckSeatTakenTask();
+        checkSeatTakenTask.execute();
         // Handle navigation view item clicks here.
         displaySelectedScreen(item.getItemId());
         return true;
