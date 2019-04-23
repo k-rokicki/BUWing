@@ -1,0 +1,62 @@
+/* kolory buwu: zielony #28724F
+                rozowy  #C86BA8
+                szary   #C3C7C3
+*/
+
+html, body {
+    height: 100%;
+}
+
+body {
+    background-color: #C3C7C3;
+}
+
+#biblioteka {
+    height: 100%;
+    width: 100%;
+    align-items: center;
+}
+
+#czytelnia {
+    border: 1.5px solid black;
+    height: 60vw;
+    width: 90vw;
+    position: relative;
+    top: 30%;
+    background: whitesmoke;
+}
+
+.stolik {
+    background-color: #28724F;
+    height: 3vw;
+    width: 5vw;
+}
+
+#stolik1 {
+    position: relative;
+    left: 30%;
+    top: 30%;
+}
+
+#stolik2 {
+    position: relative;
+    left: 30%;
+    top: 35%;
+}
+
+#stolik3 {
+    position: relative;
+    left: 30%;
+    top: 40%;
+}
+
+.popup {
+    height: 20vw;
+    width: 20vw;
+    background: lightpink;
+    z-index: 1;
+    position: absolute;
+    top: 30%;
+    left: 10%;
+    display: none;
+}
