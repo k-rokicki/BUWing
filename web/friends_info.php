@@ -5,45 +5,56 @@
   $link = pg_connect("host=labdb dbname=bd user=" . $ini['db_user'] . " password=" . $ini['db_password']);
 
   $login = $_POST["login"];
-  $result = pg_query($link, "SELECT id FROM users
+  $password = $_POST["password"];
+
+  $JSONobj->result = 0;
+
+  $result = pg_query($link, "SELECT id, password FROM users
                             WHERE login =  '" . pg_escape_string($login) . "'");
 
-  $row = pg_fetch_array($result, 0);
-  $userId = $row["id"];
+  if (pg_num_rows($result) == 1) {
+    $row = pg_fetch_array($result, 0);
+    $userId = $row["id"];
+    $hashedPassword = $row["password"];
 
-  $result = pg_query($link, "SELECT inviterid FROM friends
-                            WHERE inviteeid = '" . pg_escape_string($userId) . "'
-                            AND status = 't'");
-  $count = pg_num_rows($result);
+    if (password_verify($password, $hashedPassword)) {
+      $result = pg_query($link, "SELECT inviterid FROM friends
+                                WHERE inviteeid = '" . pg_escape_string($userId) . "'
+                                AND status = 't'");
+      $count = pg_num_rows($result);
 
-  for ($i = 0; $i < $count; $i++) {
-    $row = pg_fetch_array($result, $i);
-    $array[] = $row["inviterid"];
+      for ($i = 0; $i < $count; $i++) {
+        $row = pg_fetch_array($result, $i);
+        $array[] = $row["inviterid"];
+      }
+
+      $result = pg_query($link, "SELECT inviteeid FROM friends
+                                WHERE inviterid = '" . pg_escape_string($userId) . "'
+                                AND status = 't'");
+
+      $count = pg_num_rows($result);
+
+      for ($i = 0; $i < $count; $i++) {
+        $row = pg_fetch_array($result, $i);
+        $array[] = $row["inviteeid"];
+      }
+
+      $ids = implode(', ', $array);
+
+      $result = pg_query($link, "SELECT login FROM users
+                                WHERE id IN ($ids)");
+
+      $logins = array();
+
+      while ($row = pg_fetch_row($result)) {
+        $logins[] = $row[0];
+      }
+
+      $JSONobj->result = 1;
+      $JSONobj->friends = $logins;
+    }
   }
 
-  $result = pg_query($link, "SELECT inviteeid FROM friends
-                            WHERE inviterid = '" . pg_escape_string($userId) . "'
-                            AND status = 't'");
-
-  $count = pg_num_rows($result);
-
-  for ($i = 0; $i < $count; $i++) {
-    $row = pg_fetch_array($result, $i);
-    $array[] = $row["inviteeid"];
-  }
-
-  $ids = implode(', ', $array);
-
-  $result = pg_query($link, "SELECT login FROM users
-                            WHERE id IN ($ids)");
-
-  $logins = array();
-
-  while ($row = pg_fetch_row($result)) {
-    $logins[] = $row[0];
-  }
-
-  $JSONobj->friends = $logins;
   pg_close($link);
   $returnJSON = json_encode($JSONobj);
   echo $returnJSON;

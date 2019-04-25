@@ -42,14 +42,14 @@ public class InvitationListFragment extends BaseFragment {
     TextView invitationTextView;
     Button searchButton;
 
-    ArrayList<String> arr = new ArrayList<>();
+    static ArrayList<String> arr = new ArrayList<>();
     ListView listView;
     InvitationAdapter adapter;
 
     String friendLogin, status;
-    String noInvitation = "Brak zaproszeń";
+    static String noInvitation = "Brak zaproszeń";
 
-    String emptyFieldMessage = "Uzupełnij pole login";
+    static String emptyFieldMessage = "Uzupełnij pole login";
 
     @SuppressLint("StaticFieldLeak")
     private class GetInvitation extends AsyncTask<Void, Void, Void> {
@@ -60,6 +60,7 @@ public class InvitationListFragment extends BaseFragment {
         protected Void doInBackground(Void... voids) {
             JSONObject obj;
             JSONArray array;
+            int res;
             StringBuilder response = new StringBuilder();
             String invitationURL = Constants.webserviceURL + "invitation_info.php";
 
@@ -67,7 +68,9 @@ public class InvitationListFragment extends BaseFragment {
 
             try {
                 String POSTdata = URLEncoder.encode("login", "UTF-8")
-                        + "=" + URLEncoder.encode(MainActivity.login, "UTF-8");
+                        + "=" + URLEncoder.encode(MainActivity.login, "UTF-8")
+                        + "&" + URLEncoder.encode("password", "UTF-8")
+                        + "=" + URLEncoder.encode(MainActivity.password, "UTF-8");
                 URL url = new URL(invitationURL);
                 conn = url.openConnection();
 
@@ -90,10 +93,14 @@ public class InvitationListFragment extends BaseFragment {
                 String result = response.toString();
                 try {
                     obj = new JSONObject(result);
-                    array = obj.getJSONArray("users");
-                    for (int i = 0; i < array.length(); i++) {
-                        arr.add(array.getString(i));
+                    res = Integer.parseInt(obj.get("result").toString());
+                    if (res == 1) {
+                        array = obj.getJSONArray("users");
+                        for (int i = 0; i < array.length(); i++) {
+                            arr.add(array.getString(i));
+                        }
                     }
+
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -132,6 +139,8 @@ public class InvitationListFragment extends BaseFragment {
             try {
                 String POSTdata = URLEncoder.encode("myLogin", "UTF-8")
                         + "=" + URLEncoder.encode(MainActivity.login, "UTF-8")
+                        + "&" + URLEncoder.encode("password", "UTF-8")
+                        + "=" + URLEncoder.encode(MainActivity.password, "UTF-8")
                         + "&" + URLEncoder.encode("inviterLogin", "UTF-8")
                         + "=" + URLEncoder.encode(inviterLogin, "UTF-8");
                 URL url = new URL(confirmURL);
@@ -194,6 +203,8 @@ public class InvitationListFragment extends BaseFragment {
             try {
                 String POSTdata = URLEncoder.encode("myLogin", "UTF-8")
                         + "=" + URLEncoder.encode(MainActivity.login, "UTF-8")
+                        + "&" + URLEncoder.encode("password", "UTF-8")
+                        + "=" + URLEncoder.encode(MainActivity.password, "UTF-8")
                         + "&" + URLEncoder.encode("inviterLogin", "UTF-8")
                         + "=" + URLEncoder.encode(inviterLogin, "UTF-8");
                 URL url = new URL(confirmURL);
@@ -254,10 +265,8 @@ public class InvitationListFragment extends BaseFragment {
             try {
                 String POSTdata = URLEncoder.encode("myLogin", "UTF-8")
                         + "=" + URLEncoder.encode(MainActivity.login, "UTF-8")
-                        + "&" + URLEncoder.encode("myName", "UTF-8")
-                        + "=" + URLEncoder.encode(MainActivity.name, "UTF-8")
-                        + "&" + URLEncoder.encode("mySurname", "UTF-8")
-                        + "=" + URLEncoder.encode(MainActivity.surname, "UTf-8")
+                        + "&" + URLEncoder.encode("password", "UTF-8")
+                        + "=" + URLEncoder.encode(MainActivity.password, "UTF-8")
                         + "&" + URLEncoder.encode("friendLogin", "UTF-8")
                         + "=" + URLEncoder.encode(friendLogin, "UTF-8");
                 URL url = new URL(addURL);
