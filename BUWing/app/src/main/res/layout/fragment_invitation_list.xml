@@ -58,7 +58,6 @@
         android:layout_marginBottom="8dp"
         android:ems="10"
         android:gravity="center"
-        android:inputType="textPersonName"
         android:text="Zaproszenia"
         android:textColor="?attr/editTextColor"
         android:textSize="30sp"
