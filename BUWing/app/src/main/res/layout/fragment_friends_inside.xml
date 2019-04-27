@@ -28,6 +28,7 @@
         tools:layout_conversion_wrapWidth="622" />
 
     <ListView
+        android:id="@+id/friendsInsideListView"
         android:layout_width="match_parent"
         android:layout_height="400dp"
         android:layout_marginStart="8dp"
