@@ -42,14 +42,14 @@ public class InvitationListFragment extends BaseFragment {
     TextView invitationTextView;
     Button searchButton;
 
-    static ArrayList<String> arr = new ArrayList<>();
+    static ArrayList<String> invitations = new ArrayList<>();
     ListView listView;
     InvitationAdapter adapter;
 
     String friendLogin, status;
-    static String noInvitation = "Brak zaproszeń";
+    static String invitation = "Brak zaproszeń";
 
-    static String emptyFieldMessage = "Uzupełnij pole login";
+    final String emptyFieldMessage = "Uzupełnij pole login";
 
     @SuppressLint("StaticFieldLeak")
     private class GetInvitation extends AsyncTask<Void, Void, Void> {
@@ -97,11 +97,11 @@ public class InvitationListFragment extends BaseFragment {
                     if (res == 1) {
                         array = obj.getJSONArray("users");
                         for (int i = 0; i < array.length(); i++) {
-                            arr.add(array.getString(i));
+                            String friend = array.get(i).toString();
+                            if (!invitations.contains(friend))
+                                invitations.add(friend);
                         }
                     }
-
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -112,10 +112,12 @@ public class InvitationListFragment extends BaseFragment {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            if (arr.size() == 0) {
-                invitationTextView.setText(noInvitation);
-            }
-            adapter = new InvitationAdapter(getActivity(), R.layout.invitation_row, arr);
+            if (invitations.size() == 0)
+                invitation = "Brak zaproszeń";
+            else
+                invitation = "Zaproszenia";
+            invitationTextView.setText(invitation);
+            adapter = new InvitationAdapter(getActivity(), R.layout.invitation_row, invitations);
             listView.setAdapter(adapter);
         }
     }
@@ -380,10 +382,9 @@ public class InvitationListFragment extends BaseFragment {
                 public void onClick(View v) {
                     ConfirmInvitationTask confirmInvitationTask = new ConfirmInvitationTask();
                     confirmInvitationTask.execute(getItem(position));
-                    arr.remove(getItem(position));
-                    if (arr.size() == 0) {
-                        invitationTextView.setText(noInvitation);
-                    }
+                    invitations.remove(getItem(position));
+                    if (invitations.size() == 0)
+                        invitation = "Brak zaproszeń";
                     adapter.notifyDataSetChanged();
                 }
             });
@@ -392,10 +393,9 @@ public class InvitationListFragment extends BaseFragment {
                 public void onClick(View v) {
                     DeleteInvitationTask deleteInvitationTask = new DeleteInvitationTask();
                     deleteInvitationTask.execute(getItem(position));
-                    arr.remove(adapter.getItem(position));
-                    if (arr.size() == 0) {
-                        invitationTextView.setText(noInvitation);
-                    }
+                    invitations.remove(adapter.getItem(position));
+                    if (invitations.size() == 0)
+                        invitation = "Brak zaproszeń";
                     adapter.notifyDataSetChanged();
                 }
             });
@@ -424,6 +424,7 @@ public class InvitationListFragment extends BaseFragment {
         loginEditText = Objects.requireNonNull(getActivity()).findViewById(R.id.loginEditText);
         searchButton = Objects.requireNonNull(getActivity()).findViewById(R.id.searchButton);
         invitationTextView = Objects.requireNonNull(getActivity()).findViewById(R.id.invitationTextView);
+        invitationTextView.setText(invitation);
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
