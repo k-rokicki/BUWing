@@ -28,8 +28,19 @@
         trim($userid) != "" && trim($newPassword) != "" && trim($newPasswordRepeat) != "") {
 
         if ($newPassword != $newPasswordRepeat) {
-            echo "Wpisane hasła nie są takie same. Spróbuj ponownie.";
-        } else {        
+            echo "Hasła nie są takie same. Spróbuj ponownie.";
+        } elseif (mb_strtolower($newPassword,'UTF-8') == $newPassword) {
+            echo "Hasło musi zawierać wielką literę. Spróbuj ponownie.";
+        } elseif (mb_strtoupper($newPassword,'UTF-8') == $newPassword) {
+            echo "Hasło musi zawierać małą literę. Spróbuj ponownie.";
+        } elseif (!preg_match('/[0-9]/', $newPassword)) {
+            echo "Hasło musi zawierać cyfrę. Spróbuj ponownie.";
+        } elseif (!preg_match('/[@$!%*?&,.;]/', $newPassword)) {
+            echo "Hasło musi zawierać znak specjalny: @$!%*?&,.; <br>";
+            echo "Spróbuj ponownie.";
+        } elseif (mb_strlen($newPassword,'UTF-8') < 8) {
+            echo "Hasło musi mieć co najmniej 8 znaków";
+        } else {
             $result = pg_query($link,
                                 "DELETE
                                 FROM resetPasswordTokens

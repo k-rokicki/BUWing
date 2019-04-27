@@ -42,6 +42,10 @@
             if ($activeToken != $token) {
                 echo "Ten link nie jest aktywny.";
             } else {
+                echo "Hasło musi zawierać wielką literę, małą literę,<br>";
+                echo "cyfrę, znak specjalny: @$!%*?&,.; <br>";
+                echo "i mieć co najmniej 8 znaków.<br>";
+                echo "<br><br>";
                 echo "<form action=\"set_new_password_result.php\" method=\"post\">\n";
                     echo "<input type=hidden name=userid value=" . $userid . ">";
                     echo "Wpisz nowe hasło: <input type=password name=newPassword><br><br>";
