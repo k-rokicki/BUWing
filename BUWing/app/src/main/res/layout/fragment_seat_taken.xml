@@ -14,7 +14,7 @@
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="8dp"
         android:gravity="bottom|end"
-        android:text="wybierz miejsce"
+        android:text="twoje miejsce"
         android:textAllCaps="true"
         android:textColor="?attr/editTextColor"
         android:textSize="36sp"
@@ -24,6 +24,48 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/floorTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="8dp"
+        android:ellipsize="end"
+        android:gravity="bottom|end"
+        android:maxLines="1"
+        android:text="-"
+        android:textColor="?attr/editTextColor"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.931"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/floorMsgTextView"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/tableNumberTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="8dp"
+        android:ellipsize="end"
+        android:gravity="bottom|end"
+        android:maxLines="1"
+        android:text="-"
+        android:textColor="?attr/editTextColor"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.914"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tableNumberMsgTextView"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
@@ -44,26 +86,6 @@
         app:layout_constraintTop_toBottomOf="@+id/infoTitleTextView"
         app:layout_constraintVertical_bias="0.0" />
 
-    <Spinner
-        android:id="@+id/floorSpinner"
-        android:layout_width="120dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="8dp"
-        android:ellipsize="end"
-        android:gravity="bottom|end"
-        android:maxLines="1"
-        android:textColor="?attr/editTextColor"
-        android:textSize="36sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/floorMsgTextView"
-        app:layout_constraintVertical_bias="0.0" />
-
     <TextView
         android:id="@+id/tableNumberMsgTextView"
         android:layout_width="0dp"
@@ -79,44 +101,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.922"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/floorSpinner"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <Spinner
-        android:id="@+id/tableNumberSpinner"
-        android:layout_width="120dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="8dp"
-        android:ellipsize="end"
-        android:gravity="bottom|end"
-        android:maxLines="1"
-        android:textColor="?attr/editTextColor"
-        android:textSize="36sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tableNumberMsgTextView"
+        app:layout_constraintTop_toBottomOf="@+id/floorTextView"
         app:layout_constraintVertical_bias="0.0" />
 
     <Button
-        android:id="@+id/takeSeatButton"
+        android:id="@+id/releaseSeatButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
         android:layout_marginTop="75dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="8dp"
-        android:text="zajmij miejsce"
+        android:text="zwolnij miejsce"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tableNumberSpinner"
+        app:layout_constraintTop_toBottomOf="@+id/tableNumberTextView"
         app:layout_constraintVertical_bias="0.0" />
 
 </android.support.constraint.ConstraintLayout>

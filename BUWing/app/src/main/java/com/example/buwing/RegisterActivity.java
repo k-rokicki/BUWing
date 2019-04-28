@@ -123,51 +123,47 @@ public class RegisterActivity extends AppCompatActivity {
             loginCredentials.delete();
         }
 
-        registerButton.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("DefaultLocale")
-            @Override
-            public void onClick(View v) {
-                name = nameTextView.getText().toString();
-                surname = surnameTextView.getText().toString();
-                login = loginTextView.getText().toString();
-                email = emailTextView.getText().toString();
-                password = passwordTextView.getText().toString();
-                String passwordRepeat = passwordRepeatTextView.getText().toString();
+        registerButton.setOnClickListener(v -> {
+            name = nameTextView.getText().toString();
+            surname = surnameTextView.getText().toString();
+            login = loginTextView.getText().toString();
+            email = emailTextView.getText().toString();
+            password = passwordTextView.getText().toString();
+            String passwordRepeat = passwordRepeatTextView.getText().toString();
 
-                Matcher nameMatcher = notAllowedCharacterPattern.matcher(name);
-                Matcher surnameMatcher = notAllowedCharacterPattern.matcher(surname);
-                Matcher loginMatcher = notAllowedCharacterPattern.matcher(login);
-                Matcher uppercaseLetterMatcher = uppercaseLetterPattern.matcher(password);
-                Matcher lowercaseLetterMatcher = lowercaseLetterPattern.matcher(password);
-                Matcher digitMatcher = digitPattern.matcher(password);
-                Matcher specialCharacterMatcher = specialCharacterPattern.matcher(password);
+            Matcher nameMatcher = notAllowedCharacterPattern.matcher(name);
+            Matcher surnameMatcher = notAllowedCharacterPattern.matcher(surname);
+            Matcher loginMatcher = notAllowedCharacterPattern.matcher(login);
+            Matcher uppercaseLetterMatcher = uppercaseLetterPattern.matcher(password);
+            Matcher lowercaseLetterMatcher = lowercaseLetterPattern.matcher(password);
+            Matcher digitMatcher = digitPattern.matcher(password);
+            Matcher specialCharacterMatcher = specialCharacterPattern.matcher(password);
 
-                if (name.isEmpty() || surname.isEmpty() || login.isEmpty() || email.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "Uzupełnij wszystkie pola", Toast.LENGTH_LONG).show();
-                } else if (nameMatcher.find()) {
-                    Toast.makeText(getApplicationContext(), notAllowedCharacterMessage + "imię", Toast.LENGTH_LONG).show();
-                } else if (surnameMatcher.find()) {
-                    Toast.makeText(getApplicationContext(), notAllowedCharacterMessage + "nazwisko", Toast.LENGTH_LONG).show();
-                } else if (loginMatcher.find()) {
-                    Toast.makeText(getApplicationContext(), notAllowedCharacterMessage + "login", Toast.LENGTH_LONG).show();
-                } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                    Toast.makeText(getApplicationContext(), "Nieprawidłowy adres email", Toast.LENGTH_LONG).show();
-                } else if (!password.equals(passwordRepeat)) {
-                    Toast.makeText(getApplicationContext(), "Hasła nie są takie same", Toast.LENGTH_LONG).show();
-                } else if (!uppercaseLetterMatcher.find()) {
-                    Toast.makeText(getApplicationContext(), "Hasło musi zawierać wielką literę", Toast.LENGTH_LONG).show();
-                } else if (!lowercaseLetterMatcher.find()) {
-                    Toast.makeText(getApplicationContext(), "Hasło musi zawierać małą literę", Toast.LENGTH_LONG).show();
-                } else if (!digitMatcher.find()) {
-                    Toast.makeText(getApplicationContext(), "Hasło musi zawierać cyfrę", Toast.LENGTH_LONG).show();
-                } else if (!specialCharacterMatcher.find()) {
-                    Toast.makeText(getApplicationContext(), String.format("Hasło musi zawierać znak specjalny: %s", specialCharacters), Toast.LENGTH_LONG).show();
-                } else if (password.length() < minPasswordLength) {
-                    Toast.makeText(getApplicationContext(), String.format("Hasło musi mieć co najmniej %d znaków", minPasswordLength), Toast.LENGTH_LONG).show();
-                } else {
-                    RegistrationTask registrationTask = new RegistrationTask();
-                    registrationTask.execute();
-                }
+            if (name.isEmpty() || surname.isEmpty() || login.isEmpty() || email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(getApplicationContext(), "Uzupełnij wszystkie pola", Toast.LENGTH_LONG).show();
+            } else if (nameMatcher.find()) {
+                Toast.makeText(getApplicationContext(), notAllowedCharacterMessage + "imię", Toast.LENGTH_LONG).show();
+            } else if (surnameMatcher.find()) {
+                Toast.makeText(getApplicationContext(), notAllowedCharacterMessage + "nazwisko", Toast.LENGTH_LONG).show();
+            } else if (loginMatcher.find()) {
+                Toast.makeText(getApplicationContext(), notAllowedCharacterMessage + "login", Toast.LENGTH_LONG).show();
+            } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                Toast.makeText(getApplicationContext(), "Nieprawidłowy adres email", Toast.LENGTH_LONG).show();
+            } else if (!password.equals(passwordRepeat)) {
+                Toast.makeText(getApplicationContext(), "Hasła nie są takie same", Toast.LENGTH_LONG).show();
+            } else if (!uppercaseLetterMatcher.find()) {
+                Toast.makeText(getApplicationContext(), "Hasło musi zawierać wielką literę", Toast.LENGTH_LONG).show();
+            } else if (!lowercaseLetterMatcher.find()) {
+                Toast.makeText(getApplicationContext(), "Hasło musi zawierać małą literę", Toast.LENGTH_LONG).show();
+            } else if (!digitMatcher.find()) {
+                Toast.makeText(getApplicationContext(), "Hasło musi zawierać cyfrę", Toast.LENGTH_LONG).show();
+            } else if (!specialCharacterMatcher.find()) {
+                Toast.makeText(getApplicationContext(), String.format("Hasło musi zawierać znak specjalny: %s", specialCharacters), Toast.LENGTH_LONG).show();
+            } else if (password.length() < minPasswordLength) {
+                Toast.makeText(getApplicationContext(), String.format("Hasło musi mieć co najmniej %d znaków", minPasswordLength), Toast.LENGTH_LONG).show();
+            } else {
+                RegistrationTask registrationTask = new RegistrationTask();
+                registrationTask.execute();
             }
         });
     }

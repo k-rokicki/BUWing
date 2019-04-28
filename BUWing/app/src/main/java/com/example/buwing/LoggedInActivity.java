@@ -23,10 +23,13 @@ import static com.example.buwing.MainActivity.loginCredentials;
 import static com.example.buwing.MainActivity.name;
 import static com.example.buwing.MainActivity.surname;
 import static com.example.buwing.MainActivity.login;
+import static com.example.buwing.MainScreenFragment.invitationsMenuItemString;
 
 public class LoggedInActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    @SuppressLint("StaticFieldLeak")
+    static NavigationView navigationView;
     @SuppressLint("StaticFieldLeak")
     static TextView nameTextView;
     @SuppressLint("StaticFieldLeak")
@@ -47,7 +50,7 @@ public class LoggedInActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
 
@@ -75,14 +78,13 @@ public class LoggedInActivity extends AppCompatActivity
     private void tellFragments(){
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
         for (Fragment f : fragments) {
-            if (f != null && f instanceof BaseFragment)
+            if (f instanceof BaseFragment)
                 ((BaseFragment)f).onBackPressed();
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.logged_in, menu);
         return true;
@@ -103,9 +105,12 @@ public class LoggedInActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+        MainScreenFragment.GetPendingInvitationsCountTask getPendingInvitationsCountTask = new MainScreenFragment.GetPendingInvitationsCountTask();
+        getPendingInvitationsCountTask.execute();
+        MainScreenFragment.GetOpeningHoursTask getOpeningHoursTask = new MainScreenFragment.GetOpeningHoursTask();
+        getOpeningHoursTask.execute();
         // Handle navigation view item clicks here.
         displaySelectedScreen(item.getItemId());
         return true;
@@ -161,5 +166,10 @@ public class LoggedInActivity extends AppCompatActivity
     public static void updateUserInfo() {
         nameTextView.setText(String.format("%s %s", name, surname));
         loginTextView.setText(login);
+    }
+
+    public static void updateInvitationMenuItem() {
+        MenuItem invitationsMenuItem = navigationView.getMenu().findItem(R.id.nav_invitationList);
+        invitationsMenuItem.setTitle(invitationsMenuItemString);
     }
 }

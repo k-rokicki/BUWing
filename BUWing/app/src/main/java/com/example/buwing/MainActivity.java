@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Xml;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -45,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
     static String loginCredentialsFilename;
     static String loginCredentialsPath;
     static File loginCredentials;
+    static boolean seatTaken = false;
+    static int takenSeatId;
+    static int takenSeatFloor;
 
     @SuppressLint("StaticFieldLeak")
     private class AuthenticationTask extends AsyncTask<Void, Void, Boolean> {
@@ -119,30 +121,21 @@ public class MainActivity extends AppCompatActivity {
         passwordTextView = findViewById(R.id.passwordTextView);
         forgotPasswordButton = findViewById(R.id.forgotPasswordButton);
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                login = loginTextView.getText().toString();
-                password = passwordTextView.getText().toString();
-                AuthenticationTask loginTask = new AuthenticationTask();
-                loginTask.execute();
-            }
+        loginButton.setOnClickListener(v -> {
+            login = loginTextView.getText().toString();
+            password = passwordTextView.getText().toString();
+            AuthenticationTask loginTask = new AuthenticationTask();
+            loginTask.execute();
         });
 
-        registerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getBaseContext(), RegisterActivity.class);
-                startActivity(intent);
-            }
+        registerButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getBaseContext(), RegisterActivity.class);
+            startActivity(intent);
         });
 
-        forgotPasswordButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getBaseContext(), ForgotPasswordActivity.class);
-                startActivity(intent);
-            }
+        forgotPasswordButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getBaseContext(), ForgotPasswordActivity.class);
+            startActivity(intent);
         });
 
         if (loginCredentials.exists()) {
