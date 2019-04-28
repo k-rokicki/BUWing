@@ -377,27 +377,21 @@ public class InvitationListFragment extends BaseFragment {
             }
 
             viewHolder.loginTextView.setText(login);
-            viewHolder.confirmButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ConfirmInvitationTask confirmInvitationTask = new ConfirmInvitationTask();
-                    confirmInvitationTask.execute(getItem(position));
-                    invitations.remove(getItem(position));
-                    if (invitations.size() == 0)
-                        invitation = "Brak zaproszeń";
-                    adapter.notifyDataSetChanged();
-                }
+            viewHolder.confirmButton.setOnClickListener(v -> {
+                ConfirmInvitationTask confirmInvitationTask = new ConfirmInvitationTask();
+                confirmInvitationTask.execute(getItem(position));
+                invitations.remove(getItem(position));
+                if (invitations.size() == 0)
+                    invitation = "Brak zaproszeń";
+                adapter.notifyDataSetChanged();
             });
-            viewHolder.deleteButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    DeleteInvitationTask deleteInvitationTask = new DeleteInvitationTask();
-                    deleteInvitationTask.execute(getItem(position));
-                    invitations.remove(adapter.getItem(position));
-                    if (invitations.size() == 0)
-                        invitation = "Brak zaproszeń";
-                    adapter.notifyDataSetChanged();
-                }
+            viewHolder.deleteButton.setOnClickListener(v -> {
+                DeleteInvitationTask deleteInvitationTask = new DeleteInvitationTask();
+                deleteInvitationTask.execute(getItem(position));
+                invitations.remove(adapter.getItem(position));
+                if (invitations.size() == 0)
+                    invitation = "Brak zaproszeń";
+                adapter.notifyDataSetChanged();
             });
 
             return row;
@@ -426,24 +420,20 @@ public class InvitationListFragment extends BaseFragment {
         invitationTextView = Objects.requireNonNull(getActivity()).findViewById(R.id.invitationTextView);
         invitationTextView.setText(invitation);
 
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                friendLogin = loginEditText.getText().toString();
+        searchButton.setOnClickListener(v -> {
+            friendLogin = loginEditText.getText().toString();
 
-                Matcher loginMatcher = notAllowedCharacterPattern.matcher(friendLogin);
+            Matcher loginMatcher = notAllowedCharacterPattern.matcher(friendLogin);
 
-                if (friendLogin.isEmpty()) {
-                    Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
-                            emptyFieldMessage, Toast.LENGTH_LONG).show();
-                } else if (loginMatcher.find()) {
-                    Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
-                            notAllowedCharacterMessage + "login", Toast.LENGTH_LONG).show();
-                } else {
-                    AddFriendTask addFriendTask = new AddFriendTask();
-                    addFriendTask.execute();
-                }
-
+            if (friendLogin.isEmpty()) {
+                Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
+                        emptyFieldMessage, Toast.LENGTH_LONG).show();
+            } else if (loginMatcher.find()) {
+                Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
+                        notAllowedCharacterMessage + "login", Toast.LENGTH_LONG).show();
+            } else {
+                AddFriendTask addFriendTask = new AddFriendTask();
+                addFriendTask.execute();
             }
         });
     }
