@@ -29,28 +29,29 @@
         $result = pg_query($link,
                                 "SELECT token
                                 FROM resetPasswordTokens
-                                WHERE userid = " . pg_escape_string($userid));
+                                WHERE userid = " . pg_escape_string($userid) . "
+                                AND token = '" . pg_escape_string($token) . "'");
 
         $count = pg_num_rows($result);
 
-        if ($count == 0) {
-            echo "Wystąpił błąd. Spróbuj ponownie.";
+        if ($count != 1) {
+            echo "Ten link nie jest aktywny.";
         } else {
-            $row = pg_fetch_array($result, 0);
-            $activeToken = $row["token"];
-            
-            if ($activeToken != $token) {
-                echo "Ten link nie jest aktywny.";
-            } else {
-                echo "<form action=\"set_new_password_result.php\" method=\"post\">\n";
-                    echo "<input type=hidden name=userid value=" . $userid . ">";
-                    echo "Wpisz nowe hasło: <input type=password name=newPassword><br><br>";
-                    echo "Powtórz nowe hasło: <input type=password name=newPasswordRepeat><br><br>";
-                    echo "<input type=submit value=\"Ustaw hasło\">\n";
-                echo "</form>";
-                echo "<br>\n";
-            }
+            echo "Hasło musi zawierać wielką literę, małą literę,<br>";
+            echo "cyfrę, znak specjalny: @$!%*?&,.; <br>";
+            echo "i mieć co najmniej 8 znaków.<br>";
+            echo "<br><br>";
+            echo "<form action=\"set_new_password_result.php\" method=\"post\">\n";
+                echo "<input type=hidden name=userid value=" . $userid . ">";
+                echo "<input type=hidden name=token value=" . $token . ">";
+                echo "Wpisz nowe hasło: <input type=password name=newPassword><br><br>";
+                echo "Powtórz nowe hasło: <input type=password name=newPasswordRepeat><br><br>";
+                echo "<input type=submit value=\"Ustaw hasło\">\n";
+            echo "</form>";
+            echo "<br>\n";
         }
+    } else {
+        echo "Ten link nie jest aktywny.";
     }
 
     pg_close($link);

@@ -29,46 +29,37 @@ public class MyProfileChangeFragment extends BaseFragment {
         changePasswordButton = Objects.requireNonNull(getActivity()).findViewById(R.id.changePasswordButton);
         deleteAccountButton = Objects.requireNonNull(getActivity()).findViewById(R.id.deleteAccountButton);
 
-        changeInfoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fragment fragment = new MyProfileChangeInfoFragment();
-                FragmentTransaction ft =
-                        Objects.requireNonNull(getActivity()).getSupportFragmentManager().
-                                beginTransaction().
-                                setCustomAnimations
-                                        (R.anim.slide_in_right, R.anim.slide_out_left);
-                ft.replace(R.id.content_frame, fragment);
-                ft.commit();
-            }
+        changeInfoButton.setOnClickListener(v -> {
+            Fragment fragment = new MyProfileChangeInfoFragment();
+            FragmentTransaction ft =
+                    Objects.requireNonNull(getActivity()).getSupportFragmentManager().
+                            beginTransaction().
+                            setCustomAnimations
+                                    (R.anim.slide_in_right, R.anim.slide_out_left);
+            ft.replace(R.id.content_frame, fragment);
+            ft.commit();
         });
 
-        changePasswordButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fragment fragment = new MyProfileChangePasswordFragment();
-                FragmentTransaction ft =
-                        Objects.requireNonNull(getActivity()).getSupportFragmentManager().
-                                beginTransaction().
-                                setCustomAnimations
-                                        (R.anim.slide_in_right, R.anim.slide_out_left);
-                ft.replace(R.id.content_frame, fragment);
-                ft.commit();
-            }
+        changePasswordButton.setOnClickListener(v -> {
+            Fragment fragment = new MyProfileChangePasswordFragment();
+            FragmentTransaction ft =
+                    Objects.requireNonNull(getActivity()).getSupportFragmentManager().
+                            beginTransaction().
+                            setCustomAnimations
+                                    (R.anim.slide_in_right, R.anim.slide_out_left);
+            ft.replace(R.id.content_frame, fragment);
+            ft.commit();
         });
 
-        deleteAccountButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fragment fragment = new MyProfileDeleteAccountFragment();
-                FragmentTransaction ft =
-                        Objects.requireNonNull(getActivity()).getSupportFragmentManager().
-                                beginTransaction().
-                                setCustomAnimations
-                                        (R.anim.slide_in_right, R.anim.slide_out_left);
-                ft.replace(R.id.content_frame, fragment);
-                ft.commit();
-            }
+        deleteAccountButton.setOnClickListener(v -> {
+            Fragment fragment = new MyProfileDeleteAccountFragment();
+            FragmentTransaction ft =
+                    Objects.requireNonNull(getActivity()).getSupportFragmentManager().
+                            beginTransaction().
+                            setCustomAnimations
+                                    (R.anim.slide_in_right, R.anim.slide_out_left);
+            ft.replace(R.id.content_frame, fragment);
+            ft.commit();
         });
     }
 

@@ -70,7 +70,11 @@
                     }
                 }
             }
+        } else {
+            $success = -1;
         }
+    }  else {
+        $success = -1;
     }
 
     pg_close($link);
