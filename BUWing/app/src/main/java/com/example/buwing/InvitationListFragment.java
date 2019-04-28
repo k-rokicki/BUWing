@@ -47,8 +47,8 @@ public class InvitationListFragment extends BaseFragment {
     InvitationAdapter adapter;
 
     String friendLogin, status;
+  
     static String invitation = "Brak zaproszeń";
-
     final String emptyFieldMessage = "Uzupełnij pole login";
 
     @SuppressLint("StaticFieldLeak")

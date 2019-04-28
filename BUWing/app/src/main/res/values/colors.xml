@@ -5,4 +5,6 @@
     <color name="colorAccent">#F60404</color>
     <color name="acceptButton">#39AD41</color>
     <color name="deleteButton">#DF2A2A</color>
+    <color name="loginHeader">#00574B</color>
+    <color name="floorHeader">#008577</color>
 </resources>
