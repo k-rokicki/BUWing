@@ -52,22 +52,19 @@ public class MyProfileDeleteAccountFragment extends BaseFragment {
 
         confirmButton = Objects.requireNonNull(getActivity()).findViewById(R.id.confirmButton);
 
-        confirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                password = passwordTextView.getText().toString();
-                repeatPassword = repeatPasswordTextView.getText().toString();
+        confirmButton.setOnClickListener(v -> {
+            password = passwordTextView.getText().toString();
+            repeatPassword = repeatPasswordTextView.getText().toString();
 
-                if (password.isEmpty() || repeatPassword.isEmpty()) {
-                    Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
-                            "Uzupełnij wszystkie pola", Toast.LENGTH_LONG).show();
-                } else if (!password.equals(repeatPassword)) {
-                    Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
-                             "Hasła nie są takie same", Toast.LENGTH_LONG).show();
-                } else {
-                    DeleteAccountTask deleteAccountTask = new DeleteAccountTask();
-                    deleteAccountTask.execute();
-                }
+            if (password.isEmpty() || repeatPassword.isEmpty()) {
+                Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
+                        "Uzupełnij wszystkie pola", Toast.LENGTH_LONG).show();
+            } else if (!password.equals(repeatPassword)) {
+                Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
+                         "Hasła nie są takie same", Toast.LENGTH_LONG).show();
+            } else {
+                DeleteAccountTask deleteAccountTask = new DeleteAccountTask();
+                deleteAccountTask.execute();
             }
         });
     }

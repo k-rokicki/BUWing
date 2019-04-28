@@ -184,6 +184,8 @@ public class InvitationListFragment extends BaseFragment {
         } else {
             Toast.makeText(getContext(), "Jesteście znajomymi", Toast.LENGTH_LONG).show();
         }
+        MainScreenFragment.GetPendingInvitationsCountTask getPendingInvitationsCountTask = new MainScreenFragment.GetPendingInvitationsCountTask();
+        getPendingInvitationsCountTask.execute();
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -248,6 +250,8 @@ public class InvitationListFragment extends BaseFragment {
         } else {
             Toast.makeText(getContext(), "Odrzucono zaproszenie", Toast.LENGTH_LONG).show();
         }
+        MainScreenFragment.GetPendingInvitationsCountTask getPendingInvitationsCountTask = new MainScreenFragment.GetPendingInvitationsCountTask();
+        getPendingInvitationsCountTask.execute();
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -435,6 +439,7 @@ public class InvitationListFragment extends BaseFragment {
                 AddFriendTask addFriendTask = new AddFriendTask();
                 addFriendTask.execute();
             }
+
         });
     }
 }
