@@ -384,19 +384,17 @@ public class InvitationListFragment extends BaseFragment {
             viewHolder.confirmButton.setOnClickListener(v -> {
                 ConfirmInvitationTask confirmInvitationTask = new ConfirmInvitationTask();
                 confirmInvitationTask.execute(getItem(position));
-                arr.remove(getItem(position));
-                if (arr.size() == 0) {
-                    invitationTextView.setText(noInvitation);
-                }
+                invitations.remove(getItem(position));
+                if (invitations.size() == 0)
+                    invitation = "Brak zaproszeń";
                 adapter.notifyDataSetChanged();
             });
             viewHolder.deleteButton.setOnClickListener(v -> {
                 DeleteInvitationTask deleteInvitationTask = new DeleteInvitationTask();
                 deleteInvitationTask.execute(getItem(position));
-                arr.remove(adapter.getItem(position));
-                if (arr.size() == 0) {
-                    invitationTextView.setText(noInvitation);
-                }
+                invitations.remove(adapter.getItem(position));
+                if (invitations.size() == 0)
+                    invitation = "Brak zaproszeń";
                 adapter.notifyDataSetChanged();
             });
 
