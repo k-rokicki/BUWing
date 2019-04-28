@@ -84,7 +84,9 @@ public class FriendsListFragment extends BaseFragment {
                     if (res == 1) {
                         array = obj.getJSONArray("friends");
                         for (int i = 0; i < array.length(); i++) {
-                            friends.add(array.getString(i));
+                            String friend = array.get(i).toString();
+                            if (!friends.contains(friend))
+                                friends.add(array.getString(i));
                         }
                     }
                 } catch (JSONException e) {
