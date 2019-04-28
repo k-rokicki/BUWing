@@ -33,7 +33,7 @@ import java.util.Objects;
 
 public class FriendsListFragment extends BaseFragment {
 
-    ArrayList<String> friends = new ArrayList<>();
+    static ArrayList<String> friends = new ArrayList<>();
     ListView listView;
     FriendsAdapter adapter;
 
@@ -46,6 +46,7 @@ public class FriendsListFragment extends BaseFragment {
         protected Void doInBackground(Void... voids) {
             JSONObject obj;
             JSONArray array;
+            int res;
             StringBuilder response = new StringBuilder();
             String friendsURL = Constants.webserviceURL + "friends_info.php";
 
@@ -53,7 +54,9 @@ public class FriendsListFragment extends BaseFragment {
 
             try {
                 String POSTdata = URLEncoder.encode("login", "UtF-8")
-                        + "=" + URLEncoder.encode(MainActivity.login, "UTF-8");
+                        + "=" + URLEncoder.encode(MainActivity.login, "UTF-8")
+                        + "&" + URLEncoder.encode("password", "UTF-8")
+                        + "=" + URLEncoder.encode(MainActivity.password, "UTF-8");
 
                 URL url = new URL(friendsURL);
                 conn = url.openConnection();
@@ -77,9 +80,14 @@ public class FriendsListFragment extends BaseFragment {
                 String result = response.toString();
                 try {
                     obj = new JSONObject(result);
-                    array = obj.getJSONArray("friends");
-                    for (int i = 0; i < array.length(); i++) {
-                        friends.add(array.getString(i));
+                    res = Integer.parseInt(obj.get("result").toString());
+                    if (res == 1) {
+                        array = obj.getJSONArray("friends");
+                        for (int i = 0; i < array.length(); i++) {
+                            String friend = array.get(i).toString();
+                            if (!friends.contains(friend))
+                                friends.add(array.getString(i));
+                        }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -114,6 +122,8 @@ public class FriendsListFragment extends BaseFragment {
             try {
                 String POSTdata = URLEncoder.encode("myLogin", "UTF-8")
                         + "=" + URLEncoder.encode(MainActivity.login, "UTF-8")
+                        + "&" + URLEncoder.encode("password", "UTF-8")
+                        + "=" + URLEncoder.encode(MainActivity.password, "UTF-8")
                         + "&" + URLEncoder.encode("friendLogin", "UTF-8")
                         + "=" + URLEncoder.encode(friendLogin, "UTF-8");
                 URL url = new URL(confirmURL);
