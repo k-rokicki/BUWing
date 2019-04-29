@@ -60,7 +60,7 @@ public class InvitationListFragment extends BaseFragment {
         protected Void doInBackground(Void... voids) {
             JSONObject obj;
             JSONArray array;
-            int res;
+            int success;
             StringBuilder response = new StringBuilder();
             String invitationURL = Constants.webserviceURL + "invitation_info.php";
 
@@ -93,8 +93,8 @@ public class InvitationListFragment extends BaseFragment {
                 String result = response.toString();
                 try {
                     obj = new JSONObject(result);
-                    res = Integer.parseInt(obj.get("result").toString());
-                    if (res == 1) {
+                    success = Integer.parseInt(obj.get("result").toString());
+                    if (success == 1) {
                         array = obj.getJSONArray("users");
                         for (int i = 0; i < array.length(); i++) {
                             String friend = array.get(i).toString();
@@ -117,8 +117,7 @@ public class InvitationListFragment extends BaseFragment {
             else
                 invitation = "Zaproszenia";
             invitationTextView.setText(invitation);
-            adapter = new InvitationAdapter(getActivity(), R.layout.invitation_row, invitations);
-            listView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
         }
     }
 
@@ -418,6 +417,8 @@ public class InvitationListFragment extends BaseFragment {
         getInvitation.execute();
 
         listView = Objects.requireNonNull(getActivity()).findViewById(R.id.invitationListView);
+        adapter = new InvitationAdapter(getActivity(), R.layout.invitation_row, invitations);
+        listView.setAdapter(adapter);
 
         loginEditText = Objects.requireNonNull(getActivity()).findViewById(R.id.loginEditText);
         searchButton = Objects.requireNonNull(getActivity()).findViewById(R.id.searchButton);

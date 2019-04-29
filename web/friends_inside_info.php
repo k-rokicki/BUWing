@@ -26,15 +26,15 @@
                                 AND status = 't') ORDER BY floor");
       $count = pg_num_rows($result);
 
+      $logins = array();
+
       for ($i = 0; $i < $count; $i++) {
         $row = pg_fetch_array($result, $i, PGSQL_ASSOC);
         $logins[] = $row;
       }
 
-      if ($count > 0) {
-        $JSONobj->result = 1;
-        $JSONobj->friends = $logins;
-      }
+      $JSONobj->result = 1;
+      $JSONobj->friends = $logins;
     }
   }
 
