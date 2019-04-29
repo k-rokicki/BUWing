@@ -76,6 +76,9 @@ public class MyProfileChangeInfoFragment extends BaseFragment {
             if (newName.isEmpty() || newSurname.isEmpty() || newLogin.isEmpty() || newEmail.isEmpty()) {
                 Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
                         "Uzupełnij wszystkie pola", Toast.LENGTH_LONG).show();
+            } else if (newLogin.length() > 30) {
+                Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
+                        "Login może zawierać do 30 znaków", Toast.LENGTH_LONG).show();
             } else if (nameMatcher.find()) {
                 Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
                         notAllowedCharacterMessage + "imię", Toast.LENGTH_LONG).show();

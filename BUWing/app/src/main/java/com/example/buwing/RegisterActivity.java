@@ -153,6 +153,8 @@ public class RegisterActivity extends AppCompatActivity {
 
             if (name.isEmpty() || surname.isEmpty() || login.isEmpty() || email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(getApplicationContext(), "Uzupełnij wszystkie pola", Toast.LENGTH_LONG).show();
+            } else if (login.length() > 30) {
+                Toast.makeText(getApplicationContext(), "Login może zawierać do 30 znaków", Toast.LENGTH_LONG).show();
             } else if (nameMatcher.find()) {
                 Toast.makeText(getApplicationContext(), notAllowedCharacterMessage + "imię", Toast.LENGTH_LONG).show();
             } else if (surnameMatcher.find()) {
