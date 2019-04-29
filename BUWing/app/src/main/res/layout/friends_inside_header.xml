@@ -8,21 +8,35 @@
         android:id="@+id/headerLoginTextView"
         android:layout_width="0dp"
         android:layout_height="40dp"
-        android:layout_weight="0.7"
+        android:layout_weight="0.55"
         android:background="@color/loginHeader"
         android:text="login"
         android:textAlignment="center"
-        android:textSize="30sp"
-        android:textAllCaps="true" />
+        android:textAllCaps="false"
+        android:textColor="#ffffff"
+        android:textSize="24sp" />
 
     <TextView
         android:id="@+id/floorHeaderTextView"
         android:layout_width="0dp"
         android:layout_height="40dp"
-        android:layout_weight="0.3"
+        android:layout_weight="0.2"
         android:background="@color/floorHeader"
         android:text="piętro"
         android:textAlignment="center"
-        android:textAllCaps="true"
-        android:textSize="30sp" />
+        android:textAllCaps="false"
+        android:textColor="#ffffff"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/seatHeaderTextView"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_weight="0.25"
+        android:background="@color/seatHeader"
+        android:text="miejsce"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="#ffffff"
+        android:textSize="24sp" />
 </LinearLayout>

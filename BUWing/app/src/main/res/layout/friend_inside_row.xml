@@ -8,7 +8,7 @@
         android:id="@+id/loginTextView"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:layout_weight="0.7"
+        android:layout_weight="0.55"
         android:text="login"
         android:textAlignment="center"
         android:textSize="30sp" />
@@ -17,8 +17,17 @@
         android:id="@+id/floorTextView"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:layout_weight="0.3"
+        android:layout_weight="0.2"
         android:text="floor"
+        android:textAlignment="center"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/seatTextView"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="0.25"
+        android:text="seat"
         android:textAlignment="center"
         android:textSize="30sp" />
 </LinearLayout>
