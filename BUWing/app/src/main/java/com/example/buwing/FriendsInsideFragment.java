@@ -31,7 +31,7 @@ import java.util.Objects;
 
 public class FriendsInsideFragment extends BaseFragment {
 
-    static ArrayList<FriendRow> arr = new ArrayList<>();
+    static ArrayList<FriendRow> friends = new ArrayList<>();
     ListView listView;
     FriendsInsideAdapter adapter;
 
@@ -106,15 +106,17 @@ public class FriendsInsideFragment extends BaseFragment {
                     obj = new JSONObject(result);
                     success = Integer.parseInt(obj.get("result").toString());
                     if (success == 1) {
+                        ArrayList<FriendRow> temp = new ArrayList<>();
                         array = obj.getJSONArray("friends");
                         for (int i = 0; i < array.length(); i++) {
                             JSONObject jsonObject = array.getJSONObject(i);
                             String login = jsonObject.get("login").toString();
                             int floor = Integer.parseInt(jsonObject.get("floor").toString());
                             FriendRow row = new FriendRow(login, floor);
-                            if (!arr.contains(row))
-                                arr.add(row);
+                            temp.add(row);
                         }
+                        friends.clear();
+                        friends.addAll(temp);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -126,8 +128,7 @@ public class FriendsInsideFragment extends BaseFragment {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            adapter = new FriendsInsideAdapter(getActivity(), R.layout.friend_inside_row, arr);
-            listView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
         }
     }
 
@@ -154,16 +155,14 @@ public class FriendsInsideFragment extends BaseFragment {
             String login = friendRow.getLogin();
             int floor = friendRow.getFloor();
 
-            View row = convertView;
-
-            if (row == null) {
+            if (convertView == null) {
                 LayoutInflater inflater = ((Activity)context).getLayoutInflater();
-                row = inflater.inflate(layoutResourceId, parent, false);
+                convertView = inflater.inflate(layoutResourceId, parent, false);
 
                 viewHolder = new ViewHolder();
-                viewHolder.loginTextView = row.findViewById(R.id.loginTextView);
-                viewHolder.floorTextView = row.findViewById(R.id.floorTextView);
-                row.setTag(viewHolder);
+                viewHolder.loginTextView = convertView.findViewById(R.id.loginTextView);
+                viewHolder.floorTextView = convertView.findViewById(R.id.floorTextView);
+                convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
@@ -171,7 +170,7 @@ public class FriendsInsideFragment extends BaseFragment {
             viewHolder.loginTextView.setText(login);
             viewHolder.floorTextView.setText(String.valueOf(floor));
 
-            return row;
+            return convertView;
         }
     }
 
@@ -191,5 +190,7 @@ public class FriendsInsideFragment extends BaseFragment {
 
         listView = Objects.requireNonNull(getActivity()).findViewById(R.id.friendsInsideListView);
         listView.addHeaderView(getLayoutInflater().inflate(R.layout.friends_inside_header, null));
+        adapter = new FriendsInsideAdapter(getActivity(), R.layout.friend_inside_row, friends);
+        listView.setAdapter(adapter);
     }
 }

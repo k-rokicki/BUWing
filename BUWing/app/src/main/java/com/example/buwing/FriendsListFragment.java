@@ -46,7 +46,7 @@ public class FriendsListFragment extends BaseFragment {
         protected Void doInBackground(Void... voids) {
             JSONObject obj;
             JSONArray array;
-            int res;
+            int success;
             StringBuilder response = new StringBuilder();
             String friendsURL = Constants.webserviceURL + "friends_info.php";
 
@@ -80,8 +80,8 @@ public class FriendsListFragment extends BaseFragment {
                 String result = response.toString();
                 try {
                     obj = new JSONObject(result);
-                    res = Integer.parseInt(obj.get("result").toString());
-                    if (res == 1) {
+                    success = Integer.parseInt(obj.get("result").toString());
+                    if (success == 1) {
                         array = obj.getJSONArray("friends");
                         for (int i = 0; i < array.length(); i++) {
                             String friend = array.get(i).toString();
@@ -98,8 +98,7 @@ public class FriendsListFragment extends BaseFragment {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            adapter = new FriendsAdapter(getActivity(), R.layout.friend_row, friends);
-            listView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
         }
     }
 
@@ -231,6 +230,7 @@ public class FriendsListFragment extends BaseFragment {
         getFriends.execute();
 
         listView = Objects.requireNonNull(getActivity()).findViewById(R.id.friendsListView);
-
+        adapter = new FriendsAdapter(getActivity(), R.layout.friend_row, friends);
+        listView.setAdapter(adapter);
     }
 }
