@@ -1,6 +1,7 @@
 package com.example.buwing;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,12 +12,12 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,8 +37,6 @@ import static com.example.buwing.MainActivity.password;
 import static com.example.buwing.MainActivity.seatTaken;
 import static com.example.buwing.MainActivity.takenSeatFloor;
 import static com.example.buwing.MainActivity.takenSeatId;
-import static com.example.buwing.MainScreenFragment.availableFloors;
-import static com.example.buwing.MainScreenFragment.availableTablesAtFloors;
 import static com.example.buwing.MainScreenFragment.isLibraryOpen;
 import static java.util.Objects.requireNonNull;
 
@@ -97,18 +96,13 @@ public class TakeSeatFragment extends BaseFragment {
                 scanBarcodeButton = requireNonNull(getView()).findViewById(R.id.scanBarcodeButton);
                 chooseFromListButton = requireNonNull(getView()).findViewById(R.id.chooseFromListButton);
 
-                /*
                 scanBarcodeButton.setOnClickListener(v -> {
-                    Fragment fragment = new TakeSeatScanBarcodeFragment();
-                    FragmentTransaction ft =
-                            Objects.requireNonNull(getActivity()).getSupportFragmentManager().
-                                    beginTransaction().
-                                    setCustomAnimations
-                                            (R.anim.slide_in_right, R.anim.slide_out_left);
-                    ft.replace(R.id.content_frame, fragment);
-                    ft.commit();
+                    IntentIntegrator integrator = IntentIntegrator.forSupportFragment(TakeSeatFragment.this);
+                    integrator.setPrompt("Skanuj kod ze stolika");
+                    integrator.setBeepEnabled(false);
+                    integrator.setBarcodeImageEnabled(true);
+                    integrator.initiateScan();
                 });
-                */
 
                 chooseFromListButton.setOnClickListener(v -> {
                     Fragment fragment = new TakeSeatFromListFragment();
@@ -137,6 +131,28 @@ public class TakeSeatFragment extends BaseFragment {
                     releaseSeatTask.execute();
                 });
             }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (result != null) {
+            if (result.getContents() == null) {
+                Toast.makeText(getContext(), "Spróbuj ponownie", Toast.LENGTH_LONG).show();
+            } else {
+                TakeSeatScanBarcodeFragment.barcodeString = result.getContents();
+                Fragment fragment = new TakeSeatScanBarcodeFragment();
+                FragmentTransaction ft =
+                        Objects.requireNonNull(getActivity()).getSupportFragmentManager().
+                                beginTransaction().
+                                setCustomAnimations
+                                        (R.anim.slide_in_right, R.anim.slide_out_left);
+                ft.replace(R.id.content_frame, fragment);
+                ft.commit();
+            }
+        } else {
+            Toast.makeText(getContext(), "Spróbuj ponownie", Toast.LENGTH_LONG).show();
         }
     }
 
