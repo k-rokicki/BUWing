@@ -41,36 +41,22 @@ import static com.example.buwing.MainScreenFragment.availableTablesAtFloors;
 import static com.example.buwing.MainScreenFragment.isLibraryOpen;
 import static java.util.Objects.requireNonNull;
 
-public class TakeSeatFragment extends BaseFragment {
+public class TakeSeatFromListFragment extends BaseFragment {
 
-    @SuppressLint("StaticFieldLeak")
-    static TextView floorTextView;
-    @SuppressLint("StaticFieldLeak")
-    static TextView tableNumberTextView;
+    Spinner floorSpinner;
+    Spinner tableNumberSpinner;
 
-    Button releaseSeatButton;
+    ArrayAdapter<Integer> availableFloorsAdapter;
+    ArrayAdapter<Integer> availableTablesAdapter;
 
-    static final String defaultTextViewString = "-";
-    static String floorTextViewString = defaultTextViewString;
-    static String tableNumberTextViewString = defaultTextViewString;
-
-    Button scanBarcodeButton;
-    Button chooseFromListButton;
+    Button takeSeatButton;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         MainScreenFragment.CheckSeatTakenTask checkSeatTakenTask = new MainScreenFragment.CheckSeatTakenTask();
         checkSeatTakenTask.execute();
-        if (!isLibraryOpen) {
-            _layout = R.layout.fragment_library_closed;
-        } else {
-            if (!seatTaken) {
-                _layout = R.layout.fragment_take_seat;
-            } else {
-                _layout = R.layout.fragment_seat_taken;
-            }
-        }
+        _layout = R.layout.fragment_take_seat_from_list;
         title = "zajmij miejsce";
         super.onCreate(savedInstanceState);
     }
@@ -78,13 +64,7 @@ public class TakeSeatFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (!isLibraryOpen)
-            return inflater.inflate(R.layout.fragment_library_closed, container, false);
-        else
-            if (!seatTaken)
-                return inflater.inflate(R.layout.fragment_take_seat, container, false);
-            else
-                return inflater.inflate(R.layout.fragment_seat_taken, container, false);
+        return inflater.inflate(R.layout.fragment_take_seat_from_list, container, false);
     }
 
     @Override
@@ -92,64 +72,73 @@ public class TakeSeatFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         requireNonNull(getActivity()).setTitle("zajmij miejsce");
 
-        if (isLibraryOpen) {
-            if (!seatTaken) {
-                scanBarcodeButton = requireNonNull(getView()).findViewById(R.id.scanBarcodeButton);
-                chooseFromListButton = requireNonNull(getView()).findViewById(R.id.chooseFromListButton);
+        floorSpinner = requireNonNull(getView()).findViewById(R.id.floorSpinner);
+        tableNumberSpinner = requireNonNull(getView()).findViewById(R.id.tableNumberSpinner);
+        MainScreenFragment.GetAvailableTablesTask getAvailableTablesTask = new MainScreenFragment.GetAvailableTablesTask();
+        getAvailableTablesTask.execute();
 
-                /*
-                scanBarcodeButton.setOnClickListener(v -> {
-                    Fragment fragment = new TakeSeatScanBarcodeFragment();
-                    FragmentTransaction ft =
-                            Objects.requireNonNull(getActivity()).getSupportFragmentManager().
-                                    beginTransaction().
-                                    setCustomAnimations
-                                            (R.anim.slide_in_right, R.anim.slide_out_left);
-                    ft.replace(R.id.content_frame, fragment);
-                    ft.commit();
-                });
-                */
+        floorSpinner = requireNonNull(getView()).findViewById(R.id.floorSpinner);
+        tableNumberSpinner = requireNonNull(getView()).findViewById(R.id.tableNumberSpinner);
 
-                chooseFromListButton.setOnClickListener(v -> {
-                    Fragment fragment = new TakeSeatFromListFragment();
-                    FragmentTransaction ft =
-                            Objects.requireNonNull(getActivity()).getSupportFragmentManager().
-                                    beginTransaction().
-                                    setCustomAnimations
-                                            (R.anim.slide_in_right, R.anim.slide_out_left);
-                    ft.replace(R.id.content_frame, fragment);
-                    ft.commit();
-                });
+        availableFloorsAdapter = new ArrayAdapter<>(requireNonNull(getContext()),
+                R.layout.spinner_item, availableFloors);
 
-            } else {
-                floorTextView = requireNonNull(getView()).findViewById(R.id.floorTextView);
-                tableNumberTextView = requireNonNull(getView()).findViewById(R.id.tableNumberTextView);
-                releaseSeatButton = requireNonNull(getView()).findViewById(R.id.releaseSeatButton);
+        floorSpinner.setAdapter(availableFloorsAdapter);
 
-                floorTextViewString = String.valueOf(takenSeatFloor);
-                tableNumberTextViewString = String.valueOf(takenSeatId);
+        AdapterView.OnItemSelectedListener floorSpinnerListener = new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                int selectedFloor = Integer.parseInt(floorSpinner.getSelectedItem().toString());
+                availableTablesAdapter = new ArrayAdapter<>(requireNonNull(getContext()),
+                        R.layout.spinner_item, requireNonNull(availableTablesAtFloors.get(selectedFloor)));
 
-                floorTextView.setText(floorTextViewString);
-                tableNumberTextView.setText(tableNumberTextViewString);
-
-                releaseSeatButton.setOnClickListener(v -> {
-                    ReleaseSeatTask releaseSeatTask = new ReleaseSeatTask();
-                    releaseSeatTask.execute();
-                });
+                tableNumberSpinner.setAdapter(availableTablesAdapter);
             }
-        }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        };
+
+        floorSpinner.setOnItemSelectedListener(floorSpinnerListener);
+
+        takeSeatButton = requireNonNull(getView()).findViewById(R.id.takeSeatButton);
+
+        takeSeatButton.setOnClickListener(v -> {
+            int floor = Integer.parseInt(floorSpinner.getSelectedItem().toString());
+            int table = Integer.parseInt(tableNumberSpinner.getSelectedItem().toString());
+
+            TakeSeatTask takeSeatTask = new TakeSeatTask(floor, table);
+            takeSeatTask.execute();
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        Fragment fragment = new TakeSeatFragment();
+        FragmentTransaction ft =
+                Objects.requireNonNull(getActivity()).getSupportFragmentManager().
+                        beginTransaction().
+                        setCustomAnimations
+                                (android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        ft.replace(R.id.content_frame, fragment);
+        ft.commit();
     }
 
     @SuppressLint("StaticFieldLeak")
-    private class ReleaseSeatTask extends AsyncTask<Void, Void, Boolean> {
-        private boolean released = false;
+    private class TakeSeatTask extends AsyncTask<Void, Void, Integer> {
+        int floor;
+        int table;
+        int took = 0;
 
-        ReleaseSeatTask() {}
+        TakeSeatTask(int floor, int table) {
+            this.floor = floor;
+            this.table = table;
+        }
 
         @Override
-        protected Boolean doInBackground(Void... voids) {
+        protected Integer doInBackground(Void... voids) {
             JSONObject obj;
-            String updateURL = Constants.webserviceURL + "release_seat.php";
+            String updateURL = Constants.webserviceURL + "take_seat.php";
             StringBuilder response = new StringBuilder();
             URLConnection conn;
 
@@ -157,7 +146,11 @@ public class TakeSeatFragment extends BaseFragment {
                 String POSTdata = URLEncoder.encode("login", "UTF-8")
                         + "=" + URLEncoder.encode(login, "UTF-8")
                         + "&" + URLEncoder.encode("password", "UTF-8")
-                        + "=" + URLEncoder.encode(password, "UTF-8");
+                        + "=" + URLEncoder.encode(password, "UTF-8")
+                        + "&" + URLEncoder.encode("floor", "UTF-8")
+                        + "=" + URLEncoder.encode(String.valueOf(floor), "UTF-8")
+                        + "&" + URLEncoder.encode("table", "UTF-8")
+                        + "=" + URLEncoder.encode(String.valueOf(table), "UTF-8");
                 URL url = new URL(updateURL);
 
                 conn = url.openConnection();
@@ -181,29 +174,29 @@ public class TakeSeatFragment extends BaseFragment {
                 String result = response.toString();
                 try {
                     obj = new JSONObject(result);
-                    released = Boolean.parseBoolean(obj.get("released").toString());
+                    took = Integer.parseInt(obj.get("took").toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
-            return released;
+            return took;
         }
 
         @Override
-        protected void onPostExecute(Boolean released) {
-            checkReleaseSuccess(released);
+        protected void onPostExecute(Integer took) {
+            checkTakeSuccess(took, floor, table);
         }
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    private void checkReleaseSuccess(boolean released) {
-        if (released) {
-            seatTaken = false;
-            takenSeatId = -1;
-            takenSeatFloor = -1;
+    private void checkTakeSuccess(int took, int floor, int table) {
+        if (took == 1) {
+            seatTaken = true;
+            takenSeatId = table;
+            takenSeatFloor = floor;
 
             Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
-                    "Pomyślnie zwolniono miejsce", Toast.LENGTH_LONG).show();
+                    "Pomyślnie zajęto miejsce", Toast.LENGTH_LONG).show();
 
             FragmentManager fragmentManager = getFragmentManager();
             requireNonNull(fragmentManager).popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
@@ -217,6 +210,9 @@ public class TakeSeatFragment extends BaseFragment {
                                     (android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             ft.replace(R.id.content_frame, fragment);
             ft.commit();
+        } else if (took == -1) {
+            Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
+                    "Miejsce już zajęte", Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
                     "Spróbuj ponownie", Toast.LENGTH_LONG).show();
