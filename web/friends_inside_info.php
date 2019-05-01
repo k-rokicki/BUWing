@@ -18,7 +18,7 @@
     $hashedPassword = $row["password"];
 
     if (password_verify($password, $hashedPassword)) {
-      $result = pg_query($link, "SELECT login, floor FROM tables LEFT JOIN users
+      $result = pg_query($link, "SELECT login, floor, tables.id as seat FROM tables LEFT JOIN users
                                 ON tables.userid = users.id
                                 WHERE userid = ANY(SELECT inviterid FROM friends
                                 WHERE inviteeid = $userId AND status = 't' UNION

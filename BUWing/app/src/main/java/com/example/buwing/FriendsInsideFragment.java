@@ -39,10 +39,12 @@ public class FriendsInsideFragment extends BaseFragment {
 
         private final String login;
         private final int floor;
+        private final int seat;
 
-        private FriendRow(String login, int floor) {
+        private FriendRow(String login, int floor, int seat) {
             this.login = login;
             this.floor = floor;
+            this.seat = seat;
         }
 
         private String getLogin() {
@@ -53,10 +55,13 @@ public class FriendsInsideFragment extends BaseFragment {
             return floor;
         }
 
+        private int getSeat() { return seat; }
+
         @Override
         public boolean equals(@Nullable Object obj) {
             if (obj instanceof FriendRow) {
-                return (((FriendRow) obj).login.equals(this.login) && ((FriendRow) obj).floor == this.floor);
+                return (((FriendRow) obj).login.equals(this.login) && ((FriendRow) obj).floor == this.floor
+                        && ((FriendRow) obj).seat == this.seat);
             }
             return false;
         }
@@ -112,7 +117,8 @@ public class FriendsInsideFragment extends BaseFragment {
                             JSONObject jsonObject = array.getJSONObject(i);
                             String login = jsonObject.get("login").toString();
                             int floor = Integer.parseInt(jsonObject.get("floor").toString());
-                            FriendRow row = new FriendRow(login, floor);
+                            int seat = Integer.parseInt(jsonObject.get("seat").toString());
+                            FriendRow row = new FriendRow(login, floor, seat);
                             temp.add(row);
                         }
                         friends.clear();
@@ -138,7 +144,7 @@ public class FriendsInsideFragment extends BaseFragment {
         private Context context;
 
         private class ViewHolder {
-            TextView loginTextView, floorTextView;
+            TextView loginTextView, floorTextView, seatTextView;
         }
 
         private FriendsInsideAdapter(Context context, int layoutResourceId, ArrayList<FriendRow> list) {
@@ -154,6 +160,7 @@ public class FriendsInsideFragment extends BaseFragment {
             FriendRow friendRow = getItem(position);
             String login = friendRow.getLogin();
             int floor = friendRow.getFloor();
+            int seat = friendRow.getSeat();
 
             if (convertView == null) {
                 LayoutInflater inflater = ((Activity)context).getLayoutInflater();
@@ -162,6 +169,7 @@ public class FriendsInsideFragment extends BaseFragment {
                 viewHolder = new ViewHolder();
                 viewHolder.loginTextView = convertView.findViewById(R.id.loginTextView);
                 viewHolder.floorTextView = convertView.findViewById(R.id.floorTextView);
+                viewHolder.seatTextView = convertView.findViewById(R.id.seatTextView);
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
@@ -169,6 +177,7 @@ public class FriendsInsideFragment extends BaseFragment {
 
             viewHolder.loginTextView.setText(login);
             viewHolder.floorTextView.setText(String.valueOf(floor));
+            viewHolder.seatTextView.setText(String.valueOf(seat));
 
             return convertView;
         }
