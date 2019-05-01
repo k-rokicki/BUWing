@@ -65,10 +65,10 @@ RETURNS TABLE (
         RETURN QUERY
             SELECT inviterid
             FROM friends
-            WHERE inviteeid = userId
+            WHERE inviteeid = userId AND status = 't'
                 UNION (
                         SELECT inviteeid
                         FROM friends
-                        WHERE inviterid = userId);
+                        WHERE inviterid = userId AND status = 't');
     END;
 $$ language plpgsql;
