@@ -29,6 +29,8 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import static com.example.buwing.MainScreenFragment.isLibraryOpen;
+
 public class FriendsInsideFragment extends BaseFragment {
 
     static ArrayList<FriendRow> friends = new ArrayList<>();
@@ -187,7 +189,11 @@ public class FriendsInsideFragment extends BaseFragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        _layout = R.layout.fragment_friends_inside;
+        if (!isLibraryOpen) {
+            _layout = R.layout.fragment_library_closed;
+        } else {
+            _layout = R.layout.fragment_friends_inside;
+        }
         title = "znajomi w BUW";
         super.onCreate(savedInstanceState);
     }
@@ -196,16 +202,18 @@ public class FriendsInsideFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        listView = Objects.requireNonNull(getActivity()).findViewById(R.id.friendsInsideListView);
-        listView.addHeaderView(getLayoutInflater().inflate(R.layout.friends_inside_header, null));
-        adapter = new FriendsInsideAdapter(getActivity(), R.layout.friend_inside_row, friends);
-        listView.setAdapter(adapter);
+        if (isLibraryOpen) {
+            listView = Objects.requireNonNull(getActivity()).findViewById(R.id.friendsInsideListView);
+            listView.addHeaderView(getLayoutInflater().inflate(R.layout.friends_inside_header, null));
+            adapter = new FriendsInsideAdapter(getActivity(), R.layout.friend_inside_row, friends);
+            listView.setAdapter(adapter);
 
-        //noinspection StatementWithEmptyBody
-        while (listView.getCount() - 1 != friends.size()) {
-            // issue #30 fix (?)
+            //noinspection StatementWithEmptyBody
+            while (listView.getCount() - 1 != friends.size()) {
+                // issue #30 fix (?)
+            }
+
+            new GetFriends().execute();
         }
-
-        new GetFriends().execute();
     }
 }
