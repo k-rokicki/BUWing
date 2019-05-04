@@ -55,7 +55,9 @@ public class FriendsInsideFragment extends BaseFragment {
             return floor;
         }
 
-        private int getSeat() { return seat; }
+        private int getSeat() {
+            return seat;
+        }
 
         @Override
         public boolean equals(@Nullable Object obj) {
@@ -194,12 +196,16 @@ public class FriendsInsideFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        GetFriends getFriends = new GetFriends();
-        getFriends.execute();
-
         listView = Objects.requireNonNull(getActivity()).findViewById(R.id.friendsInsideListView);
         listView.addHeaderView(getLayoutInflater().inflate(R.layout.friends_inside_header, null));
         adapter = new FriendsInsideAdapter(getActivity(), R.layout.friend_inside_row, friends);
         listView.setAdapter(adapter);
+
+        //noinspection StatementWithEmptyBody
+        while (listView.getCount() - 1 != friends.size()) {
+            // issue #30 fix (?)
+        }
+
+        new GetFriends().execute();
     }
 }
