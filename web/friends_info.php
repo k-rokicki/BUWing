@@ -42,7 +42,8 @@
       $ids = implode(', ', $array);
 
       $result = pg_query($link, "SELECT login FROM users
-                                WHERE id IN ($ids)");
+                                WHERE id IN ($ids)
+                                ORDER BY login");
 
       $logins = array();
 
