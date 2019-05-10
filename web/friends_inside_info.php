@@ -23,7 +23,7 @@
                                 WHERE userid = ANY(SELECT inviterid FROM friends
                                 WHERE inviteeid = $userId AND status = 't' UNION
                                 SELECT inviteeid FROM friends WHERE inviterid = $userId
-                                AND status = 't') ORDER BY floor");
+                                AND status = 't') ORDER BY floor, seat");
       $count = pg_num_rows($result);
 
       $logins = array();

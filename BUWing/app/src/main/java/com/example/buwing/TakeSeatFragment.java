@@ -59,8 +59,6 @@ public class TakeSeatFragment extends BaseFragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        MainScreenFragment.CheckSeatTakenTask checkSeatTakenTask = new MainScreenFragment.CheckSeatTakenTask();
-        checkSeatTakenTask.execute();
         if (!isLibraryOpen) {
             _layout = R.layout.fragment_library_closed;
         } else {
@@ -114,6 +112,8 @@ public class TakeSeatFragment extends BaseFragment {
                     ft.replace(R.id.content_frame, fragment);
                     ft.commit();
                 });
+
+                new MainScreenFragment.CheckSeatTakenTask().execute();
 
             } else {
                 floorTextView = requireNonNull(getView()).findViewById(R.id.floorTextView);
