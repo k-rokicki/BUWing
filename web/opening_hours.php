@@ -2,48 +2,48 @@
     $dayOfWeek = date("N");
     $currentHour = date("G");
     $currentMinutes = date("i") * 1;
-    
+
     if ($dayOfWeek > 1) {
         $prevDay = $dayOfWeek - 1;
     } else {
         $prevDay = 7;
     }
-    
+
     $timetable = array(
         1 => array(
             'opensHour' => 8,
             'opensMinutes' => 0,
-            'closesHour' => 22,
+            'closesHour' => 5,
             'closesMinutes' => 0,
-            'closesNextDay' => false,
+            'closesNextDay' => true,
         ),
         2 => array(
             'opensHour' => 8,
             'opensMinutes' => 0,
-            'closesHour' => 22,
+            'closesHour' => 5,
             'closesMinutes' => 0,
-            'closesNextDay' => false,
+            'closesNextDay' => true,
         ),
         3 => array(
             'opensHour' => 8,
             'opensMinutes' => 0,
-            'closesHour' => 22,
+            'closesHour' => 5,
             'closesMinutes' => 0,
-            'closesNextDay' => false,
+            'closesNextDay' => true,
         ),
         4 => array(
             'opensHour' => 8,
             'opensMinutes' => 0,
-            'closesHour' => 22,
+            'closesHour' => 5,
             'closesMinutes' => 0,
-            'closesNextDay' => false,
+            'closesNextDay' => true,
         ),
         5 => array(
             'opensHour' => 8,
             'opensMinutes' => 0,
-            'closesHour' => 22,
+            'closesHour' => 5,
             'closesMinutes' => 0,
-            'closesNextDay' => false,
+            'closesNextDay' => true,
         ),
         6 => array(
             'opensHour' => 9,
@@ -74,7 +74,7 @@
             $dayToFetchHours = $dayOfWeek;
         }
     }
-    
+
     $JSONobj->opensHour = $timetable[$dayToFetchHours]['opensHour'];;
     $JSONobj->opensMinutes = $timetable[$dayToFetchHours]['opensMinutes'];
     $JSONobj->closesHour = $timetable[$dayToFetchHours]['closesHour'];
