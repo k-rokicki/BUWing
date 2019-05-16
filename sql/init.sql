@@ -5,7 +5,7 @@ CREATE TABLE users(
     name VARCHAR(30) NOT NULL,
     surname VARCHAR(50) NOT NULL,
     email VARCHAR(200) NOT NULL UNIQUE,
-    activated INTEGER NOT NULL DEFAULT 0,
+    activated BOOLEAN NULL DEFAULT FALSE,
     PRIMARY KEY (id)
 );
 
@@ -31,8 +31,9 @@ CREATE TABLE tables(
 CREATE TABLE activationTokens(
     userid INTEGER NOT NULL,
     token VARCHAR(50) NOT NULL,
+    time_log TIMESTAMP NOT NULL DEFAULT now(),
     PRIMARY KEY (userid),
-    FOREIGN KEY (userid) REFERENCES users(id)
+    FOREIGN KEY (userid) REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE pendingPasswordChanges(

@@ -15,3 +15,26 @@ RETURNS TABLE (
                         AND status = true);
     END;
 $$ language plpgsql;
+
+CREATE OR REPLACE FUNCTION getActivationTokenIdsToDelete()    
+RETURNS TABLE (
+    userid INTEGER
+) AS $$
+    BEGIN
+        RETURN QUERY
+            SELECT activationTokens.userid
+            FROM activationTokens
+            WHERE EXTRACT(EPOCH FROM current_timestamp - time_log) / 108000 >= 30;
+    END;
+$$ language plpgsql;
+
+
+CREATE OR REPLACE FUNCTION cleanActivationTokens()    
+RETURNS TRIGGER AS $$
+    BEGIN
+        DELETE FROM users
+        WHERE id IN (SELECT * FROM getActivationTokenIdsToDelete());
+        
+        RETURN NEW;
+    END;
+$$ language plpgsql;
