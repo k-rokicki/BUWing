@@ -10,22 +10,25 @@
 </head>
 <body onload="assignTableStatus()">
     <div id="biblioteka">
-        <div id="czytelnia">
+        <div id="czytelnia" class="miejsce" onscroll="aaa()">
             <div class="stolik" id="stolik1"></div>
             <div class="stolik" id="stolik2"></div>
             <div class="stolik" id="stolik3"></div>
 
         </div>
+        <div id="korytarz" class="miejsce"></div>
+        <div id="reszta" class="miejsce"></div>
     </div>
+    
     <div id="popupZajmij" class="popup">
-        <button id="popupButton" onclick="takeTable()">Zajmij</button>
-        <button class="close" onclick="closePopups()">X</button>
+        <button class="popupButton" onclick="takeTable()">Zajmij</button>
+        <button class="popupButton" onclick="closePopups()">X</button>
     </div>
 
     <div id="popupZwolnij" class="popup">
-            <button id="popupButton" onclick="freeTable()">Zwolinj</button>
-            <button class="close" onclick="closePopups()">X</button>
-        </div>
+            <button class="popupButton" onclick="freeTable()">Zwolnij</button>
+            <button class="popupButton" onclick="closePopups()">X</button>
+    </div>
     
 </body>
 <script src="main.js"></script>

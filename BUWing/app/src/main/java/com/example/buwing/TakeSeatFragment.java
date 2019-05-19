@@ -46,6 +46,7 @@ public class TakeSeatFragment extends BaseFragment {
         View v = inflater.inflate(R.layout.fragment_take_seat, container, false);
         WebView webview = (WebView) v.findViewById(R.id.webview);
         webview.getSettings().setJavaScriptEnabled(true);
+        webview.getSettings().setBuiltInZoomControls(true);
         webview.setWebViewClient(new NewWebViewClient());
         webview.loadUrl("file:///android_asset/main.html");
         return v;

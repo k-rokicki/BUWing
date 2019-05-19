@@ -23,19 +23,117 @@ var idStolik;
         }
         
     }
+    
+    // w trakcie ogarniania jakby co
+    // wykrywanie pinch zooma
+    window.onwheel = function(event) {
+      //  event.preventDefault();
+
+       // console.log("hhh2");
+        var tables = document.getElementsByClassName('stolik');
+       // console.log(document.getElementById("biblioteka").offsetHeight);
+       // console.log(document.width);
+
+        tables[0].style.background = "red";
+        /*
+        if (document.getElementById("biblioteka").offsetHeight > 400) {
+            for (let i = 0; i < tables.length; i++) {
+                tables[i].style.display = "block";
+            }
+        }
+        else {
+            for (let i = 0; i < tables.length; i++) {
+                tables[i].style.display = "none";
+            }
+        } */
+       // render();
+    }
+
+    /*
+    console.log('zoom', window.devicePixelRatio);
+    var elFrame = document.getElementById("frame");
+    elFrame.contentWindow.addEventListener('resize', function() {
+        console.log('zoom', window.devicePixelRatio);
+
+        var tables = document.getElementsByClassName('stolik');
+        if (document.getElementById("biblioteka").offsetHeight > 400) {
+            for (let i = 0; i < tables.length; i++) {
+                tables.style.display = "block";
+            }
+        }
+        else {
+            for (let i = 0; i < tables.length; i++) {
+                tables.style.display = "none";
+            }
+        }    
+    });
+    /*
+    window.addEventListener('resize', function() {
+        console.log("aaaa");
+        var tables = document.getElementsByClassName('stolik');
+        if (window.devicePixelRatio >= 2) {
+            for (let i = 0; i < tables.length; i++) {
+                tables.style.display = "block";
+            }
+        }
+        else {
+            for (let i = 0; i < tables.length; i++) {
+                tables.style.display = "none";
+            }
+        }
+
+    })  */
+    /*
+    const resizeObserver = new ResizeObserver(entries => {
+        for (let entry of entries) {
+            if (entry.target.style.background == "red") {
+                entry.target.style.background = "yellow";
+                document.getElementById("stolik2").style.display = "none";
+            }
+          else  {
+            entry.target.style.background = "red";
+
+            document.getElementById("stolik2").style.display = "block";
+
+          }
+        }
+        document.getElementById("stolik1").style.display = "block";
+      });
+
+   // var x = document.getElementsByTagName("iframe")[0].contentWindow;
+    resizeObserver.observe(document.getElementById("czytelnia"));
+  //  resizeObserver.observe(x);
+ */
 
     function showPopupTT() {
+        var windowHeight = window.innerHeight * 0.5; // zeby przy zoomie rozmiar popupu sie nie psul
+        var windowWidth = window.innerWidth * 0.5;
+        var font_size = window.innerHeight * 0.05;
+        console.log(windowHeight);
+        document.getElementById("popupZajmij").style.height = windowHeight + "px";
+        document.getElementById("popupZajmij").style.width = windowWidth + "px";
+        var popupButtons = document.getElementsByClassName('popupButton');
+        for (let i = 0; i < popupButtons.length; i++) {
+            popupButtons[i].style.fontSize = font_size + "px";
+        }
         document.getElementById("popupZajmij").style.display = "block";
     }
 
     function showPopupFT() {
+        var windowHeight = window.innerHeight * 0.5; 
+        var font_size = window.innerHeight * 0.05;
+        document.getElementById("popupZwolnij").style.height = windowHeight + "px";
+        document.getElementById("popupZwolnij").style.width = windowHeight + "px";
+        var popupButtons = document.getElementsByClassName('popupButton');
+        for (let i = 0; i < popupButtons.length; i++) {
+            popupButtons[i].style.fontSize = font_size + "px";
+        }
         document.getElementById("popupZwolnij").style.display = "block";
     }
 
     function closePopups() {
         document.getElementById("popupZajmij").style.display = "none";
         document.getElementById("popupZwolnij").style.display = "none";
-
     }
 
     function takeTable() {
@@ -75,5 +173,4 @@ var idStolik;
 
         document.getElementById("stolik3").status = "zajety";
         document.getElementById("stolik3").style.background = "#C86BA8";
-
     }
