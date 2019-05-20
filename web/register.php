@@ -26,7 +26,7 @@
     if (isset($name) && isset($surname) && isset($login) && isset($email) && isset($password) &&
         trim($name) != "" && trim($surname) != "" && trim($login) != "" &&
         trim($email) != "" && trim($password) != "") {
-
+        
         $result = pg_query($link,
                                 "SELECT COUNT(*)
                                 FROM users
@@ -35,7 +35,7 @@
 
         $row = pg_fetch_array($result, 0);
         $loginOrPasswordAlreadyUsed = $row[0];
-
+        
         if ($loginOrPasswordAlreadyUsed) {
             $JSONobj->registered = -1;
         } else {
@@ -62,7 +62,7 @@
 
                 if ($result) {
                     $JSONobj->registered = 1;
-
+                    
                     $confirmationLink = "http://students.mimuw.edu.pl/~kr394714/buwing/activate.php?userid="
                                         . $userid . "&token=" . $token;
 
@@ -73,7 +73,7 @@
                     $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 
                     $message = '<p>' . $name . ' ' . $surname . ', dziękujemy za rejestrację konta w BUWing.</p>
-                                <p>Aktywuj konto klikając w ten <a href="' . $confirmationLink . '">link (ważny 30 dni).</a></p>';
+                                <p>Aktywuj konto klikając w ten <a href="' . $confirmationLink . '">link</a></p>';
 
                     mail($email, $subject, $message, $headers);
                 }

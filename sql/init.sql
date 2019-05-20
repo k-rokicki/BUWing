@@ -5,7 +5,7 @@ CREATE TABLE users(
     name VARCHAR(30) NOT NULL,
     surname VARCHAR(50) NOT NULL,
     email VARCHAR(200) NOT NULL UNIQUE,
-    activated BOOLEAN NULL DEFAULT FALSE,
+    activated INTEGER NOT NULL DEFAULT 0,
     PRIMARY KEY (id)
 );
 
@@ -31,9 +31,8 @@ CREATE TABLE tables(
 CREATE TABLE activationTokens(
     userid INTEGER NOT NULL,
     token VARCHAR(50) NOT NULL,
-    time_log TIMESTAMP NOT NULL DEFAULT now(),
     PRIMARY KEY (userid),
-    FOREIGN KEY (userid) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (userid) REFERENCES users(id)
 );
 
 CREATE TABLE pendingPasswordChanges(
@@ -58,3 +57,20 @@ CREATE TABLE pendingAccountDeletions(
     FOREIGN KEY (userid) REFERENCES users(id)
 );
 
+CREATE OR REPLACE FUNCTION getFriendsId(userId INTEGER)
+RETURNS TABLE (
+    id INTEGER
+) AS $$
+    BEGIN
+        RETURN QUERY
+            SELECT inviterid
+            FROM friends
+            WHERE inviteeid = userId
+            AND status = true
+                UNION (
+                        SELECT inviteeid
+                        FROM friends
+                        WHERE inviterid = userId
+                        AND status = true);
+    END;
+$$ language plpgsql;
