@@ -47,6 +47,7 @@ public class TakeSeatFragment extends BaseFragment {
         WebView webview = (WebView) v.findViewById(R.id.webview);
         webview.getSettings().setJavaScriptEnabled(true);
         webview.getSettings().setBuiltInZoomControls(true);
+        webview.getSettings().setDisplayZoomControls(false);
         webview.setWebViewClient(new NewWebViewClient());
         webview.loadUrl("file:///android_asset/main.html");
         return v;

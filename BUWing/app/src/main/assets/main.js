@@ -1,4 +1,6 @@
 var idStolik;
+var initWindowHeight = window.innerHeight;
+var initWindowWidth = window.innerWidth;
 
     document.body.onclick = function(e) {   //when the document body is clicked
         if (window.event) {
@@ -23,87 +25,25 @@ var idStolik;
         }
         
     }
-    
-    // w trakcie ogarniania jakby co
-    // wykrywanie pinch zooma
-    window.onwheel = function(event) {
-      //  event.preventDefault();
 
-       // console.log("hhh2");
+    // pinch zoomowanie stolikow
+    document.getElementById("biblioteka").addEventListener('touchend', touchendeventListener, false);
+
+    function touchendeventListener(event) {
         var tables = document.getElementsByClassName('stolik');
-       // console.log(document.getElementById("biblioteka").offsetHeight);
-       // console.log(document.width);
-
-        tables[0].style.background = "red";
-        /*
-        if (document.getElementById("biblioteka").offsetHeight > 400) {
-            for (let i = 0; i < tables.length; i++) {
-                tables[i].style.display = "block";
+            if (window.innerHeight < initWindowHeight * 0.7) { //na razie na poziomie 70%
+                for (let i = 0; i < tables.length; i++) {
+                    tables[i].style.display = "block";
+                }
             }
-        }
-        else {
-            for (let i = 0; i < tables.length; i++) {
-                tables[i].style.display = "none";
+            else {
+                for (let i = 0; i < tables.length; i++) {
+                    tables[i].style.display = "none";
+                }
             }
-        } */
-       // render();
     }
-
-    /*
-    console.log('zoom', window.devicePixelRatio);
-    var elFrame = document.getElementById("frame");
-    elFrame.contentWindow.addEventListener('resize', function() {
-        console.log('zoom', window.devicePixelRatio);
-
-        var tables = document.getElementsByClassName('stolik');
-        if (document.getElementById("biblioteka").offsetHeight > 400) {
-            for (let i = 0; i < tables.length; i++) {
-                tables.style.display = "block";
-            }
-        }
-        else {
-            for (let i = 0; i < tables.length; i++) {
-                tables.style.display = "none";
-            }
-        }    
-    });
-    /*
-    window.addEventListener('resize', function() {
-        console.log("aaaa");
-        var tables = document.getElementsByClassName('stolik');
-        if (window.devicePixelRatio >= 2) {
-            for (let i = 0; i < tables.length; i++) {
-                tables.style.display = "block";
-            }
-        }
-        else {
-            for (let i = 0; i < tables.length; i++) {
-                tables.style.display = "none";
-            }
-        }
-
-    })  */
-    /*
-    const resizeObserver = new ResizeObserver(entries => {
-        for (let entry of entries) {
-            if (entry.target.style.background == "red") {
-                entry.target.style.background = "yellow";
-                document.getElementById("stolik2").style.display = "none";
-            }
-          else  {
-            entry.target.style.background = "red";
-
-            document.getElementById("stolik2").style.display = "block";
-
-          }
-        }
-        document.getElementById("stolik1").style.display = "block";
-      });
-
-   // var x = document.getElementsByTagName("iframe")[0].contentWindow;
-    resizeObserver.observe(document.getElementById("czytelnia"));
-  //  resizeObserver.observe(x);
- */
+    
+    
 
     function showPopupTT() {
         var windowHeight = window.innerHeight * 0.5; // zeby przy zoomie rozmiar popupu sie nie psul
