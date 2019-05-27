@@ -27,7 +27,7 @@ var initWindowWidth = window.innerWidth;
     }
 
     // pinch zoomowanie stolikow
-    document.getElementById("biblioteka").addEventListener('touchend', touchendeventListener, false);
+    /*document.getElementById("biblioteka").addEventListener('touchend', touchendeventListener, false);
 
     function touchendeventListener(event) {
         var tables = document.getElementsByClassName('stolik');
@@ -41,33 +41,35 @@ var initWindowWidth = window.innerWidth;
                     tables[i].style.display = "none";
                 }
             }
-    }
+    }*/
     
     
 
     function showPopupTT() {
-        var windowHeight = window.innerHeight * 0.5; // zeby przy zoomie rozmiar popupu sie nie psul
+        var windowHeight = window.innerHeight * 0.3; // zeby przy zoomie rozmiar popupu sie nie psul
         var windowWidth = window.innerWidth * 0.5;
         var font_size = window.innerHeight * 0.05;
         console.log(windowHeight);
         document.getElementById("popupZajmij").style.height = windowHeight + "px";
         document.getElementById("popupZajmij").style.width = windowWidth + "px";
         var popupButtons = document.getElementsByClassName('popupButton');
-        for (let i = 0; i < popupButtons.length; i++) {
+        popupButtons[0].style.fontSize = font_size + "px";
+        /*for (let i = 0; i < popupButtons.length; i++) {
             popupButtons[i].style.fontSize = font_size + "px";
-        }
+        }*/
         document.getElementById("popupZajmij").style.display = "block";
     }
 
     function showPopupFT() {
-        var windowHeight = window.innerHeight * 0.5; 
+        var windowHeight = window.innerHeight * 0.3;
         var font_size = window.innerHeight * 0.05;
         document.getElementById("popupZwolnij").style.height = windowHeight + "px";
         document.getElementById("popupZwolnij").style.width = windowHeight + "px";
         var popupButtons = document.getElementsByClassName('popupButton');
-        for (let i = 0; i < popupButtons.length; i++) {
+        popupButtons[1].style.fontSize = font_size + "px";
+        /*for (let i = 0; i < popupButtons.length; i++) {
             popupButtons[i].style.fontSize = font_size + "px";
-        }
+        }*/
         document.getElementById("popupZwolnij").style.display = "block";
     }
 

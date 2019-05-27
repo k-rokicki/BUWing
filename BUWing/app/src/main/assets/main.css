@@ -47,7 +47,7 @@ body {
     background-color: #28724F;
     height: 3vw;
     width: 5vw;
-    display: none;
+    display: block;
 }
 
 #stolik1 {
@@ -68,8 +68,17 @@ body {
     top: 40%;
 }
 
+#zajmowanie_przycisk {
+    margin-left: 28%;
+}
+
+#zwalnianie_przycisk {
+    margin-left: 20%;
+}
+
 .popup {
-    background: lightpink;
+    background-color: rgba(232, 159, 235, 0.6);
+    border-radius: 10%;
     z-index: 1;
     position: fixed;
     left: 50%;
@@ -79,4 +88,23 @@ body {
     -webkit-transform: translate(-50%,-50%);
     transform: translate(-50%,-50%);
     display: none;
+}
+
+.popup .close {
+    position: absolute;
+    top: 2%;
+    right: 4%;
+    transition: all 200ms;
+    font-size: 4vh;
+    font-weight: bold;
+    text-decoration: none;
+    color: rgb(253, 242, 242);
+}
+
+.popupButton {
+    margin-top: 30%;
+    background: white;
+    position: center;
+    font-style: bold;
+    border-radius: 10%;
 }
