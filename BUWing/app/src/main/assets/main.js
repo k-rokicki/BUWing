@@ -2,6 +2,11 @@ var idStolik;
 var initWindowHeight = window.innerHeight;
 var initWindowWidth = window.innerWidth;
 
+// do sprawdzania ze przycisk odswieza
+var dt = new Date();
+document.getElementById("datetime").innerHTML = dt.toLocaleTimeString();
+
+
     document.body.onclick = function(e) {   //when the document body is clicked
         if (window.event) {
             e = event.srcElement;           //assign the element clicked to e (IE 6-8)
@@ -26,8 +31,9 @@ var initWindowWidth = window.innerWidth;
         
     }
 
-    // pinch zoomowanie stolikow
-    /*document.getElementById("biblioteka").addEventListener('touchend', touchendeventListener, false);
+    // pinch zoomowanie stolikow 
+    
+    document.getElementById("biblioteka").addEventListener('touchend', touchendeventListener, false);
 
     function touchendeventListener(event) {
         var tables = document.getElementsByClassName('stolik');
@@ -41,7 +47,7 @@ var initWindowWidth = window.innerWidth;
                     tables[i].style.display = "none";
                 }
             }
-    }*/
+    }
     
     
 
