@@ -14,7 +14,9 @@ import android.widget.Toast;
 import android.webkit.WebSettings;
 import android.widget.Button;
 
-//import static com.example.buwing.MainActivity.seatTaken;
+
+import static com.example.buwing.MainActivity.login;
+import static com.example.buwing.MainActivity.password;
 
 public class TakeSeatFragment extends BaseFragment {
 
@@ -55,8 +57,8 @@ public class TakeSeatFragment extends BaseFragment {
         webview.getSettings().setBuiltInZoomControls(true);
         webview.getSettings().setDisplayZoomControls(false);
         webview.setWebViewClient(new NewWebViewClient());
-        webview.loadUrl("file:///android_asset/first.html");
-
+        webview.loadUrl("file:///android_asset/first.html?login=" + login
+                + "&password=" + password + "&floor=1");
         Spinner spin = (Spinner) v.findViewById(R.id.level_spinner);
         String[] levels = {"Poziom 1", "Poziom 2", "Poziom 3",};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, levels);
@@ -65,18 +67,20 @@ public class TakeSeatFragment extends BaseFragment {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
                 if (levels[position].equals("Poziom 1")) {
-                    webview.loadUrl("file:///android_asset/first.html");
+                    webview.loadUrl("file:///android_asset/first.html?login=" +
+                            login + "&password=" + password + "&floor=1");
                 }
                 else if (levels[position].equals("Poziom 2")) {
-                    webview.loadUrl("file:///android_asset/second.html");
+                    webview.loadUrl("file:///android_asset/second.html?login=" +
+                            login + "&password=" + password + "&floor=2");
                 }
                 else {
-                    webview.loadUrl("file:///android_asset/third.html");
+                    webview.loadUrl("file:///android_asset/third.html?login=" +
+                            login + "&password=" + password + "&floor=3");
                 }
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
         spin.setAdapter(adapter);

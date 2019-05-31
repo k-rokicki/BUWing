@@ -100,14 +100,6 @@ document.getElementById("datetime").innerHTML = dt.toLocaleTimeString();
         document.getElementById("popupZwolnij").style.display = "none";
     }
 
-    function takeTable() {
-        if (successfulTT()) {
-            idStolik.style.background = "orange";
-            idStolik.status = "okupowany";
-        }
-        closePopups();
-    }
-
     function freeTable() {
         if (successfulFT()) {
             idStolik.style.background = "#28724F";
@@ -116,25 +108,70 @@ document.getElementById("datetime").innerHTML = dt.toLocaleTimeString();
         closePopups();
     }
 
-    //laczenie z baza czy sie udalo zajac
-    function successfulTT() {
-        return true;
+    // zajmowanie stolika
+    function takeTable() {
+        var table;
+        // roboczo bo nie ma zwalniania jeszcze
+        if (idStolik.id == "stolik1") {
+            table = "10";
+        }
+        else if (idStolik.id == "stolik2") {
+            table = "11";
+        }
+        else {
+            table = "12";
+        }
+        var postData = 'login=' + login + '&password=' + password + '&table=' + table + '&floor=' + floor; 
+       // console.log(postData);       
+        var http = new XMLHttpRequest();
+        var url = 'http://students.mimuw.edu.pl/~kr394714/buwing/take_seat.php';
+        http.open('POST', url, true);
+
+        http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        http.send(postData);
+
+        http.onreadystatechange = function() {
+            if(http.readyState == 4 && http.status == 200) {
+                const content = JSON.parse(http.responseText);
+               // console.log(content['took']);
+                var result = content['took'];
+                if (result == 1) {
+                    idStolik.style.background = "orange";
+                    idStolik.status = "okupowany";
+                }
+            }
+        }
+        closePopups();
     }
+
     //laczenie z baza czy udalo sie zwolnic
     function successfulFT() {
         return true;
     }
 
+    var login, password, floor;
+
     //przypisze statusy stolikom na podstawie skryptu php przy zaladowaniu strony
     function assignTableStatus() {
-        //wyluskanie loginu uzytkownika zeby przekazac phpowi
-        var url_string = window.location.href;
-        var url = new URL(url_string);
-        var c = url.searchParams.get("login");
-        
         document.getElementById("stolik1").status = "wolny";
         document.getElementById("stolik2").status = "wolny";
 
         document.getElementById("stolik3").status = "zajety";
         document.getElementById("stolik3").style.background = "#C86BA8";
+    }
+
+
+    function getUserData() {
+        var url_string = window.location.href;
+        var url = new URL(url_string);
+        login = url.searchParams.get("login");
+        password =  url.searchParams.get("password");
+        floor = url.searchParams.get("floor");
+
+        document.getElementById("dane").innerHTML = "dane uzytkownika (roboczo)" + login + password + floor;
+    }
+
+    function start() {
+        assignTableStatus();
+        getUserData();
     }
