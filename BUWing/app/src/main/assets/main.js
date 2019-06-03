@@ -117,7 +117,7 @@ document.getElementById("datetime").innerHTML = dt.toLocaleTimeString();
             if(http.readyState == 4 && http.status == 200) {
                 const content = JSON.parse(http.responseText);
                 console.log(content);  
-                var result =  content[released];          
+                var result =  content['released'];          
                 if (result && idStolik) {
                     idStolik.style.background = "#28724F";
                     idStolik.status = "wolny";
