@@ -1,0 +1,28 @@
+
+.popup {
+    background-color: rgba(232, 159, 235, 0.6);
+    border-radius: 10%;
+    z-index: 1;
+    position: absolute;
+    display: none;
+    /*text-align: center;*/
+}
+
+.popup .close {
+    position: absolute;
+    top: 2%;
+    right: 4%;
+    transition: all 200ms;
+    font-weight: bold;
+    text-decoration: none;
+    color: rgb(253, 242, 242);
+}
+
+.popupButton {
+    background: white;
+    font-style: bold;
+    border-radius: 10%;
+    position: absolute;
+    /*display: inline-block;*/
+}
+
