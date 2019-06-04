@@ -8,7 +8,7 @@ document.getElementById("datetime").innerHTML = dt.toLocaleTimeString();
 var idStolik;
 var initWindowHeight = window.innerHeight;
 var initWindowWidth = window.innerWidth;
-var login, password, floor;
+var login, password, floor, friend;
 
 
 
@@ -33,6 +33,11 @@ function getUserData() {
     login = url.searchParams.get("login");
     password =  url.searchParams.get("password");
     floor = url.searchParams.get("floor");
+
+    friend = url.searchParams.get("friend");
+    if (friend != null) {
+        //costam skrypt znajdujacy stolik (moze tez imie i nazwisko) i setfriends marker(stolik)
+    }
 }
 
 
@@ -126,8 +131,10 @@ function showPopup(popup) {
 
     var marginLeft = window.scrollX + window.innerWidth/4;
     var marginTop = window.scrollY + window.innerHeight/4;
-    var buttonTop = marginTop *0.9;
-    var buttonLeft = marginLeft *0.8;
+    var buttonTop = windowHeight*0.25;
+    var buttonLeft = windowWidth/8;
+    var buttonWidth = 6*windowWidth/8;
+    var buttonHeight = buttonTop*2;
 
     popup.style.left = marginLeft + "px";
     popup.style.top = marginTop + "px";
@@ -136,6 +143,8 @@ function showPopup(popup) {
     for (let i = 0; i < popupButtons.length; i++) {
         popupButtons[i].style.fontSize = font_size + "px";
         popupButtons[i].style.top = buttonTop + "px";
+        popupButtons[i].style.width = buttonWidth + "px";
+        popupButtons[i].style.height = buttonHeight + "px";
     }
 
     document.getElementById('zwalnianie_przycisk').style.left = buttonLeft + "px";
