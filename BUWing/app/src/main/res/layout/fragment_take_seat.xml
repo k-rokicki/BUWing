@@ -20,25 +20,25 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chooseFromListButton"
+        app:layout_constraintTop_toBottomOf="@+id/chooseFromMapButton"
         app:layout_constraintVertical_bias="0.074" />
 
     <Button
-        android:id="@+id/chooseFromListButton"
+        android:id="@+id/chooseFromMapButton"
         android:layout_width="250dp"
         android:layout_height="75dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="200dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="460dp"
-        android:text="wybierz z listy"
+        android:layout_marginBottom="8dp"
+        android:text="wybierz z mapy"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.0" />
 
 
 </android.support.constraint.ConstraintLayout>

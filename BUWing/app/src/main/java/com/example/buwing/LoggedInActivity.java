@@ -23,6 +23,7 @@ import static com.example.buwing.MainActivity.name;
 import static com.example.buwing.MainActivity.surname;
 import static com.example.buwing.MainActivity.login;
 import static com.example.buwing.MainScreenFragment.invitationsMenuItemString;
+import static com.example.buwing.MainScreenFragment.takeSeatMenuItemString;
 
 public class LoggedInActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -148,5 +149,11 @@ public class LoggedInActivity extends AppCompatActivity
     public static void updateInvitationMenuItem() {
         MenuItem invitationsMenuItem = navigationView.getMenu().findItem(R.id.nav_invitationList);
         invitationsMenuItem.setTitle(invitationsMenuItemString);
+    }
+
+    public static void updateTakeSeatMenuItem() {
+        MenuItem takeSeatMenuItem = navigationView.getMenu().findItem(R.id.nav_takeSeat);
+        takeSeatMenuItem.setTitle(takeSeatMenuItemString);
+
     }
 }

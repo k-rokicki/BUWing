@@ -21,6 +21,7 @@ CREATE TABLE friends(
 CREATE TABLE tables(
     id serial,
     floor INTEGER NOT NULL,
+    barcode VARCHAR(20) NOT NULL UNIQUE,
     taken BOOLEAN NOT NULL DEFAULT false,
     userid INTEGER DEFAULT NULL,
     PRIMARY KEY (id),

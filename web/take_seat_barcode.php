@@ -1,4 +1,5 @@
 <?php
+
     header('Access-Control-Allow-Origin: *');
     header('Access-Control-Allow-Methods: GET, POST');
     header("Access-Control-Allow-Headers: X-Requested-With");
@@ -7,10 +8,11 @@
 
     $login = $_POST["login"];
     $password = $_POST["password"];
-    $floor = $_POST["floor"];
-    $table = $_POST["table"];
+    $barcode = $_POST["barcode"];
 
     $JSONobj->took = 0;
+    $JSONobj->table = -1;
+    $JSONobj->floor = -1;
 
     $link = pg_connect("host=labdb dbname=bd user=" . $ini['db_user'] . " password=" . $ini['db_password']);
     $result = pg_query($link,
@@ -27,15 +29,17 @@
                         "UPDATE tables
                          SET taken = TRUE,
                          userid = " . $row["id"] . "
-                         WHERE floor = " . $floor . "
-                         AND id = " . $table . "
+                         WHERE barcode = '" . $barcode . "'
                          AND taken = FALSE
-                         RETURNING id");
+                         RETURNING id, floor");
 
-            if (pg_num_rows($result) != 0) {
-                $JSONobj->took = 1;
-            } else {
+            if (pg_num_rows($result) != 1) {
                 $JSONobj->took = -1;
+            } else {
+                $JSONobj->took = 1;
+                $row = pg_fetch_array($result, 0);
+                $JSONobj->table = $row["id"];
+                $JSONobj->floor = $row["floor"];
             }
         }
     }

@@ -11,11 +11,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.textservice.TextInfo;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,16 +33,13 @@ import static com.example.buwing.MainActivity.password;
 import static com.example.buwing.MainActivity.seatTaken;
 import static com.example.buwing.MainActivity.takenSeatFloor;
 import static com.example.buwing.MainActivity.takenSeatId;
-import static com.example.buwing.MainScreenFragment.availableFloors;
-import static com.example.buwing.MainScreenFragment.availableTablesAtFloors;
 import static java.util.Objects.requireNonNull;
 
 public class TakeSeatScanBarcodeFragment extends BaseFragment {
 
     static String barcodeString = null;
 
-    TextView floorTextView;
-    TextView tableNumberTextView;
+    TextView barcodeTextView;
     Button takeSeatButton;
 
     @Override
@@ -69,11 +62,12 @@ public class TakeSeatScanBarcodeFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         requireNonNull(getActivity()).setTitle("zajmij miejsce");
 
-        floorTextView = requireNonNull(getView()).findViewById(R.id.floorTextView);
-        tableNumberTextView = requireNonNull(getView()).findViewById(R.id.tableNumberTextView);
+        barcodeTextView = requireNonNull(getView()).findViewById(R.id.barcodeTextView);
+        barcodeTextView.setText(barcodeString);
+
         takeSeatButton = requireNonNull(getView()).findViewById(R.id.takeSeatButton);
 
-        floorTextView.setText(barcodeString);
+        takeSeatButton.setOnClickListener(v -> new TakeSeatTask().execute());
     }
 
     @Override
@@ -86,6 +80,101 @@ public class TakeSeatScanBarcodeFragment extends BaseFragment {
                                 (android.R.anim.slide_in_left, android.R.anim.slide_out_right);
         ft.replace(R.id.content_frame, fragment);
         ft.commit();
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private class TakeSeatTask extends AsyncTask<Void, Void, Integer> {
+        String barcode;
+        int took = 0;
+        int floor = -1;
+        int table = -1;
+
+        TakeSeatTask() {
+            this.barcode = barcodeString;
+        }
+
+        @Override
+        protected Integer doInBackground(Void... voids) {
+            JSONObject obj;
+            String updateURL = Constants.webserviceURL + "take_seat_barcode.php";
+            StringBuilder response = new StringBuilder();
+            URLConnection conn;
+
+            try {
+                String POSTdata = URLEncoder.encode("login", "UTF-8")
+                        + "=" + URLEncoder.encode(login, "UTF-8")
+                        + "&" + URLEncoder.encode("password", "UTF-8")
+                        + "=" + URLEncoder.encode(password, "UTF-8")
+                        + "&" + URLEncoder.encode("barcode", "UTF-8")
+                        + "=" + URLEncoder.encode(barcode, "UTF-8");
+                URL url = new URL(updateURL);
+
+                conn = url.openConnection();
+                conn.setDoOutput(true);
+                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+                wr.write(POSTdata);
+                wr.flush();
+
+                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                String inputLine;
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                String result = response.toString();
+                try {
+                    obj = new JSONObject(result);
+                    took = Integer.parseInt(obj.get("took").toString());
+                    floor = Integer.parseInt(obj.get("floor").toString());
+                    table = Integer.parseInt(obj.get("table").toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            return took;
+        }
+
+        @Override
+        protected void onPostExecute(Integer took) {
+            checkTakeSuccess(took, floor, table);
+        }
+    }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private void checkTakeSuccess(int took, int floor, int table) {
+        if (took == 1) {
+            seatTaken = true;
+            takenSeatId = table;
+            takenSeatFloor = floor;
+
+            Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
+                    "Pomyślnie zajęto miejsce", Toast.LENGTH_LONG).show();
+
+            FragmentManager fragmentManager = getFragmentManager();
+            requireNonNull(fragmentManager).popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            LoggedInActivity.navigationView.getMenu().getItem(0).setChecked(true);
+
+            Fragment fragment = new MainScreenFragment();
+            FragmentTransaction ft =
+                    Objects.requireNonNull(getActivity()).getSupportFragmentManager().
+                            beginTransaction().
+                            setCustomAnimations
+                                    (android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+            ft.replace(R.id.content_frame, fragment);
+            ft.commit();
+        } else if (took == -1) {
+            Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
+                    "Miejsce już zajęte", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
+                    "Spróbuj ponownie", Toast.LENGTH_LONG).show();
+        }
     }
 
 }

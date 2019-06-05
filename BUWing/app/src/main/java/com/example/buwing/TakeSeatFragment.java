@@ -38,6 +38,8 @@ import static com.example.buwing.MainActivity.seatTaken;
 import static com.example.buwing.MainActivity.takenSeatFloor;
 import static com.example.buwing.MainActivity.takenSeatId;
 import static com.example.buwing.MainScreenFragment.isLibraryOpen;
+import static com.example.buwing.MainScreenFragment.takeSeatFreeMenuItemString;
+import static com.example.buwing.MainScreenFragment.takeSeatTakenMenuItemString;
 import static java.util.Objects.requireNonNull;
 
 public class TakeSeatFragment extends BaseFragment {
@@ -54,7 +56,7 @@ public class TakeSeatFragment extends BaseFragment {
     static String tableNumberTextViewString = defaultTextViewString;
 
     Button scanBarcodeButton;
-    Button chooseFromListButton;
+    Button chooseFromMapButton;
 
 
     @Override
@@ -64,11 +66,12 @@ public class TakeSeatFragment extends BaseFragment {
         } else {
             if (!seatTaken) {
                 _layout = R.layout.fragment_take_seat;
+                title = takeSeatFreeMenuItemString;
             } else {
                 _layout = R.layout.fragment_seat_taken;
+                title = takeSeatTakenMenuItemString;
             }
         }
-        title = "zajmij miejsce";
         super.onCreate(savedInstanceState);
     }
 
@@ -92,7 +95,7 @@ public class TakeSeatFragment extends BaseFragment {
         if (isLibraryOpen) {
             if (!seatTaken) {
                 scanBarcodeButton = requireNonNull(getView()).findViewById(R.id.scanBarcodeButton);
-                chooseFromListButton = requireNonNull(getView()).findViewById(R.id.chooseFromListButton);
+                chooseFromMapButton = requireNonNull(getView()).findViewById(R.id.chooseFromMapButton);
 
                 scanBarcodeButton.setOnClickListener(v -> {
                     IntentIntegrator integrator = IntentIntegrator.forSupportFragment(TakeSeatFragment.this);
@@ -102,15 +105,8 @@ public class TakeSeatFragment extends BaseFragment {
                     integrator.initiateScan();
                 });
 
-                chooseFromListButton.setOnClickListener(v -> {
-                    Fragment fragment = new TakeSeatFromListFragment();
-                    FragmentTransaction ft =
-                            Objects.requireNonNull(getActivity()).getSupportFragmentManager().
-                                    beginTransaction().
-                                    setCustomAnimations
-                                            (R.anim.slide_in_right, R.anim.slide_out_left);
-                    ft.replace(R.id.content_frame, fragment);
-                    ft.commit();
+                chooseFromMapButton.setOnClickListener(v -> {
+                    //TODO połączyć z mapą
                 });
 
                 new MainScreenFragment.CheckSeatTakenTask().execute();
@@ -137,22 +133,16 @@ public class TakeSeatFragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if (result != null) {
-            if (result.getContents() == null) {
-                Toast.makeText(getContext(), "Spróbuj ponownie", Toast.LENGTH_LONG).show();
-            } else {
-                TakeSeatScanBarcodeFragment.barcodeString = result.getContents();
-                Fragment fragment = new TakeSeatScanBarcodeFragment();
-                FragmentTransaction ft =
-                        Objects.requireNonNull(getActivity()).getSupportFragmentManager().
-                                beginTransaction().
-                                setCustomAnimations
-                                        (R.anim.slide_in_right, R.anim.slide_out_left);
-                ft.replace(R.id.content_frame, fragment);
-                ft.commit();
-            }
-        } else {
-            Toast.makeText(getContext(), "Spróbuj ponownie", Toast.LENGTH_LONG).show();
+        if (result != null && result.getContents() != null) {
+            TakeSeatScanBarcodeFragment.barcodeString = result.getContents();
+            Fragment fragment = new TakeSeatScanBarcodeFragment();
+            FragmentTransaction ft =
+                    Objects.requireNonNull(getActivity()).getSupportFragmentManager().
+                            beginTransaction().
+                            setCustomAnimations
+                                    (R.anim.slide_in_right, R.anim.slide_out_left);
+            ft.replace(R.id.content_frame, fragment);
+            ft.commit();
         }
     }
 
