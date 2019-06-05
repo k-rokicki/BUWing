@@ -47,7 +47,7 @@ function setFriendOnMap() {
     var postData = 'login=' + login + '&password=' + password + '&friend=' + friend;
 
         var http = new XMLHttpRequest();
-        var url = 'http://students.mimuw.edu.pl/~af394182/friend_table_info.php';
+        var url = 'http://students.mimuw.edu.pl/~kr394714/buwing/friend_table_info.php';
         http.open('POST', url, true);
 
         http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
@@ -268,7 +268,7 @@ function assignTableStatus() {
 
     var postData = 'login=' + login + '&password=' + password + '&floor=' + floor;
     var http = new XMLHttpRequest();
-    var url = 'http://students.mimuw.edu.pl/~af394182/tables_status_info.php';
+    var url = 'http://students.mimuw.edu.pl/~kr394714/buwing/tables_status_info.php';
     http.open('POST', url, true);
 
     http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
