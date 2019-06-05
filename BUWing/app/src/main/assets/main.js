@@ -153,15 +153,15 @@ document.body.onclick = function(e) {
 /* Funkcja pokazująca okienka popup */
 function showPopup(popup) {
 
-    var windowHeight = window.innerHeight * 0.5;
-    var windowWidth = window.innerWidth * 0.5;
-    var font_size = window.innerHeight * 0.05;
+    var windowHeight = window.innerHeight * 0.8;
+    var windowWidth = window.innerWidth * 0.7;
+    var font_size = window.innerHeight * 0.02;
 
     popup.style.height = windowHeight + "px";
     popup.style.width = windowWidth + "px";
 
-    var marginLeft = window.scrollX + window.innerWidth/4;
-    var marginTop = window.scrollY + window.innerHeight/4;
+    var marginLeft = window.scrollX + (window.innerWidth/10)*1.5;
+    var marginTop = window.scrollY + window.innerHeight/10;
     var buttonTop = windowHeight*0.25;
     var buttonLeft = windowWidth/8;
     var buttonWidth = 6*windowWidth/8;
@@ -176,6 +176,14 @@ function showPopup(popup) {
         popupButtons[i].style.top = buttonTop + "px";
         popupButtons[i].style.width = buttonWidth + "px";
         popupButtons[i].style.height = buttonHeight + "px";
+    }
+    var popupClose = document.getElementsByClassName('close');
+    for (let i = 0; i < popupClose.length; i++) {
+        popupClose[i].width = buttonWidth/4;
+        popupClose[i].height = buttonHeight/4;
+        popupClose[i].style.fontSize = font_size + "px";
+        popupClose[i].style.right = 0;
+        popupClose[i].style.top = 0;
     }
 
     document.getElementById('zwalnianie_przycisk').style.left = buttonLeft + "px";

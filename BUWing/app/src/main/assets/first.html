@@ -346,21 +346,22 @@
     </svg>
 
 <div id="popupZajmij" class="popup">
-    <a class="close" href="#">&times;</a>
+    <!-- <a class="close" href="#">&times;</a> -->
+    <button class="close" onclick="closePopups()">X</button>
     <button id="zajmowanie_przycisk" class="popupButton" onclick="takeTable()">Zajmij</button>
 </div>
 
 <div id="popupZwolnij" class="popup">
-    <a class="close" href="#">&times;</a>
+        <!-- <a class="close" href="#">&times;</a> -->
+    <button class="close" onclick="closePopups()">X</button>
     <button id="zwalnianie_przycisk" class="popupButton" onclick="freeTable()">Zwolnij</button>
 </div>
 
 <div id="popupInfo" class="popup">
-    <a class="close" href="#">&times;</a>
+        <!-- <a class="close" href="#">&times;</a> -->
+    <button class="close" onclick="closePopups()">X</button>
     <p>W celu zajęcia nowego stolika zwolnij dotychczasowo zajmowany stolik</p>
-    <!-- <p id="nrStolika"></p> -->
-    <!--<p id="pietroStolika"></p>  -->
-    <!-- --> <button class="popupButton" onclick="freeTable()">Zwolnij</button>
+    <button class="popupButton" onclick="freeTable()">Zwolnij</button>
 </div>
 
 <div id="popupBrakZnajomego" class="popup">

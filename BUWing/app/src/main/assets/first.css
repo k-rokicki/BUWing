@@ -15,7 +15,10 @@
     transition: all 200ms;
     font-weight: bold;
     text-decoration: none;
-    color: rgb(253, 242, 242);
+    color: rgb(215, 136, 218);
+    background: white;
+    border-radius: 10%;
+    border-color: beige;
 }
 
 .popupButton {
