@@ -12,10 +12,6 @@
   $password = $_POST["password"];
   $floor = $_POST["floor"];
   
-  //$login = "alpaczka";
-  //$password = "Alpasia22@";
-  //$floor = 1;
-  
   $JSONobj->result = 0;
   $result = pg_query($link, "SELECT id, password FROM users
                             WHERE login =  '" . pg_escape_string($login) . "'");

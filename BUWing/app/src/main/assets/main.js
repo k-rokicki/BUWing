@@ -36,8 +36,37 @@ function getUserData() {
 
     friend = url.searchParams.get("friend");
     if (friend != null) {
-        //costam skrypt znajdujacy stolik (moze tez imie i nazwisko) i setfriends marker(stolik)
+        setFriendOnMap();
     }
+}
+
+
+/* Funkcja znajduje znajomego i umieszcza jego znacznik na mapie */
+function setFriendOnMap() {
+
+    var postData = 'login=' + login + '&password=' + password + '&friend=' + friend;
+
+        var http = new XMLHttpRequest();
+        var url = 'http://students.mimuw.edu.pl/~af394182/friend_table_info.php';
+        http.open('POST', url, true);
+
+        http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        http.send(postData);
+
+        http.onreadystatechange = function() {
+            if (http.readyState == 4 && http.status == 200) {
+                const content = JSON.parse(http.responseText);
+
+                var result = content['tablesId'];
+
+                if (result != null) {
+                    setFriendsMarker(result);
+                }
+                else {
+                    showPopup(document.getElementById("popupBrakZnajomego"));
+                }
+            }
+        }
 }
 
 
@@ -58,13 +87,15 @@ function initTables() {
 
 /* Funkcja ustawijąca znacznik nad ławką o danym id */
 function setFriendsMarker(tablesId) {
+
     var svg = document.getElementsByTagName('svg')[1];
+    var circle = document.getElementsByTagName('circle')[0];
 
-    console.log(svg);
-
-    var t = document.getElementById('10');
+    var t = document.getElementById(tablesId);
     var x = t.getAttribute('x');
     var y = t.getAttribute('y');
+
+    circle.setAttribute("display", "block");
     svg.setAttribute("x", x);
     svg.setAttribute("y", y);
 }
@@ -161,6 +192,7 @@ function closePopups() {
     document.getElementById("popupZajmij").style.display = "none";
     document.getElementById("popupZwolnij").style.display = "none";
     document.getElementById("popupInfo").style.display = "none";
+    document.getElementById("popupBrakZnajomego").style.display = "none";
 }
 
 
