@@ -171,7 +171,7 @@ public class TakeSeatScanBarcodeFragment extends BaseFragment {
         } else if (took == -1) {
             Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
                     "Miejsce już zajęte", Toast.LENGTH_LONG).show();
-        }  if (took == -2) {
+        } else if (took == -2) {
             Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
                     "Nie ma takiego miejsca", Toast.LENGTH_LONG).show();
         } else {
