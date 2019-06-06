@@ -69,14 +69,12 @@ function setFriendOnMap() {
 
 
 
-/* Fukncja przypisująca stolikom id oraz inne atrybuty */
+/* Fukncja przypisująca stolikom id */
 function initTables() {
 
     var tables = document.getElementsByClassName('stolik');
 
     for (let i = 0; i < tables.length; i++) {
-        tables[i].setAttribute("height", "3");
-        tables[i].setAttribute("width", "4.5");
         tables[i].setAttribute("id", i);
     }
 }
