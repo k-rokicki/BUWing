@@ -54,6 +54,7 @@ public class MapFragment extends BaseFragment {
         webview.getSettings().setJavaScriptEnabled(true);
         webview.getSettings().setBuiltInZoomControls(true);
         webview.getSettings().setDisplayZoomControls(false);
+        webview.setInitialScale(70);
         webview.setWebViewClient(new NewWebViewClient());
         webview.loadUrl("file:///android_asset/first.html?login=" + login
                 + "&password=" + password + "&floor=1");
