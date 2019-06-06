@@ -57,6 +57,9 @@ public class MainScreenFragment extends BaseFragment {
     static final String defaultFriendsInsideMsgString_more = "znajomych w BUW";
     static final String defaultFriendsInsideMsgString_one = "znajomy w BUW";
     static final String defaultInvitationsMenuItemString = "zaproszenia";
+    static final String takeSeatFreeMenuItemString = "zajmij miejsce";
+    static final String takeSeatTakenMenuItemString = "zwolnij miejsce";
+
     static int inactiveColor = Color.parseColor("#727272");
     static int activeColor = Color.parseColor("#10674F");
 
@@ -69,6 +72,7 @@ public class MainScreenFragment extends BaseFragment {
     static String friendsInsideMsgString = defaultFriendsInsideMsgString_more;
 
     static String invitationsMenuItemString = defaultInvitationsMenuItemString;
+    static String takeSeatMenuItemString = takeSeatFreeMenuItemString;
 
     static int opensHour;
     static int opensMinutes;
@@ -320,6 +324,17 @@ public class MainScreenFragment extends BaseFragment {
                 }
             }
             return false;
+        }
+
+        @SuppressLint("DefaultLocale")
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (result && seatTaken) {
+                takeSeatMenuItemString = takeSeatTakenMenuItemString;
+            } else {
+                takeSeatMenuItemString = takeSeatFreeMenuItemString;
+            }
+            LoggedInActivity.updateTakeSeatMenuItem();
         }
     }
 
