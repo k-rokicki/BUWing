@@ -2,8 +2,6 @@
 
 
 // do sprawdzenia
-var dt = new Date();
-document.getElementById("datetime").innerHTML = dt.toLocaleTimeString();
 
 var idStolik;
 var initWindowHeight = window.innerHeight;
