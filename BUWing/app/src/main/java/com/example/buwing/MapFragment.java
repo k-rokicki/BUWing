@@ -37,9 +37,10 @@ public class MapFragment extends BaseFragment {
     Button popupButtonZwolnij;
     Button popupCloseZwolnij;
 
-    //String napis;
-    //RemoteViews remoteViews;
-
+    FrameLayout ramkaZwolnijPrev;
+    TextView popupZwolnijPrev;
+    Button popupButtonZwolnijPrev;
+    Button popupCloseZwolnijPrev;
 
 
     @Override
@@ -87,26 +88,39 @@ public class MapFragment extends BaseFragment {
 
         @JavascriptInterface
         public boolean showPopupZajmij() {
-            Toast.makeText(getActivity(), "aaa", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Przesun mape, popupZajmij", Toast.LENGTH_SHORT).show();
             ramkaZajmij.setVisibility(View.VISIBLE);
             if (ramkaZajmij.getVisibility() == View.VISIBLE) {
-                Toast.makeText(getActivity(), "bbb", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "View.VISIBLE", Toast.LENGTH_SHORT).show();
             }
             else {
                 Toast.makeText(getActivity(), "ccc", Toast.LENGTH_SHORT).show();
             }
-
-
 
             return false;
         }
 
         @JavascriptInterface
         public boolean showPopupZwolnij() {
-            Toast.makeText(getActivity(), "aaa", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Przesun mape, popupZwolnij", Toast.LENGTH_SHORT).show();
             ramkaZwolnij.setVisibility(View.VISIBLE);
+            popupZwolnij.setText("bbb");
+
             if (ramkaZwolnij.getVisibility() == View.VISIBLE) {
-                Toast.makeText(getActivity(), "bbb", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "View.VISIBLE", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Toast.makeText(getActivity(), "ccc", Toast.LENGTH_SHORT).show();
+            }
+            return false;
+        }
+
+        @JavascriptInterface
+        public boolean showPopupZwolnijPrev() {
+            Toast.makeText(getActivity(), "Przesun mape, popupZwolnijPrev", Toast.LENGTH_SHORT).show();
+            ramkaZwolnijPrev.setVisibility(View.VISIBLE);
+            if (ramkaZwolnijPrev.getVisibility() == View.VISIBLE) {
+                Toast.makeText(getActivity(), "View.VISIBLE", Toast.LENGTH_SHORT).show();
             }
             else {
                 Toast.makeText(getActivity(), "ccc", Toast.LENGTH_SHORT).show();
@@ -166,6 +180,7 @@ public class MapFragment extends BaseFragment {
             }
         });
 
+        // Popup zajmujacy
         popupButtonZajmij = (Button) v.findViewById(R.id.popupButtonZajmij);
         popupButtonZajmij.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -173,7 +188,6 @@ public class MapFragment extends BaseFragment {
                 ramkaZajmij.setVisibility(View.INVISIBLE);
             }
         });
-      //  popupButton.setVisibility(View.INVISIBLE);
         popupCloseZajmij = (Button) v.findViewById(R.id.popupCloseZajmij);
         popupZajmij = (TextView) v.findViewById(R.id.popupZajmij);
         ramkaZajmij = (FrameLayout) v.findViewById(R.id.ramkaZajmij);
@@ -183,7 +197,7 @@ public class MapFragment extends BaseFragment {
             }
         });
 
-
+        // Popup zwalniajacy okupowany
         popupButtonZwolnij = (Button) v.findViewById(R.id.popupButtonZwolnij);
         popupButtonZwolnij.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -198,6 +212,24 @@ public class MapFragment extends BaseFragment {
                 ramkaZwolnij.setVisibility(View.INVISIBLE);
             }
         });
+
+        // Popup zwalniajacy poprzednio okupowany
+        popupZwolnijPrev = (TextView) v.findViewById(R.id.popupZwolnijPrev);
+        popupButtonZwolnijPrev = (Button) v.findViewById(R.id.popupButtonZwolnijPrev);
+        popupButtonZwolnijPrev.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                webview.loadUrl("javascript:freeTable()");
+                ramkaZwolnijPrev.setVisibility(View.INVISIBLE);
+            }
+        });
+        ramkaZwolnijPrev = (FrameLayout) v.findViewById(R.id.ramkaZwolnijPrev);
+        popupCloseZwolnijPrev = (Button) v.findViewById(R.id.popupCloseZwolnijPrev);
+        popupCloseZwolnijPrev.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                ramkaZwolnijPrev.setVisibility(View.INVISIBLE);
+            }
+        });
+
 
         return v;
     }

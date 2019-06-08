@@ -137,6 +137,7 @@ document.body.onclick = function(e) {
                     }
                     else {
                         idStolik = document.getElementById(content['seatId']);
+                        Android.showPopupZwolnijPrev();
                        // showPopup(document.getElementById("popupInfo"));
                     }
                 }

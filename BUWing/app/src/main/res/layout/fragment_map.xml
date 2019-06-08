@@ -41,7 +41,7 @@
     <FrameLayout
         android:id="@+id/ramkaZajmij"
         android:layout_width="match_parent"
-        android:layout_height="550dp"
+        android:layout_height="500dp"
         android:visibility="invisible">
 
         <TextView
@@ -51,7 +51,6 @@
             android:layout_marginStart="30dp"
             android:layout_marginTop="50dp"
             android:background="#E2D6BF"
-            android:text="This is a popup window."
             android:textSize="22sp" />
 
         <Button
@@ -75,8 +74,9 @@
     <FrameLayout
         android:id="@+id/ramkaZwolnij"
         android:layout_width="match_parent"
-        android:layout_height="550dp"
+        android:layout_height="500dp"
         android:visibility="invisible">
+
 
         <TextView
             android:id="@+id/popupZwolnij"
@@ -85,7 +85,6 @@
             android:layout_marginStart="30dp"
             android:layout_marginTop="50dp"
             android:background="#E2D6BF"
-            android:text="This is a popup window."
             android:textSize="22sp" />
 
         <Button
@@ -105,5 +104,49 @@
             android:text="X" />
 
     </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/ramkaZwolnijPrev"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:visibility="invisible">
+        <TextView
+            android:id="@+id/popupZwolnijPrev2"
+            android:layout_width="339dp"
+            android:layout_height="55dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="60dp"
+            android:background="#E2D6BF"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/popupZwolnijPrev"
+            android:layout_width="339dp"
+            android:layout_height="487dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="115dp"
+            android:background="#E2D6BF"
+            android:text="W celu zajęcia nowego stolika zwolnij dotychczasowo zajmowany stolik"
+            android:textSize="22sp" />
+
+        <Button
+            android:id="@+id/popupButtonZwolnijPrev"
+            android:layout_width="250dp"
+            android:layout_height="150dp"
+            android:layout_marginStart="75dp"
+            android:layout_marginTop="300dp"
+            android:text="Zwolnij poprzedni" />
+
+        <Button
+            android:id="@+id/popupCloseZwolnijPrev"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="50dp"
+            android:text="X" />
+
+    </FrameLayout>
+
+
 
 </RelativeLayout>
