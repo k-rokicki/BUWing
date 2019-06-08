@@ -112,7 +112,7 @@ document.body.onclick = function(e) {
         closePopups();
 
     if (e.getAttribute('class') && e.getAttribute('class').indexOf('stolik') != -1) {
-        document.getElementById("test").innerHTML = "aaa" + Android.getWinHeight();
+       // document.getElementById("test").innerHTML = "aaa" + Android.getWinHeight();
        // document.getElementById("test2").innerHTML =  Android.showPopup2();
         idStolik = e;
 
@@ -150,7 +150,6 @@ document.body.onclick = function(e) {
         }
     }
 }
-
 
 
 /* Funkcja pokazująca okienka popup */

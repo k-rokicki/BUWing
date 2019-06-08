@@ -16,8 +16,17 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.RemoteViews;
-
+import android.view.MotionEvent;
+import android.os.SystemClock;
+import android.os.Handler;
+import android.view.View.OnTouchListener;
+import android.net.Uri;
 import android.webkit.JavascriptInterface;
+
+
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.content.Context;
 
@@ -25,7 +34,9 @@ import static com.example.buwing.MainActivity.login;
 import static com.example.buwing.MainActivity.password;
 
 public class MapFragment extends BaseFragment {
+    View v;
     WebView webview;
+    Button refresh;
 
     TextView popupZajmij;
     Button popupButtonZajmij;
@@ -33,7 +44,6 @@ public class MapFragment extends BaseFragment {
     FrameLayout ramkaZajmij;
 
     FrameLayout ramkaZwolnij;
-    TextView popupZwolnij;
     Button popupButtonZwolnij;
     Button popupCloseZwolnij;
 
@@ -45,16 +55,6 @@ public class MapFragment extends BaseFragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        /*
-        MainScreenFragment.CheckSeatTakenTask checkSeatTakenTask = new MainScreenFragment.CheckSeatTakenTask();
-        checkSeatTakenTask.execute();
-        if (!seatTaken) {
-            _layout = R.layout.fragment_map;
-        } else {
-            _layout = R.layout.fragment_seat_taken;
-        }
-        title = "zajmij miejsce";
-        super.onCreate(savedInstanceState); */
 
         super.onCreate(savedInstanceState);
         _layout = R.layout.fragment_map;
@@ -70,62 +70,51 @@ public class MapFragment extends BaseFragment {
     }
 
     public class WebAppInterface {
-        @JavascriptInterface
 
-        public int getWinHeight() {
-            return webview.getMeasuredWidthAndState();
+        @JavascriptInterface
+        public void hide() {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ramkaZajmij.setVisibility(View.VISIBLE);
+                }
+            });
         }
 
         @JavascriptInterface
-        public int getWinScrollX() {
-            return webview.getScrollX();
+        public void showPopupZajmij() {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ramkaZajmij.setVisibility(View.VISIBLE);
+                    Toast.makeText(getActivity(), "popupZajmij", Toast.LENGTH_SHORT).show();
+
+                }
+            });
+
         }
 
         @JavascriptInterface
-        public int getWinScrollY() {
-            return webview.getScrollY();
+        public void showPopupZwolnij() {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ramkaZwolnij.setVisibility(View.VISIBLE);
+                    Toast.makeText(getActivity(), "popupZwolnij", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
 
         @JavascriptInterface
-        public boolean showPopupZajmij() {
-            Toast.makeText(getActivity(), "Przesun mape, popupZajmij", Toast.LENGTH_SHORT).show();
-            ramkaZajmij.setVisibility(View.VISIBLE);
-            if (ramkaZajmij.getVisibility() == View.VISIBLE) {
-                Toast.makeText(getActivity(), "View.VISIBLE", Toast.LENGTH_SHORT).show();
-            }
-            else {
-                Toast.makeText(getActivity(), "ccc", Toast.LENGTH_SHORT).show();
-            }
+        public void showPopupZwolnijPrev() {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ramkaZwolnijPrev.setVisibility(View.VISIBLE);
+                    Toast.makeText(getActivity(), "popupZwolnijPrev", Toast.LENGTH_SHORT).show();
+                }
+            });
 
-            return false;
-        }
-
-        @JavascriptInterface
-        public boolean showPopupZwolnij() {
-            Toast.makeText(getActivity(), "Przesun mape, popupZwolnij", Toast.LENGTH_SHORT).show();
-            ramkaZwolnij.setVisibility(View.VISIBLE);
-            popupZwolnij.setText("bbb");
-
-            if (ramkaZwolnij.getVisibility() == View.VISIBLE) {
-                Toast.makeText(getActivity(), "View.VISIBLE", Toast.LENGTH_SHORT).show();
-            }
-            else {
-                Toast.makeText(getActivity(), "ccc", Toast.LENGTH_SHORT).show();
-            }
-            return false;
-        }
-
-        @JavascriptInterface
-        public boolean showPopupZwolnijPrev() {
-            Toast.makeText(getActivity(), "Przesun mape, popupZwolnijPrev", Toast.LENGTH_SHORT).show();
-            ramkaZwolnijPrev.setVisibility(View.VISIBLE);
-            if (ramkaZwolnijPrev.getVisibility() == View.VISIBLE) {
-                Toast.makeText(getActivity(), "View.VISIBLE", Toast.LENGTH_SHORT).show();
-            }
-            else {
-                Toast.makeText(getActivity(), "ccc", Toast.LENGTH_SHORT).show();
-            }
-            return false;
         }
 
 
@@ -136,7 +125,7 @@ public class MapFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         //WebView.setDataDirectorySuffix("dir_name_no_separator");
-        View v = inflater.inflate(R.layout.fragment_map, container, false);
+        v = inflater.inflate(R.layout.fragment_map, container, false);
         webview = (WebView) v.findViewById(R.id.webview);
         webview.getSettings().setJavaScriptEnabled(true);
         webview.getSettings().setBuiltInZoomControls(true);
@@ -173,7 +162,7 @@ public class MapFragment extends BaseFragment {
         });
         spin.setAdapter(adapter);
 
-        Button refresh = (Button) v.findViewById(R.id.refresh_button);
+        refresh = (Button) v.findViewById(R.id.refresh_button);
         refresh.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 webview.reload();
@@ -184,8 +173,10 @@ public class MapFragment extends BaseFragment {
         popupButtonZajmij = (Button) v.findViewById(R.id.popupButtonZajmij);
         popupButtonZajmij.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                Toast.makeText(getActivity(), "View.VISIBLE", Toast.LENGTH_SHORT).show();
+
                 webview.loadUrl("javascript:takeTable()");
-                ramkaZajmij.setVisibility(View.INVISIBLE);
+                ramkaZajmij.setVisibility(View.GONE);
             }
         });
         popupCloseZajmij = (Button) v.findViewById(R.id.popupCloseZajmij);
@@ -193,7 +184,9 @@ public class MapFragment extends BaseFragment {
         ramkaZajmij = (FrameLayout) v.findViewById(R.id.ramkaZajmij);
         popupCloseZajmij.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                ramkaZajmij.setVisibility(View.INVISIBLE);
+                Toast.makeText(getActivity(), "View.VISIBLE", Toast.LENGTH_SHORT).show();
+
+                ramkaZajmij.setVisibility(View.GONE);
             }
         });
 
@@ -201,15 +194,19 @@ public class MapFragment extends BaseFragment {
         popupButtonZwolnij = (Button) v.findViewById(R.id.popupButtonZwolnij);
         popupButtonZwolnij.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                Toast.makeText(getActivity(), "View.VISIBLE", Toast.LENGTH_SHORT).show();
+
                 webview.loadUrl("javascript:freeTable()");
-                ramkaZwolnij.setVisibility(View.INVISIBLE);
+                ramkaZwolnij.setVisibility(View.GONE);
             }
         });
         ramkaZwolnij = (FrameLayout) v.findViewById(R.id.ramkaZwolnij);
         popupCloseZwolnij = (Button) v.findViewById(R.id.popupCloseZwolnij);
         popupCloseZwolnij.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                ramkaZwolnij.setVisibility(View.INVISIBLE);
+                Toast.makeText(getActivity(), "View.VISIBLE", Toast.LENGTH_SHORT).show();
+
+                ramkaZwolnij.setVisibility(View.GONE);
             }
         });
 
@@ -218,19 +215,23 @@ public class MapFragment extends BaseFragment {
         popupButtonZwolnijPrev = (Button) v.findViewById(R.id.popupButtonZwolnijPrev);
         popupButtonZwolnijPrev.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                Toast.makeText(getActivity(), "View.VISIBLE", Toast.LENGTH_SHORT).show();
+
                 webview.loadUrl("javascript:freeTable()");
-                ramkaZwolnijPrev.setVisibility(View.INVISIBLE);
+                ramkaZwolnijPrev.setVisibility(View.GONE);
             }
         });
         ramkaZwolnijPrev = (FrameLayout) v.findViewById(R.id.ramkaZwolnijPrev);
         popupCloseZwolnijPrev = (Button) v.findViewById(R.id.popupCloseZwolnijPrev);
         popupCloseZwolnijPrev.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                ramkaZwolnijPrev.setVisibility(View.INVISIBLE);
+                Toast.makeText(getActivity(), "View.VISIBLE", Toast.LENGTH_SHORT).show();
+
+                ramkaZwolnijPrev.setVisibility(View.GONE);
             }
         });
 
-
         return v;
     }
+
 }
