@@ -113,9 +113,9 @@ document.body.onclick = function(e) {
 
     if (e.getAttribute('class') && e.getAttribute('class').indexOf('stolik') != -1) {
         document.getElementById("test").innerHTML = "aaa" + Android.getWinHeight();
-        document.getElementById("test2").innerHTML = Android.showPopup();
+       // document.getElementById("test2").innerHTML =  Android.showPopup2();
         idStolik = e;
-/*
+
         //obsluga wolnego
         if (e.status == "wolny") {
             var postData = 'login=' + login + '&password=' + password;
@@ -132,20 +132,22 @@ document.body.onclick = function(e) {
                     var result = content['taken'];
 
                     if (!result) {
-                        showPopup(document.getElementById("popupZajmij"));
+                        Android.showPopupZajmij();
+                       // showPopup(document.getElementById("popupZajmij"));
                     }
                     else {
                         idStolik = document.getElementById(content['seatId']);
-                        showPopup(document.getElementById("popupInfo"));
+                       // showPopup(document.getElementById("popupInfo"));
                     }
                 }
             }
         }
         //okupowany to stolik ktory zajmuje uzytkownik
         else if (e.status == "okupowany") {
-            showPopup(document.getElementById("popupZwolnij"));
+            Android.showPopupZwolnij();
+           // showPopup(document.getElementById("popupZwolnij"));
         }
-    }*/
+    }
 }
 
 

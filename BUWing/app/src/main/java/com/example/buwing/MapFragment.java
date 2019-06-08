@@ -15,6 +15,7 @@ import android.widget.Spinner;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.RemoteViews;
 
 import android.webkit.JavascriptInterface;
 
@@ -25,9 +26,19 @@ import static com.example.buwing.MainActivity.password;
 
 public class MapFragment extends BaseFragment {
     WebView webview;
-    TextView popup;
-    Button popupButton;
-    FrameLayout ramka;
+
+    TextView popupZajmij;
+    Button popupButtonZajmij;
+    Button popupCloseZajmij;
+    FrameLayout ramkaZajmij;
+
+    FrameLayout ramkaZwolnij;
+    TextView popupZwolnij;
+    Button popupButtonZwolnij;
+    Button popupCloseZwolnij;
+
+    //String napis;
+    //RemoteViews remoteViews;
 
 
 
@@ -75,23 +86,37 @@ public class MapFragment extends BaseFragment {
         }
 
         @JavascriptInterface
-        public boolean showPopup() {
-            popups();
+        public boolean showPopupZajmij() {
+            Toast.makeText(getActivity(), "aaa", Toast.LENGTH_SHORT).show();
+            ramkaZajmij.setVisibility(View.VISIBLE);
+            if (ramkaZajmij.getVisibility() == View.VISIBLE) {
+                Toast.makeText(getActivity(), "bbb", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Toast.makeText(getActivity(), "ccc", Toast.LENGTH_SHORT).show();
+            }
+
+
+
+            return false;
+        }
+
+        @JavascriptInterface
+        public boolean showPopupZwolnij() {
+            Toast.makeText(getActivity(), "aaa", Toast.LENGTH_SHORT).show();
+            ramkaZwolnij.setVisibility(View.VISIBLE);
+            if (ramkaZwolnij.getVisibility() == View.VISIBLE) {
+                Toast.makeText(getActivity(), "bbb", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Toast.makeText(getActivity(), "ccc", Toast.LENGTH_SHORT).show();
+            }
             return false;
         }
 
 
     }
 
-    public void popups() {
-      //  webview.setVisibility(View.INVISIBLE);
-      //  webview.zoomOut();
-      //  webview.setsc
-      //  popup.setVisibility(View.VISIBLE);
-      //  popup.setVisibility(View.VISIBLE);
-       // popupButton.setVisibility(View.VISIBLE);
-        ramka.setVisibility(View.VISIBLE);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -103,16 +128,15 @@ public class MapFragment extends BaseFragment {
         webview.getSettings().setBuiltInZoomControls(true);
         webview.getSettings().setDisplayZoomControls(false);
         webview.addJavascriptInterface(new WebAppInterface(), "Android");
-       // webview.getSettings().setUserAgentString("Chrome");
-       // Toast.makeText(getActivity(), webview.getSettings().getUserAgentString(), Toast.LENGTH_SHORT).show();
         webview.setInitialScale(70);
         webview.setWebViewClient(new NewWebViewClient());
+
         webview.loadUrl("file:///android_asset/first.html?login=" + login
                 + "&password=" + password + "&floor=1");
+
         Spinner spin = (Spinner) v.findViewById(R.id.level_spinner);
         String[] levels = {"Poziom 1", "Poziom 2", "Poziom 3",};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, levels);
-        //adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
@@ -142,14 +166,38 @@ public class MapFragment extends BaseFragment {
             }
         });
 
-    //    popupButton = (Button) v.findViewById(R.id.popupButton);
+        popupButtonZajmij = (Button) v.findViewById(R.id.popupButtonZajmij);
+        popupButtonZajmij.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                webview.loadUrl("javascript:takeTable()");
+                ramkaZajmij.setVisibility(View.INVISIBLE);
+            }
+        });
       //  popupButton.setVisibility(View.INVISIBLE);
-        popup = (TextView) v.findViewById(R.id.popup);
-      //  popup.setVisibility(View.VISIGOBLE);
-        ramka = (FrameLayout) v.findViewById(R.id.ramka);
-        ramka.setVisibility(View.INVISIBLE);
+        popupCloseZajmij = (Button) v.findViewById(R.id.popupCloseZajmij);
+        popupZajmij = (TextView) v.findViewById(R.id.popupZajmij);
+        ramkaZajmij = (FrameLayout) v.findViewById(R.id.ramkaZajmij);
+        popupCloseZajmij.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                ramkaZajmij.setVisibility(View.INVISIBLE);
+            }
+        });
 
 
+        popupButtonZwolnij = (Button) v.findViewById(R.id.popupButtonZwolnij);
+        popupButtonZwolnij.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                webview.loadUrl("javascript:freeTable()");
+                ramkaZwolnij.setVisibility(View.INVISIBLE);
+            }
+        });
+        ramkaZwolnij = (FrameLayout) v.findViewById(R.id.ramkaZwolnij);
+        popupCloseZwolnij = (Button) v.findViewById(R.id.popupCloseZwolnij);
+        popupCloseZwolnij.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                ramkaZwolnij.setVisibility(View.INVISIBLE);
+            }
+        });
 
         return v;
     }
