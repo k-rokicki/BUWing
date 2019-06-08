@@ -86,6 +86,7 @@ public class MapFragment extends BaseFragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    webview.setClickable(false);
                     ramkaZajmij.setVisibility(View.VISIBLE);
                     Toast.makeText(getActivity(), "popupZajmij", Toast.LENGTH_SHORT).show();
 
@@ -143,6 +144,12 @@ public class MapFragment extends BaseFragment {
         spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        closePopups();
+                    }
+                });
                 if (levels[position].equals("Poziom 1")) {
                     webview.loadUrl("file:///android_asset/first.html?login=" +
                             login + "&password=" + password + "&floor=1");
@@ -165,6 +172,12 @@ public class MapFragment extends BaseFragment {
         refresh = (Button) v.findViewById(R.id.refresh_button);
         refresh.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        closePopups();
+                    }
+                });
                 webview.reload();
             }
         });
@@ -173,8 +186,6 @@ public class MapFragment extends BaseFragment {
         popupButtonZajmij = (Button) v.findViewById(R.id.popupButtonZajmij);
         popupButtonZajmij.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "View.VISIBLE", Toast.LENGTH_SHORT).show();
-
                 webview.loadUrl("javascript:takeTable()");
                 ramkaZajmij.setVisibility(View.GONE);
             }
@@ -184,8 +195,6 @@ public class MapFragment extends BaseFragment {
         ramkaZajmij = (FrameLayout) v.findViewById(R.id.ramkaZajmij);
         popupCloseZajmij.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "View.VISIBLE", Toast.LENGTH_SHORT).show();
-
                 ramkaZajmij.setVisibility(View.GONE);
             }
         });
@@ -194,8 +203,6 @@ public class MapFragment extends BaseFragment {
         popupButtonZwolnij = (Button) v.findViewById(R.id.popupButtonZwolnij);
         popupButtonZwolnij.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "View.VISIBLE", Toast.LENGTH_SHORT).show();
-
                 webview.loadUrl("javascript:freeTable()");
                 ramkaZwolnij.setVisibility(View.GONE);
             }
@@ -204,8 +211,6 @@ public class MapFragment extends BaseFragment {
         popupCloseZwolnij = (Button) v.findViewById(R.id.popupCloseZwolnij);
         popupCloseZwolnij.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "View.VISIBLE", Toast.LENGTH_SHORT).show();
-
                 ramkaZwolnij.setVisibility(View.GONE);
             }
         });
@@ -215,8 +220,6 @@ public class MapFragment extends BaseFragment {
         popupButtonZwolnijPrev = (Button) v.findViewById(R.id.popupButtonZwolnijPrev);
         popupButtonZwolnijPrev.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "View.VISIBLE", Toast.LENGTH_SHORT).show();
-
                 webview.loadUrl("javascript:freeTable()");
                 ramkaZwolnijPrev.setVisibility(View.GONE);
             }
@@ -225,8 +228,6 @@ public class MapFragment extends BaseFragment {
         popupCloseZwolnijPrev = (Button) v.findViewById(R.id.popupCloseZwolnijPrev);
         popupCloseZwolnijPrev.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "View.VISIBLE", Toast.LENGTH_SHORT).show();
-
                 ramkaZwolnijPrev.setVisibility(View.GONE);
             }
         });
@@ -234,4 +235,9 @@ public class MapFragment extends BaseFragment {
         return v;
     }
 
+    public void closePopups() {
+        ramkaZwolnijPrev.setVisibility(View.GONE);
+        ramkaZwolnij.setVisibility(View.GONE);
+        ramkaZajmij.setVisibility(View.GONE);
+    }
 }
