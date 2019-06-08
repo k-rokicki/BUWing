@@ -89,6 +89,12 @@ public class MapFragment extends BaseFragment {
                     webview.setClickable(false);
                     ramkaZajmij.setVisibility(View.VISIBLE);
                     Toast.makeText(getActivity(), "popupZajmij", Toast.LENGTH_SHORT).show();
+                    webview.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            return true;
+                        }
+                    });
 
                 }
             });
@@ -102,6 +108,12 @@ public class MapFragment extends BaseFragment {
                 public void run() {
                     ramkaZwolnij.setVisibility(View.VISIBLE);
                     Toast.makeText(getActivity(), "popupZwolnij", Toast.LENGTH_SHORT).show();
+                    webview.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            return true;
+                        }
+                    });
                 }
             });
         }
@@ -113,6 +125,13 @@ public class MapFragment extends BaseFragment {
                 public void run() {
                     ramkaZwolnijPrev.setVisibility(View.VISIBLE);
                     Toast.makeText(getActivity(), "popupZwolnijPrev", Toast.LENGTH_SHORT).show();
+                    webview.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            return true;
+                        }
+                    });
+
                 }
             });
 
@@ -187,7 +206,12 @@ public class MapFragment extends BaseFragment {
         popupButtonZajmij.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 webview.loadUrl("javascript:takeTable()");
-                ramkaZajmij.setVisibility(View.GONE);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        closePopups();
+                    }
+                });
             }
         });
         popupCloseZajmij = (Button) v.findViewById(R.id.popupCloseZajmij);
@@ -195,7 +219,12 @@ public class MapFragment extends BaseFragment {
         ramkaZajmij = (FrameLayout) v.findViewById(R.id.ramkaZajmij);
         popupCloseZajmij.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                ramkaZajmij.setVisibility(View.GONE);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        closePopups();
+                    }
+                });
             }
         });
 
@@ -204,14 +233,24 @@ public class MapFragment extends BaseFragment {
         popupButtonZwolnij.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 webview.loadUrl("javascript:freeTable()");
-                ramkaZwolnij.setVisibility(View.GONE);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        closePopups();
+                    }
+                });
             }
         });
         ramkaZwolnij = (FrameLayout) v.findViewById(R.id.ramkaZwolnij);
         popupCloseZwolnij = (Button) v.findViewById(R.id.popupCloseZwolnij);
         popupCloseZwolnij.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                ramkaZwolnij.setVisibility(View.GONE);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        closePopups();
+                    }
+                });
             }
         });
 
@@ -221,7 +260,12 @@ public class MapFragment extends BaseFragment {
         popupButtonZwolnijPrev.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 webview.loadUrl("javascript:freeTable()");
-                ramkaZwolnijPrev.setVisibility(View.GONE);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        closePopups();
+                    }
+                });
             }
         });
         ramkaZwolnijPrev = (FrameLayout) v.findViewById(R.id.ramkaZwolnijPrev);
@@ -229,6 +273,12 @@ public class MapFragment extends BaseFragment {
         popupCloseZwolnijPrev.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 ramkaZwolnijPrev.setVisibility(View.GONE);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        closePopups();
+                    }
+                });
             }
         });
 
@@ -236,6 +286,12 @@ public class MapFragment extends BaseFragment {
     }
 
     public void closePopups() {
+        webview.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+            }
+        });
         ramkaZwolnijPrev.setVisibility(View.GONE);
         ramkaZwolnij.setVisibility(View.GONE);
         ramkaZajmij.setVisibility(View.GONE);
