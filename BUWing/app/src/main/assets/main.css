@@ -1,7 +1,7 @@
 
 .popup {
     background-color: rgba(232, 159, 235, 0.6);
-    border-radius: 10%;
+   /* border-radius: 10%; */
     z-index: 1;
     position: absolute;
     display: none;
@@ -17,14 +17,16 @@
     text-decoration: none;
     color: rgb(215, 136, 218);
     background: white;
-    border-radius: 10%;
-    border-color: beige;
+    border: none;
+    /*border-radius: 10%;
+    border-color: beige;*/
 }
 
 .popupButton {
     background: white;
     font-style: bold;
-    border-radius: 10%;
+    border: none;
+    /*border-radius: 10%; */
     position: absolute;
     /*display: inline-block;*/
 }

@@ -1,5 +1,6 @@
 package com.example.buwing;
 
+import android.annotation.TargetApi;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.webkit.WebView;
@@ -9,14 +10,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import android.webkit.JavascriptInterface;
+
+import android.content.Context;
 
 import static com.example.buwing.MainActivity.login;
 import static com.example.buwing.MainActivity.password;
 
 public class MapFragment extends BaseFragment {
+    WebView webview;
+    TextView popup;
+    Button popupButton;
+    FrameLayout ramka;
+
 
 
     @Override
@@ -36,7 +48,7 @@ public class MapFragment extends BaseFragment {
         _layout = R.layout.fragment_map;
     }
 
-        public class NewWebViewClient extends WebViewClient {
+    public class NewWebViewClient extends WebViewClient {
         @SuppressWarnings("deprecation")
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -45,15 +57,54 @@ public class MapFragment extends BaseFragment {
         }
     }
 
+    public class WebAppInterface {
+        @JavascriptInterface
+
+        public int getWinHeight() {
+            return webview.getMeasuredWidthAndState();
+        }
+
+        @JavascriptInterface
+        public int getWinScrollX() {
+            return webview.getScrollX();
+        }
+
+        @JavascriptInterface
+        public int getWinScrollY() {
+            return webview.getScrollY();
+        }
+
+        @JavascriptInterface
+        public boolean showPopup() {
+            popups();
+            return false;
+        }
+
+
+    }
+
+    public void popups() {
+      //  webview.setVisibility(View.INVISIBLE);
+      //  webview.zoomOut();
+      //  webview.setsc
+      //  popup.setVisibility(View.VISIBLE);
+      //  popup.setVisibility(View.VISIBLE);
+       // popupButton.setVisibility(View.VISIBLE);
+        ramka.setVisibility(View.VISIBLE);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        //WebView.setDataDirectorySuffix("dir_name_no_separator");
         View v = inflater.inflate(R.layout.fragment_map, container, false);
-        WebView webview = (WebView) v.findViewById(R.id.webview);
+        webview = (WebView) v.findViewById(R.id.webview);
         webview.getSettings().setJavaScriptEnabled(true);
         webview.getSettings().setBuiltInZoomControls(true);
         webview.getSettings().setDisplayZoomControls(false);
+        webview.addJavascriptInterface(new WebAppInterface(), "Android");
+       // webview.getSettings().setUserAgentString("Chrome");
+       // Toast.makeText(getActivity(), webview.getSettings().getUserAgentString(), Toast.LENGTH_SHORT).show();
         webview.setInitialScale(70);
         webview.setWebViewClient(new NewWebViewClient());
         webview.loadUrl("file:///android_asset/first.html?login=" + login
@@ -90,6 +141,15 @@ public class MapFragment extends BaseFragment {
                 webview.reload();
             }
         });
+
+    //    popupButton = (Button) v.findViewById(R.id.popupButton);
+      //  popupButton.setVisibility(View.INVISIBLE);
+        popup = (TextView) v.findViewById(R.id.popup);
+      //  popup.setVisibility(View.VISIGOBLE);
+        ramka = (FrameLayout) v.findViewById(R.id.ramka);
+        ramka.setVisibility(View.INVISIBLE);
+
+
 
         return v;
     }

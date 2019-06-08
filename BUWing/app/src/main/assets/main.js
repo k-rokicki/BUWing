@@ -12,6 +12,8 @@ var login, password, floor, friend;
 
 
 
+
+
 /* Funkcja wywoływana przy ładowaniu mapy */
 function start() {
 
@@ -110,8 +112,10 @@ document.body.onclick = function(e) {
         closePopups();
 
     if (e.getAttribute('class') && e.getAttribute('class').indexOf('stolik') != -1) {
+        document.getElementById("test").innerHTML = "aaa" + Android.getWinHeight();
+        document.getElementById("test2").innerHTML = Android.showPopup();
         idStolik = e;
-
+/*
         //obsluga wolnego
         if (e.status == "wolny") {
             var postData = 'login=' + login + '&password=' + password;
@@ -141,7 +145,7 @@ document.body.onclick = function(e) {
         else if (e.status == "okupowany") {
             showPopup(document.getElementById("popupZwolnij"));
         }
-    }
+    }*/
 }
 
 
@@ -151,7 +155,8 @@ function showPopup(popup) {
 
     var windowHeight = window.innerHeight * 0.8;
     var windowWidth = window.innerWidth * 0.7;
-    var font_size = window.innerHeight * 0.02;
+   // var font_size = window.innerHeight * 0.02;
+   var font_size = 45 * window.innerHeight / initWindowHeight;
 
     popup.style.height = windowHeight + "px";
     popup.style.width = windowWidth + "px";
