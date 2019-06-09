@@ -1,8 +1,11 @@
 package com.example.buwing;
 
+import android.annotation.SuppressLint;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.view.LayoutInflater;
@@ -18,13 +21,16 @@ import android.widget.Toast;
 import android.view.MotionEvent;
 import android.webkit.JavascriptInterface;
 
-
 import static com.example.buwing.MainActivity.login;
 import static com.example.buwing.MainActivity.password;
 import static com.example.buwing.MainActivity.seatTaken;
 import static com.example.buwing.MainActivity.takenSeatFloor;
 import static com.example.buwing.MainActivity.takenSeatId;
+import static com.example.buwing.MainScreenFragment.takeSeatMenuItemString;
 import static java.util.Objects.requireNonNull;
+
+import static com.example.buwing.MainScreenFragment.takeSeatFreeMenuItemString;
+import static com.example.buwing.MainScreenFragment.takeSeatTakenMenuItemString;
 
 public class MapFragment extends BaseFragment {
     View v;
@@ -148,6 +154,14 @@ public class MapFragment extends BaseFragment {
                     seatTaken = seatT;
                     takenSeatId = takenStId;
                     takenSeatFloor = takenStFloor;
+
+                    if (seatTaken) {
+                        takeSeatMenuItemString = takeSeatTakenMenuItemString;
+                    }
+                    else {
+                        takeSeatMenuItemString = takeSeatFreeMenuItemString;
+                    }
+                    LoggedInActivity.updateTakeSeatMenuItem();
                 }
             });
 
