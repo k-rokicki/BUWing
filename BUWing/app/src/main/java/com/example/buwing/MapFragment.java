@@ -21,6 +21,9 @@ import android.webkit.JavascriptInterface;
 
 import static com.example.buwing.MainActivity.login;
 import static com.example.buwing.MainActivity.password;
+import static com.example.buwing.MainActivity.seatTaken;
+import static com.example.buwing.MainActivity.takenSeatFloor;
+import static com.example.buwing.MainActivity.takenSeatId;
 import static java.util.Objects.requireNonNull;
 
 public class MapFragment extends BaseFragment {
@@ -132,6 +135,19 @@ public class MapFragment extends BaseFragment {
                 public void run() {
                     ramkaZwolnijPrev.setVisibility(View.VISIBLE);
                     disableMap();
+                }
+            });
+
+        }
+
+        @JavascriptInterface
+        public void changeSeatTaken(boolean seatT, int takenStId, int takenStFloor) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    seatTaken = seatT;
+                    takenSeatId = takenStId;
+                    takenSeatFloor = takenStFloor;
                 }
             });
 
