@@ -8,12 +8,14 @@
 
     <WebView
         android:id="@+id/webview"
-        android:layout_width="377dp"
-        android:layout_height="571dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginBottom="107dp"></WebView>
+        android:layout_marginBottom="107dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"></WebView>
 
     <Spinner
         android:id="@+id/level_spinner"
@@ -24,7 +26,6 @@
         android:layout_marginStart="205dp"
         android:layout_marginTop="-82dp"
         android:spinnerMode="dropdown" />
-
 
 
     <Button
@@ -41,15 +42,17 @@
     <FrameLayout
         android:id="@+id/ramkaZajmij"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="match_parent"
         android:visibility="invisible">
 
         <TextView
             android:id="@+id/popupZajmij"
-            android:layout_width="339dp"
-            android:layout_height="487dp"
-            android:layout_marginStart="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="107dp"
             android:layout_marginTop="50dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
             android:background="#E2D6BF"
             android:textSize="22sp" />
 
@@ -74,16 +77,18 @@
     <FrameLayout
         android:id="@+id/ramkaZwolnij"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="match_parent"
         android:visibility="invisible">
 
 
         <TextView
             android:id="@+id/popupZwolnij"
-            android:layout_width="339dp"
-            android:layout_height="487dp"
-            android:layout_marginStart="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="107dp"
             android:layout_marginTop="50dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
             android:background="#E2D6BF"
             android:textSize="22sp" />
 
@@ -108,23 +113,27 @@
     <FrameLayout
         android:id="@+id/ramkaZwolnijPrev"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="match_parent"
         android:visibility="invisible">
         <TextView
             android:id="@+id/popupZwolnijPrev2"
-            android:layout_width="339dp"
-            android:layout_height="55dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="60dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="107dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
             android:background="#E2D6BF"
             android:textSize="22sp" />
 
         <TextView
             android:id="@+id/popupZwolnijPrev"
-            android:layout_width="339dp"
-            android:layout_height="487dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="115dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="107dp"
+            android:layout_marginTop="110dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
             android:background="#E2D6BF"
             android:text="W celu zajęcia nowego stolika zwolnij dotychczasowo zajmowany stolik"
             android:textSize="22sp" />

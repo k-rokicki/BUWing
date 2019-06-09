@@ -72,11 +72,41 @@ public class MapFragment extends BaseFragment {
     public class WebAppInterface {
 
         @JavascriptInterface
-        public void hide() {
+        public void releasedSuccess() {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    ramkaZajmij.setVisibility(View.VISIBLE);
+                    Toast.makeText(getActivity(), "Pomyślnie zwolniono miejsce", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+
+        @JavascriptInterface
+        public void tryAgain() {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getActivity(), "Spróbuj ponownie", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+
+        @JavascriptInterface
+        public void takenSuccess() {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getActivity(), "Pomyślnie zajęto miejsce", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+
+        @JavascriptInterface
+        public void takenFail() {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getActivity(), "Miejsce już zajęte", Toast.LENGTH_LONG).show();
                 }
             });
         }
@@ -86,16 +116,8 @@ public class MapFragment extends BaseFragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    webview.setClickable(false);
                     ramkaZajmij.setVisibility(View.VISIBLE);
-                    Toast.makeText(getActivity(), "popupZajmij", Toast.LENGTH_SHORT).show();
-                    webview.setOnTouchListener(new View.OnTouchListener() {
-                        @Override
-                        public boolean onTouch(View v, MotionEvent event) {
-                            return true;
-                        }
-                    });
-
+                    disableMap();
                 }
             });
 
@@ -107,13 +129,7 @@ public class MapFragment extends BaseFragment {
                 @Override
                 public void run() {
                     ramkaZwolnij.setVisibility(View.VISIBLE);
-                    Toast.makeText(getActivity(), "popupZwolnij", Toast.LENGTH_SHORT).show();
-                    webview.setOnTouchListener(new View.OnTouchListener() {
-                        @Override
-                        public boolean onTouch(View v, MotionEvent event) {
-                            return true;
-                        }
-                    });
+                    disableMap();
                 }
             });
         }
@@ -124,14 +140,7 @@ public class MapFragment extends BaseFragment {
                 @Override
                 public void run() {
                     ramkaZwolnijPrev.setVisibility(View.VISIBLE);
-                    Toast.makeText(getActivity(), "popupZwolnijPrev", Toast.LENGTH_SHORT).show();
-                    webview.setOnTouchListener(new View.OnTouchListener() {
-                        @Override
-                        public boolean onTouch(View v, MotionEvent event) {
-                            return true;
-                        }
-                    });
-
+                    disableMap();
                 }
             });
 
@@ -144,7 +153,6 @@ public class MapFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        //WebView.setDataDirectorySuffix("dir_name_no_separator");
         v = inflater.inflate(R.layout.fragment_map, container, false);
         webview = (WebView) v.findViewById(R.id.webview);
         webview.getSettings().setJavaScriptEnabled(true);
@@ -157,6 +165,7 @@ public class MapFragment extends BaseFragment {
         webview.loadUrl("file:///android_asset/first.html?login=" + login
                 + "&password=" + password + "&floor=1");
 
+
         Spinner spin = (Spinner) v.findViewById(R.id.level_spinner);
         String[] levels = {"Poziom 1", "Poziom 2", "Poziom 3",};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, levels);
@@ -165,9 +174,7 @@ public class MapFragment extends BaseFragment {
                                        int position, long id) {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
-                    public void run() {
-                        closePopups();
-                    }
+                    public void run() { closePopups(); }
                 });
                 if (levels[position].equals("Poziom 1")) {
                     webview.loadUrl("file:///android_asset/first.html?login=" +
@@ -286,14 +293,27 @@ public class MapFragment extends BaseFragment {
     }
 
     public void closePopups() {
+        enableMap();
+        ramkaZwolnijPrev.setVisibility(View.INVISIBLE);
+        ramkaZwolnij.setVisibility(View.INVISIBLE);
+        ramkaZajmij.setVisibility(View.INVISIBLE);
+    }
+
+    public void disableMap() {
+        webview.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
+    }
+
+    public void enableMap() {
         webview.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 return false;
             }
         });
-        ramkaZwolnijPrev.setVisibility(View.GONE);
-        ramkaZwolnij.setVisibility(View.GONE);
-        ramkaZajmij.setVisibility(View.GONE);
     }
 }
