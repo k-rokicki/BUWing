@@ -195,7 +195,7 @@ function takeTable() {
                 idStolik.setAttribute("fill", "orange");
                 idStolik.status = "okupowany";
                 Android.takenSuccess();
-                Android.changeSeatTaken(true, table, floor);
+                Android.changeSeatTaken(true, table.toString(), floor.toString());
             }
             else if (result == -1) {
                 Android.takenFail();

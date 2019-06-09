@@ -147,13 +147,13 @@ public class MapFragment extends BaseFragment {
         }
 
         @JavascriptInterface
-        public void changeSeatTaken(boolean seatT, int takenStId, int takenStFloor) {
+        public void changeSeatTaken(boolean seatT, String takenStId, String takenStFloor) {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     seatTaken = seatT;
-                    takenSeatId = takenStId;
-                    takenSeatFloor = takenStFloor;
+                    takenSeatId = Integer.valueOf(takenStId).intValue();
+                    takenSeatFloor = Integer.valueOf(takenStFloor).intValue();
 
                     if (seatTaken) {
                         takeSeatMenuItemString = takeSeatTakenMenuItemString;
