@@ -107,6 +107,10 @@ public class TakeSeatFragment extends BaseFragment {
 
                 chooseFromMapButton.setOnClickListener(v -> {
                     //TODO połączyć z mapą
+                    Fragment fragment = new MapFragment();
+                    FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                    ft.replace(R.id.content_frame, fragment);
+                    ft.commit();
                 });
 
                 new MainScreenFragment.CheckSeatTakenTask().execute();
