@@ -1,5 +1,5 @@
 <resources>
-    <string name="versionNumber">v0.5</string>
+    <string name="versionNumber">v0.7</string>
     <string name="app_name">BUWing</string>
     <string name="title_activity_logged_in">LoggedInActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>

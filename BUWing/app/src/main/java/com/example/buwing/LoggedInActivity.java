@@ -118,9 +118,6 @@ public class LoggedInActivity extends AppCompatActivity
             case R.id.nav_friendsList:
                 fragment = new FriendsListFragment();
                 break;
-            case R.id.nav_map:
-                fragment = new MapFragment();
-                break;
             case R.id.nav_logout:
                 if (loginCredentials.exists()) {
                     //noinspection ResultOfMethodCallIgnored

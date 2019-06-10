@@ -16,11 +16,6 @@
             android:id="@+id/nav_friendsInside"
             android:icon="@drawable/ic_menu_send"
             android:title="znajomi w BUW" />
-        <item
-            android:id="@+id/nav_map"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="mapa BUWu" />
-        
     </group>
 
     <item android:title="ustawienia">
