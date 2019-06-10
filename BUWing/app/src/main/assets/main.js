@@ -12,6 +12,8 @@ var login, password, floor, friend;
 
 
 
+
+
 /* Funkcja wywoływana przy ładowaniu mapy */
 function start() {
 
@@ -61,7 +63,7 @@ function setFriendOnMap() {
                     setFriendsMarker(result);
                 }
                 else {
-                    showPopup(document.getElementById("popupBrakZnajomego"));
+                 //   showPopup(document.getElementById("popupBrakZnajomego"));
                 }
             }
         }
@@ -106,9 +108,6 @@ document.body.onclick = function(e) {
     else
        e = e.target;
 
-    if (!e.getAttribute('class') || e.getAttribute('class').indexOf('popup') == -1)
-        closePopups();
-
     if (e.getAttribute('class') && e.getAttribute('class').indexOf('stolik') != -1) {
         idStolik = e;
 
@@ -128,78 +127,21 @@ document.body.onclick = function(e) {
                     var result = content['taken'];
 
                     if (!result) {
-                        showPopup(document.getElementById("popupZajmij"));
+                        Android.showPopupZajmij();
                     }
                     else {
                         idStolik = document.getElementById(content['seatId']);
-                        showPopup(document.getElementById("popupInfo"));
+                        Android.showPopupZwolnijPrev();
                     }
                 }
             }
         }
         //okupowany to stolik ktory zajmuje uzytkownik
         else if (e.status == "okupowany") {
-            showPopup(document.getElementById("popupZwolnij"));
+            Android.showPopupZwolnij();
         }
     }
 }
-
-
-
-/* Funkcja pokazująca okienka popup */
-function showPopup(popup) {
-
-    var windowHeight = window.innerHeight * 0.8;
-    var windowWidth = window.innerWidth * 0.7;
-    var font_size = window.innerHeight * 0.02;
-
-    popup.style.height = windowHeight + "px";
-    popup.style.width = windowWidth + "px";
-
-    var marginLeft = window.scrollX + (window.innerWidth/10)*1.5;
-    var marginTop = window.scrollY + window.innerHeight/10;
-    var buttonTop = windowHeight*0.25;
-    var buttonLeft = windowWidth/8;
-    var buttonWidth = 6*windowWidth/8;
-    var buttonHeight = buttonTop*2;
-
-    popup.style.left = marginLeft + "px";
-    popup.style.top = marginTop + "px";
-
-    var popupButtons = document.getElementsByClassName('popupButton');
-    for (let i = 0; i < popupButtons.length; i++) {
-        popupButtons[i].style.fontSize = font_size + "px";
-        popupButtons[i].style.top = buttonTop + "px";
-        popupButtons[i].style.width = buttonWidth + "px";
-        popupButtons[i].style.height = buttonHeight + "px";
-    }
-    var popupClose = document.getElementsByClassName('close');
-    for (let i = 0; i < popupClose.length; i++) {
-        popupClose[i].width = buttonWidth/4;
-        popupClose[i].height = buttonHeight/4;
-        popupClose[i].style.fontSize = font_size + "px";
-        popupClose[i].style.right = 0;
-        popupClose[i].style.top = 0;
-    }
-
-    document.getElementById('zwalnianie_przycisk').style.left = buttonLeft + "px";
-    document.getElementById('zajmowanie_przycisk').style.left = buttonLeft + "px";
-
-    popup.style.display = "block";
-}
-
-
-
-/* Funkcja zamykająca otwarte poupy */
-function closePopups() {
-
-    document.getElementById("popupZajmij").style.display = "none";
-    document.getElementById("popupZwolnij").style.display = "none";
-    document.getElementById("popupInfo").style.display = "none";
-    document.getElementById("popupBrakZnajomego").style.display = "none";
-}
-
-
 
 /* Funkcja zwalniająca zajmowany przez użytkownika stolik */
 function freeTable() {
@@ -220,13 +162,14 @@ function freeTable() {
             if (result && idStolik) {
                 idStolik.setAttribute("fill", "#28724F");
                 idStolik.status = "wolny";
+                Android.releasedSuccess();
+            }
+            else {
+                Android.tryAgain();
             }
         }
     }
-
-    closePopups();
 }
-
 
 
 /* Funkcja zajmująca wybrany przez użytkownika stolik */
@@ -250,11 +193,16 @@ function takeTable() {
             if (result == 1) {
                 idStolik.setAttribute("fill", "orange");
                 idStolik.status = "okupowany";
+                Android.takenSuccess();
+            }
+            else if (result == -1) {
+                Android.takenFail();
+            }
+            else {
+                Android.tryAgain();
             }
         }
     }
-
-    closePopups();
 }
 
 
@@ -278,10 +226,6 @@ function assignTableStatus() {
 
             for (let i = 0; i < n; i++) {
                 var table = document.getElementById(tables[i]["id"]);
-
-                /*console.log(tables[i]["id"]);
-                console.log(tables[i]["taken"]);
-                console.log(tables[i]["login"]);*/
 
                 if (table != null) {
                     if (tables[i]["taken"] == "t") {
