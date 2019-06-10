@@ -11,7 +11,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -24,12 +23,13 @@ import static com.example.buwing.MainActivity.name;
 import static com.example.buwing.MainActivity.surname;
 import static com.example.buwing.MainActivity.login;
 import static com.example.buwing.MainScreenFragment.invitationsMenuItemString;
+import static com.example.buwing.MainScreenFragment.takeSeatMenuItemString;
 
 public class LoggedInActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     @SuppressLint("StaticFieldLeak")
-    private static NavigationView navigationView;
+    static NavigationView navigationView;
     @SuppressLint("StaticFieldLeak")
     static TextView nameTextView;
     @SuppressLint("StaticFieldLeak")
@@ -84,31 +84,11 @@ public class LoggedInActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.logged_in, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         MainScreenFragment.GetPendingInvitationsCountTask getPendingInvitationsCountTask = new MainScreenFragment.GetPendingInvitationsCountTask();
         getPendingInvitationsCountTask.execute();
+        MainScreenFragment.GetOpeningHoursTask getOpeningHoursTask = new MainScreenFragment.GetOpeningHoursTask();
+        getOpeningHoursTask.execute();
         // Handle navigation view item clicks here.
         displaySelectedScreen(item.getItemId());
         return true;
@@ -172,5 +152,11 @@ public class LoggedInActivity extends AppCompatActivity
     public static void updateInvitationMenuItem() {
         MenuItem invitationsMenuItem = navigationView.getMenu().findItem(R.id.nav_invitationList);
         invitationsMenuItem.setTitle(invitationsMenuItemString);
+    }
+
+    public static void updateTakeSeatMenuItem() {
+        MenuItem takeSeatMenuItem = navigationView.getMenu().findItem(R.id.nav_takeSeat);
+        takeSeatMenuItem.setTitle(takeSeatMenuItemString);
+
     }
 }

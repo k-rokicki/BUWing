@@ -42,14 +42,14 @@ public class InvitationListFragment extends BaseFragment {
     TextView invitationTextView;
     Button searchButton;
 
-    ArrayList<String> arr = new ArrayList<>();
+    static ArrayList<String> invitations = new ArrayList<>();
     ListView listView;
     InvitationAdapter adapter;
 
     String friendLogin, status;
-    String noInvitation = "Brak zaproszeń";
-
-    String emptyFieldMessage = "Uzupełnij pole login";
+  
+    static String invitation = "Brak zaproszeń";
+    final String emptyFieldMessage = "Uzupełnij pole login";
 
     @SuppressLint("StaticFieldLeak")
     private class GetInvitation extends AsyncTask<Void, Void, Void> {
@@ -60,6 +60,7 @@ public class InvitationListFragment extends BaseFragment {
         protected Void doInBackground(Void... voids) {
             JSONObject obj;
             JSONArray array;
+            int success;
             StringBuilder response = new StringBuilder();
             String invitationURL = Constants.webserviceURL + "invitation_info.php";
 
@@ -67,7 +68,9 @@ public class InvitationListFragment extends BaseFragment {
 
             try {
                 String POSTdata = URLEncoder.encode("login", "UTF-8")
-                        + "=" + URLEncoder.encode(MainActivity.login, "UTF-8");
+                        + "=" + URLEncoder.encode(MainActivity.login, "UTF-8")
+                        + "&" + URLEncoder.encode("password", "UTF-8")
+                        + "=" + URLEncoder.encode(MainActivity.password, "UTF-8");
                 URL url = new URL(invitationURL);
                 conn = url.openConnection();
 
@@ -90,11 +93,15 @@ public class InvitationListFragment extends BaseFragment {
                 String result = response.toString();
                 try {
                     obj = new JSONObject(result);
-                    array = obj.getJSONArray("users");
-                    for (int i = 0; i < array.length(); i++) {
-                        arr.add(array.getString(i));
+                    success = Integer.parseInt(obj.get("result").toString());
+                    if (success == 1) {
+                        array = obj.getJSONArray("users");
+                        for (int i = 0; i < array.length(); i++) {
+                            String friend = array.get(i).toString();
+                            if (!invitations.contains(friend))
+                                invitations.add(friend);
+                        }
                     }
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -105,11 +112,12 @@ public class InvitationListFragment extends BaseFragment {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            if (arr.size() == 0) {
-                invitationTextView.setText(noInvitation);
-            }
-            adapter = new InvitationAdapter(getActivity(), R.layout.invitation_row, arr);
-            listView.setAdapter(adapter);
+            if (invitations.size() == 0)
+                invitation = "Brak zaproszeń";
+            else
+                invitation = "Zaproszenia";
+            invitationTextView.setText(invitation);
+            adapter.notifyDataSetChanged();
         }
     }
 
@@ -132,6 +140,8 @@ public class InvitationListFragment extends BaseFragment {
             try {
                 String POSTdata = URLEncoder.encode("myLogin", "UTF-8")
                         + "=" + URLEncoder.encode(MainActivity.login, "UTF-8")
+                        + "&" + URLEncoder.encode("password", "UTF-8")
+                        + "=" + URLEncoder.encode(MainActivity.password, "UTF-8")
                         + "&" + URLEncoder.encode("inviterLogin", "UTF-8")
                         + "=" + URLEncoder.encode(inviterLogin, "UTF-8");
                 URL url = new URL(confirmURL);
@@ -196,6 +206,8 @@ public class InvitationListFragment extends BaseFragment {
             try {
                 String POSTdata = URLEncoder.encode("myLogin", "UTF-8")
                         + "=" + URLEncoder.encode(MainActivity.login, "UTF-8")
+                        + "&" + URLEncoder.encode("password", "UTF-8")
+                        + "=" + URLEncoder.encode(MainActivity.password, "UTF-8")
                         + "&" + URLEncoder.encode("inviterLogin", "UTF-8")
                         + "=" + URLEncoder.encode(inviterLogin, "UTF-8");
                 URL url = new URL(confirmURL);
@@ -258,10 +270,8 @@ public class InvitationListFragment extends BaseFragment {
             try {
                 String POSTdata = URLEncoder.encode("myLogin", "UTF-8")
                         + "=" + URLEncoder.encode(MainActivity.login, "UTF-8")
-                        + "&" + URLEncoder.encode("myName", "UTF-8")
-                        + "=" + URLEncoder.encode(MainActivity.name, "UTF-8")
-                        + "&" + URLEncoder.encode("mySurname", "UTF-8")
-                        + "=" + URLEncoder.encode(MainActivity.surname, "UTf-8")
+                        + "&" + URLEncoder.encode("password", "UTF-8")
+                        + "=" + URLEncoder.encode(MainActivity.password, "UTF-8")
                         + "&" + URLEncoder.encode("friendLogin", "UTF-8")
                         + "=" + URLEncoder.encode(friendLogin, "UTF-8");
                 URL url = new URL(addURL);
@@ -373,19 +383,17 @@ public class InvitationListFragment extends BaseFragment {
             viewHolder.confirmButton.setOnClickListener(v -> {
                 ConfirmInvitationTask confirmInvitationTask = new ConfirmInvitationTask();
                 confirmInvitationTask.execute(getItem(position));
-                arr.remove(getItem(position));
-                if (arr.size() == 0) {
-                    invitationTextView.setText(noInvitation);
-                }
+                invitations.remove(getItem(position));
+                if (invitations.size() == 0)
+                    invitation = "Brak zaproszeń";
                 adapter.notifyDataSetChanged();
             });
             viewHolder.deleteButton.setOnClickListener(v -> {
                 DeleteInvitationTask deleteInvitationTask = new DeleteInvitationTask();
                 deleteInvitationTask.execute(getItem(position));
-                arr.remove(adapter.getItem(position));
-                if (arr.size() == 0) {
-                    invitationTextView.setText(noInvitation);
-                }
+                invitations.remove(adapter.getItem(position));
+                if (invitations.size() == 0)
+                    invitation = "Brak zaproszeń";
                 adapter.notifyDataSetChanged();
             });
 
@@ -409,10 +417,13 @@ public class InvitationListFragment extends BaseFragment {
         getInvitation.execute();
 
         listView = Objects.requireNonNull(getActivity()).findViewById(R.id.invitationListView);
+        adapter = new InvitationAdapter(getActivity(), R.layout.invitation_row, invitations);
+        listView.setAdapter(adapter);
 
         loginEditText = Objects.requireNonNull(getActivity()).findViewById(R.id.loginEditText);
         searchButton = Objects.requireNonNull(getActivity()).findViewById(R.id.searchButton);
         invitationTextView = Objects.requireNonNull(getActivity()).findViewById(R.id.invitationTextView);
+        invitationTextView.setText(invitation);
 
         searchButton.setOnClickListener(v -> {
             friendLogin = loginEditText.getText().toString();

@@ -6,15 +6,15 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_mainScreen"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_menu_send"
             android:title="ekran główny" />
         <item
             android:id="@+id/nav_takeSeat"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_menu_send"
             android:title="zajmij miejsce" />
         <item
             android:id="@+id/nav_friendsInside"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_menu_send"
             android:title="znajomi w BUW" />
         <item
             android:id="@+id/nav_map"
@@ -27,9 +27,9 @@
         <menu>
             <item
                 android:id="@+id/nav_myProfile"
-                android:icon="@drawable/ic_menu_share"
-                android:title="mój profil"
-                android:checkable="true" />
+                android:checkable="true"
+                android:icon="@drawable/ic_menu_send"
+                android:title="mój profil" />
             <item
                 android:id="@+id/nav_invitationList"
                 android:checkable="true"

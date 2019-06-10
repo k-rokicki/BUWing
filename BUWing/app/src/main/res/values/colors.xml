@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#07EC17</color>
-    <color name="colorAccent">#F60404</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#b5619c</color>
+    <color name="acceptButton">#77dd77</color>
+    <color name="deleteButton">#ff7f7f</color>
+    <color name="loginHeader">#00574B</color>
+    <color name="floorHeader">#00654B</color>
+    <color name="seatHeader">#008577</color>
 </resources>

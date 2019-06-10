@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,22 +27,29 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 
 import static com.example.buwing.MainActivity.login;
 import static com.example.buwing.MainActivity.password;
 import static com.example.buwing.MainActivity.seatTaken;
 import static com.example.buwing.MainActivity.takenSeatFloor;
 import static com.example.buwing.MainActivity.takenSeatId;
+import static java.lang.Integer.*;
 import static java.util.Objects.requireNonNull;
 
 public class MainScreenFragment extends BaseFragment {
 
-    TextView fullnessInfoTextView;
+    @SuppressLint("StaticFieldLeak")
+    static TextView fullnessInfoTextView;
     TextView openingHoursMsgTextView;
-    TextView openingHoursTextView;
-    TextView friendsInsideMsgTextView;
-    TextView friendsInsideTextView;
+    @SuppressLint("StaticFieldLeak")
+    static TextView openingHoursTextView;
+    @SuppressLint("StaticFieldLeak")
+    static TextView friendsInsideMsgTextView;
+    @SuppressLint("StaticFieldLeak")
+    static TextView friendsInsideTextView;
 
     static final String defaultFullnessInfoString = "- / -";
     static final String defaultOpeningHoursString = "brak danych";
@@ -49,6 +57,9 @@ public class MainScreenFragment extends BaseFragment {
     static final String defaultFriendsInsideMsgString_more = "znajomych w BUW";
     static final String defaultFriendsInsideMsgString_one = "znajomy w BUW";
     static final String defaultInvitationsMenuItemString = "zaproszenia";
+    static final String takeSeatFreeMenuItemString = "zajmij miejsce";
+    static final String takeSeatTakenMenuItemString = "zwolnij miejsce";
+
     static int inactiveColor = Color.parseColor("#727272");
     static int activeColor = Color.parseColor("#10674F");
 
@@ -61,17 +72,25 @@ public class MainScreenFragment extends BaseFragment {
     static String friendsInsideMsgString = defaultFriendsInsideMsgString_more;
 
     static String invitationsMenuItemString = defaultInvitationsMenuItemString;
+    static String takeSeatMenuItemString = takeSeatFreeMenuItemString;
 
-    int opensHour, opensMinutes, closesHour, closesMinutes;
-    boolean closesNextDay;
+    static int opensHour;
+    static int opensMinutes;
+    static int closesHour;
+    static int closesMinutes;
+    static boolean closesNextDay;
     static boolean isLibraryOpen;
-    int freeSeatsCount;
-    int allSeatsCount;
-    int friendsInsideCount;
+    static int freeSeatsCount;
+    static int allSeatsCount;
+    static int friendsInsideCount;
     static int pendingInvitationsCount = 0;
 
+    static ArrayList<Integer> availableFloors = new ArrayList<>();
+    @SuppressLint("UseSparseArrays")
+    static HashMap<Integer, ArrayList<Integer>> availableTablesAtFloors = new HashMap<>();
+
     @SuppressLint("StaticFieldLeak")
-    private class GetOpeningHoursTask extends AsyncTask<Void, Void, Boolean> {
+    protected static class GetOpeningHoursTask extends AsyncTask<Void, Void, Boolean> {
         private JSONObject obj;
         private String response;
 
@@ -79,12 +98,12 @@ public class MainScreenFragment extends BaseFragment {
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-            String loginURL = Constants.webserviceURL + "opening_hours.php";
+            String checkURL = Constants.webserviceURL + "opening_hours.php";
 
             HttpURLConnection conn = null;
 
             try {
-                URL url = new URL(loginURL);
+                URL url = new URL(checkURL);
                 conn = (HttpURLConnection) url.openConnection();
 
                 conn.setDoOutput(false);
@@ -112,10 +131,10 @@ public class MainScreenFragment extends BaseFragment {
                 }
                 try {
                     obj = new JSONObject(response);
-                    opensHour = Integer.parseInt(obj.getString("opensHour"));
-                    opensMinutes = Integer.parseInt(obj.getString("opensMinutes"));
-                    closesHour = Integer.parseInt(obj.getString("closesHour"));
-                    closesMinutes = Integer.parseInt(obj.getString("closesMinutes"));
+                    opensHour = parseInt(obj.getString("opensHour"));
+                    opensMinutes = parseInt(obj.getString("opensMinutes"));
+                    closesHour = parseInt(obj.getString("closesHour"));
+                    closesMinutes = parseInt(obj.getString("closesMinutes"));
                     closesNextDay = Boolean.parseBoolean(obj.getString("closesNextDay"));
                     return true;
                 } catch (JSONException e) {
@@ -159,10 +178,10 @@ public class MainScreenFragment extends BaseFragment {
                 if (isLibraryOpen) {
                     GetFullnessInfoTask getFullnessInfoTask = new GetFullnessInfoTask();
                     getFullnessInfoTask.execute();
-                    CheckSeatTakenTask checkSeatTakenTask = new CheckSeatTakenTask();
-                    checkSeatTakenTask.execute();
                     GetFriendsInsideCountTask getFriendsInsideCountTask = new GetFriendsInsideCountTask();
                     getFriendsInsideCountTask.execute();
+                    GetAvailableTablesTask getAvailableTablesTask = new GetAvailableTablesTask();
+                    getAvailableTablesTask.execute();
                 } else {
                     fullnessInfoString = defaultFullnessInfoString;
                     friendsInsideString = defaultFriendsInsideString;
@@ -184,11 +203,13 @@ public class MainScreenFragment extends BaseFragment {
             openingHoursTextView.setTextColor(openingHoursColor);
             GetPendingInvitationsCountTask getPendingInvitationsCountTask = new GetPendingInvitationsCountTask();
             getPendingInvitationsCountTask.execute();
+            CheckSeatTakenTask checkSeatTakenTask = new CheckSeatTakenTask();
+            checkSeatTakenTask.execute();
         }
     }
 
     @SuppressLint("StaticFieldLeak")
-    private class GetFullnessInfoTask extends AsyncTask<Void, Void, Boolean> {
+    private static class GetFullnessInfoTask extends AsyncTask<Void, Void, Boolean> {
 
         GetFullnessInfoTask() {}
 
@@ -196,12 +217,12 @@ public class MainScreenFragment extends BaseFragment {
         protected Boolean doInBackground(Void... voids) {
             JSONObject obj;
             String response = null;
-            String loginURL = Constants.webserviceURL + "fullness_info.php";
+            String checkURL = Constants.webserviceURL + "fullness_info.php";
 
             HttpURLConnection conn = null;
 
             try {
-                URL url = new URL(loginURL);
+                URL url = new URL(checkURL);
                 conn = (HttpURLConnection) url.openConnection();
 
                 conn.setDoOutput(false);
@@ -229,8 +250,8 @@ public class MainScreenFragment extends BaseFragment {
                 }
                 try {
                     obj = new JSONObject(response);
-                    freeSeatsCount = Integer.parseInt(obj.get("freeSeatsCount").toString());
-                    allSeatsCount = Integer.parseInt(obj.get("allSeatsCount").toString());
+                    freeSeatsCount = parseInt(obj.get("freeSeatsCount").toString());
+                    allSeatsCount = parseInt(obj.get("allSeatsCount").toString());
                     return true;
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -295,8 +316,8 @@ public class MainScreenFragment extends BaseFragment {
                 try {
                     obj = new JSONObject(result);
                     seatTaken = Boolean.parseBoolean(obj.get("taken").toString());
-                    takenSeatId = Integer.parseInt(obj.get("seatId").toString());
-                    takenSeatFloor = Integer.parseInt(obj.get("seatFloor").toString());
+                    takenSeatId = parseInt(obj.get("seatId").toString());
+                    takenSeatFloor = parseInt(obj.get("seatFloor").toString());
                     return true;
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -304,10 +325,21 @@ public class MainScreenFragment extends BaseFragment {
             }
             return false;
         }
+
+        @SuppressLint("DefaultLocale")
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (result && seatTaken) {
+                takeSeatMenuItemString = takeSeatTakenMenuItemString;
+            } else {
+                takeSeatMenuItemString = takeSeatFreeMenuItemString;
+            }
+            LoggedInActivity.updateTakeSeatMenuItem();
+        }
     }
 
     @SuppressLint("StaticFieldLeak")
-    private class GetFriendsInsideCountTask extends AsyncTask<Void, Void, Boolean> {
+    private static class GetFriendsInsideCountTask extends AsyncTask<Void, Void, Boolean> {
         GetFriendsInsideCountTask() {}
 
         @Override
@@ -345,7 +377,7 @@ public class MainScreenFragment extends BaseFragment {
                 String result = response.toString();
                 try {
                     obj = new JSONObject(result);
-                    friendsInsideCount = Integer.parseInt(obj.get("friendsCount").toString());
+                    friendsInsideCount = parseInt(obj.get("friendsCount").toString());
                     return true;
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -416,7 +448,7 @@ public class MainScreenFragment extends BaseFragment {
                 String result = response.toString();
                 try {
                     obj = new JSONObject(result);
-                    pendingInvitationsCount = Integer.parseInt(obj.get("invitationsCount").toString());
+                    pendingInvitationsCount = parseInt(obj.get("invitationsCount").toString());
                     return true;
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -434,6 +466,72 @@ public class MainScreenFragment extends BaseFragment {
                 invitationsMenuItemString = defaultInvitationsMenuItemString;
             }
             LoggedInActivity.updateInvitationMenuItem();
+        }
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    static class GetAvailableTablesTask extends AsyncTask<Void, Void, Void> {
+
+        GetAvailableTablesTask() {}
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            JSONObject obj;
+            StringBuilder response = new StringBuilder();
+            String checkURL = Constants.webserviceURL + "available_tables.php";
+            URLConnection conn;
+
+            try {
+                String POSTdata = URLEncoder.encode("login", "UTF-8")
+                        + "=" + URLEncoder.encode(login, "UTF-8")
+                        + "&" + URLEncoder.encode("password", "UTF-8")
+                        + "=" + URLEncoder.encode(password, "UTF-8");
+                URL url = new URL(checkURL);
+
+                conn = url.openConnection();
+                conn.setDoOutput(true);
+                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+                wr.write(POSTdata);
+                wr.flush();
+
+                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                String inputLine;
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                String result = response.toString();
+                availableFloors.clear();
+                availableTablesAtFloors.clear();
+                try {
+                    obj = new JSONObject(result);
+                    JSONArray availableFloorsArray = obj.getJSONArray("availableFloors");
+                    if (availableFloorsArray != null) {
+                        for (int i = 0; i < availableFloorsArray.length(); ++i) {
+                            availableFloors.add(valueOf(availableFloorsArray.getString(i)));
+                        }
+                    }
+                    JSONObject availableTablesAtFloorsObject = obj.getJSONObject("availableTables");
+                    for (int i = 0; i < availableFloors.size(); ++i) {
+                        int floor = availableFloors.get(i);
+                        ArrayList<Integer> tables = new ArrayList<>();
+                        JSONArray tablesArray = availableTablesAtFloorsObject.getJSONArray(String.valueOf(floor));
+                        for (int j = 0; j < tablesArray.length(); ++j) {
+                            tables.add(tablesArray.getInt(j));
+                        }
+                        availableTablesAtFloors.put(floor, tables);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
         }
     }
 

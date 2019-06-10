@@ -63,37 +63,37 @@ public class MyProfileChangeInfoFragment extends BaseFragment {
         loginEditText.setText(MainActivity.login);
         emailEditText.setText(MainActivity.email);
 
-        confirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                newName = nameEditText.getText().toString();
-                newSurname = surnameEditText.getText().toString();
-                newLogin = loginEditText.getText().toString();
-                newEmail = emailEditText.getText().toString();
+        confirmButton.setOnClickListener(v -> {
+            newName = nameEditText.getText().toString();
+            newSurname = surnameEditText.getText().toString();
+            newLogin = loginEditText.getText().toString();
+            newEmail = emailEditText.getText().toString();
 
-                Matcher nameMatcher = notAllowedCharacterPattern.matcher(newName);
-                Matcher surnameMatcher = notAllowedCharacterPattern.matcher(newSurname);
-                Matcher loginMatcher = notAllowedCharacterPattern.matcher(newLogin);
+            Matcher nameMatcher = notAllowedCharacterPattern.matcher(newName);
+            Matcher surnameMatcher = notAllowedCharacterPattern.matcher(newSurname);
+            Matcher loginMatcher = notAllowedCharacterPattern.matcher(newLogin);
 
-                if (newName.isEmpty() || newSurname.isEmpty() || newLogin.isEmpty() || newEmail.isEmpty()) {
-                    Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
-                            "Uzupełnij wszystkie pola", Toast.LENGTH_LONG).show();
-                } else if (nameMatcher.find()) {
-                    Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
-                            notAllowedCharacterMessage + "imię", Toast.LENGTH_LONG).show();
-                } else if (surnameMatcher.find()) {
-                    Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
-                            notAllowedCharacterMessage + "nazwisko", Toast.LENGTH_LONG).show();
-                } else if (loginMatcher.find()) {
-                    Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
-                            notAllowedCharacterMessage + "login", Toast.LENGTH_LONG).show();
-                } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(newEmail).matches()) {
-                    Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
-                            "Nieprawidłowy adres email", Toast.LENGTH_LONG).show();
-                } else {
-                    UpdateInfoTask updateInfoTask = new UpdateInfoTask();
-                    updateInfoTask.execute();
-                }
+            if (newName.isEmpty() || newSurname.isEmpty() || newLogin.isEmpty() || newEmail.isEmpty()) {
+                Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
+                        "Uzupełnij wszystkie pola", Toast.LENGTH_LONG).show();
+            } else if (newLogin.length() > 30) {
+                Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
+                        "Login może zawierać do 30 znaków", Toast.LENGTH_LONG).show();
+            } else if (nameMatcher.find()) {
+                Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
+                        notAllowedCharacterMessage + "imię", Toast.LENGTH_LONG).show();
+            } else if (surnameMatcher.find()) {
+                Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
+                        notAllowedCharacterMessage + "nazwisko", Toast.LENGTH_LONG).show();
+            } else if (loginMatcher.find()) {
+                Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
+                        notAllowedCharacterMessage + "login", Toast.LENGTH_LONG).show();
+            } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(newEmail).matches()) {
+                Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(),
+                        "Nieprawidłowy adres email", Toast.LENGTH_LONG).show();
+            } else {
+                UpdateInfoTask updateInfoTask = new UpdateInfoTask();
+                updateInfoTask.execute();
             }
         });
     }
@@ -186,12 +186,7 @@ public class MyProfileChangeInfoFragment extends BaseFragment {
             MainActivity.surname = newSurname;
             MainActivity.login = newLogin;
 
-            Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    LoggedInActivity.updateUserInfo();
-                }
-            });
+            Objects.requireNonNull(getActivity()).runOnUiThread(LoggedInActivity::updateUserInfo);
 
             if (!logout) {
                 try {

@@ -163,6 +163,7 @@ function freeTable() {
                 idStolik.setAttribute("fill", "#28724F");
                 idStolik.status = "wolny";
                 Android.releasedSuccess();
+                Android.changeSeatTaken(false, -1, -1);
             }
             else {
                 Android.tryAgain();
@@ -194,6 +195,7 @@ function takeTable() {
                 idStolik.setAttribute("fill", "orange");
                 idStolik.status = "okupowany";
                 Android.takenSuccess();
+                Android.changeSeatTaken(true, table.toString(), floor.toString());
             }
             else if (result == -1) {
                 Android.takenFail();

@@ -1,5 +1,4 @@
 <?php
-
     header('Access-Control-Allow-Origin: *');
     header('Access-Control-Allow-Methods: GET, POST');
     header("Access-Control-Allow-Headers: X-Requested-With");
@@ -8,10 +7,10 @@
 
     $login = $_POST["login"];
     $password = $_POST["password"];
+    $floor = $_POST["floor"];
+    $table = $_POST["table"];
 
-    $JSONobj->taken = false;
-    $JSONobj->seatId = -1;
-    $JSONobj->seatFloor = -1;
+    $JSONobj->took = 0;
 
     $link = pg_connect("host=labdb dbname=bd user=" . $ini['db_user'] . " password=" . $ini['db_password']);
     $result = pg_query($link,
@@ -25,16 +24,18 @@
         $hashedPassword = $row["password"];
         if (password_verify($password, $hashedPassword)) {
             $result = pg_query($link,
-                        "SELECT id, floor
-                        FROM tables
-                        WHERE taken = TRUE
-                        AND userid = " . $row["id"]);
+                        "UPDATE tables
+                         SET taken = TRUE,
+                         userid = " . $row["id"] . "
+                         WHERE floor = " . $floor . "
+                         AND id = " . $table . "
+                         AND taken = FALSE
+                         RETURNING id");
 
-            if (pg_num_rows($result) == 1) {
-                $row = pg_fetch_array($result, 0);
-                $JSONobj->taken = true;
-                $JSONobj->seatId = $row["id"];
-                $JSONobj->seatFloor = $row["floor"];
+            if (pg_num_rows($result) != 0) {
+                $JSONobj->took = 1;
+            } else {
+                $JSONobj->took = -1;
             }
         }
     }

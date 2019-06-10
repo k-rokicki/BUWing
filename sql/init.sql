@@ -21,6 +21,7 @@ CREATE TABLE friends(
 CREATE TABLE tables(
     id serial,
     floor INTEGER NOT NULL,
+    barcode VARCHAR(20) NOT NULL UNIQUE,
     taken BOOLEAN NOT NULL DEFAULT false,
     userid INTEGER DEFAULT NULL,
     PRIMARY KEY (id),
@@ -66,9 +67,11 @@ RETURNS TABLE (
             SELECT inviterid
             FROM friends
             WHERE inviteeid = userId
+            AND status = true
                 UNION (
                         SELECT inviteeid
                         FROM friends
-                        WHERE inviterid = userId);
+                        WHERE inviterid = userId
+                        AND status = true);
     END;
 $$ language plpgsql;

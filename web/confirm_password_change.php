@@ -35,7 +35,7 @@
         $count = pg_num_rows($result);
 
         if ($count == 0) {
-            echo "Wystąpił błąd. Spróbuj ponownie.";
+            echo "Ten link nie jest aktywny.";
         } else {
             $row = pg_fetch_array($result, 0);
             $newPassword = $row["password"];
@@ -81,6 +81,8 @@
                 }
             }
         }
+    } else {
+        echo "Ten link nie jest aktywny.";
     }
 
     pg_close($link);

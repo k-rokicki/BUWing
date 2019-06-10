@@ -18,29 +18,23 @@
     $hashedPassword = $row["password"];
 
     if (password_verify($password, $hashedPassword)) {
-      $result = pg_query($link, "SELECT inviterid FROM friends
-                                WHERE inviteeid = '" . pg_escape_string($userId) . "'
-                                AND status = 'f'");
+      $result = pg_query($link, "SELECT login, floor, tables.id as seat FROM tables LEFT JOIN users
+                                ON tables.userid = users.id
+                                WHERE userid = ANY(SELECT inviterid FROM friends
+                                WHERE inviteeid = $userId AND status = 't' UNION
+                                SELECT inviteeid FROM friends WHERE inviterid = $userId
+                                AND status = 't') ORDER BY floor, seat");
       $count = pg_num_rows($result);
-
-      for ($i = 0; $i < $count; $i++) {
-        $row = pg_fetch_array($result, $i);
-        $array[] = $row["inviterid"];
-      }
-
-      $ids = implode(', ', $array);
-
-      $result = pg_query($link, "SELECT login FROM users
-                                WHERE id IN ($ids)");
 
       $logins = array();
 
-      while ($row = pg_fetch_row($result)) {
-        $logins[] = $row[0];
+      for ($i = 0; $i < $count; $i++) {
+        $row = pg_fetch_array($result, $i, PGSQL_ASSOC);
+        $logins[] = $row;
       }
 
       $JSONobj->result = 1;
-      $JSONobj->users = $logins;
+      $JSONobj->friends = $logins;
     }
   }
 

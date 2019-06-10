@@ -1,8 +1,11 @@
 package com.example.buwing;
 
-import android.annotation.TargetApi;
+import android.annotation.SuppressLint;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.view.LayoutInflater;
@@ -15,23 +18,19 @@ import android.widget.Spinner;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.RemoteViews;
 import android.view.MotionEvent;
-import android.os.SystemClock;
-import android.os.Handler;
-import android.view.View.OnTouchListener;
-import android.net.Uri;
 import android.webkit.JavascriptInterface;
-
-
-
-import java.util.Timer;
-import java.util.TimerTask;
-
-import android.content.Context;
 
 import static com.example.buwing.MainActivity.login;
 import static com.example.buwing.MainActivity.password;
+import static com.example.buwing.MainActivity.seatTaken;
+import static com.example.buwing.MainActivity.takenSeatFloor;
+import static com.example.buwing.MainActivity.takenSeatId;
+import static com.example.buwing.MainScreenFragment.takeSeatMenuItemString;
+import static java.util.Objects.requireNonNull;
+
+import static com.example.buwing.MainScreenFragment.takeSeatFreeMenuItemString;
+import static com.example.buwing.MainScreenFragment.takeSeatTakenMenuItemString;
 
 public class MapFragment extends BaseFragment {
     View v;
@@ -56,8 +55,9 @@ public class MapFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
 
-        super.onCreate(savedInstanceState);
         _layout = R.layout.fragment_map;
+        title = "mapa BUW";
+        super.onCreate(savedInstanceState);
     }
 
     public class NewWebViewClient extends WebViewClient {
@@ -146,6 +146,26 @@ public class MapFragment extends BaseFragment {
 
         }
 
+        @JavascriptInterface
+        public void changeSeatTaken(boolean seatT, String takenStId, String takenStFloor) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    seatTaken = seatT;
+                    takenSeatId = Integer.valueOf(takenStId).intValue();
+                    takenSeatFloor = Integer.valueOf(takenStFloor).intValue();
+
+                    if (seatTaken) {
+                        takeSeatMenuItemString = takeSeatTakenMenuItemString;
+                    }
+                    else {
+                        takeSeatMenuItemString = takeSeatFreeMenuItemString;
+                    }
+                    LoggedInActivity.updateTakeSeatMenuItem();
+                }
+            });
+
+        }
 
     }
 
@@ -290,6 +310,12 @@ public class MapFragment extends BaseFragment {
         });
 
         return v;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        requireNonNull(getActivity()).setTitle("mapa");
     }
 
     public void closePopups() {

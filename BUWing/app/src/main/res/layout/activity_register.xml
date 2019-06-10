@@ -85,7 +85,7 @@
     <EditText
         android:id="@+id/passwordTextView"
         android:layout_width="wrap_content"
-        android:layout_height="54dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
@@ -136,4 +136,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/passwordRepeatTextView"
         app:layout_constraintVertical_bias="0.108" />
+
+    <TextView
+        android:id="@+id/passwordConstraintsTextView"
+        android:layout_width="260dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="8dp"
+        android:text="Login może zawierać do 30 znaków. Hasło musi zawierać wielką literę, małą literę, cyfrę, znak specjalny: @$!%*?&amp;,.; i mieć co najmniej 8 znaków."
+        android:textAlignment="center"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/registerButton"
+        app:layout_constraintVertical_bias="0.25" />
+
 </android.support.constraint.ConstraintLayout>
