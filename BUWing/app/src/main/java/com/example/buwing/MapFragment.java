@@ -52,6 +52,7 @@ public class MapFragment extends BaseFragment {
     Button popupCloseZwolnijPrev;
 
 
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
 
