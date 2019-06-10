@@ -58,10 +58,12 @@
 
         <Button
             android:id="@+id/popupButtonZajmij"
-            android:layout_width="250dp"
-            android:layout_height="150dp"
-            android:layout_marginStart="75dp"
-            android:layout_marginTop="300dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="187dp"
+            android:layout_marginTop="240dp"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="60dp"
             android:text="Zajmij" />
 
         <Button
@@ -94,10 +96,12 @@
 
         <Button
             android:id="@+id/popupButtonZwolnij"
-            android:layout_width="250dp"
-            android:layout_height="150dp"
-            android:layout_marginStart="75dp"
-            android:layout_marginTop="300dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="187dp"
+            android:layout_marginTop="240dp"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="60dp"
             android:text="Zwolnij" />
 
         <Button
@@ -140,10 +144,12 @@
 
         <Button
             android:id="@+id/popupButtonZwolnijPrev"
-            android:layout_width="250dp"
-            android:layout_height="150dp"
-            android:layout_marginStart="75dp"
-            android:layout_marginTop="300dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="60dp"
+            android:layout_marginTop="240dp"
+            android:layout_marginRight="60dp"
+            android:layout_marginBottom="187dp"
             android:text="Zwolnij poprzedni" />
 
         <Button
