@@ -87,7 +87,7 @@
                 $headers .= "MIME-Version: 1.0\r\n";
                 $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 
-                $message = '<p>' . $friendName . ' ' . $friendSurname . ', użytkownik ' . $myName . ' ' . $mySurname . ' wysłał Ci zaproszenie do znajomych w BUWing.</p>
+                $message = '<p>' . $friendName . ' ' . $friendSurname . ', użytkownik ' . $myName . ' ' . $mySurname . ' (' . $myLogin . ') wysłał Ci zaproszenie do znajomych w BUWing.</p>
                            <p>Potwierdź zaproszenie w aplikacji mobilnej.</p>';
 
                 mail($friendEmail, $subject, $message, $headers);
