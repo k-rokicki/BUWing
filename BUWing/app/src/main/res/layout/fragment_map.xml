@@ -1,0 +1,161 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+
+    <WebView
+        android:id="@+id/webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="107dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"></WebView>
+
+    <Spinner
+        android:id="@+id/level_spinner"
+        android:layout_width="200dp"
+        android:layout_height="57dp"
+        android:layout_below="@+id/webview"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="205dp"
+        android:layout_marginTop="-82dp"
+        android:spinnerMode="dropdown" />
+
+
+    <Button
+        android:id="@+id/refresh_button"
+        android:layout_width="195dp"
+        android:layout_height="77dp"
+        android:layout_below="@+id/webview"
+
+        android:layout_marginTop="-91dp"
+        android:text="Odśwież" />
+
+
+
+    <FrameLayout
+        android:id="@+id/ramkaZajmij"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible">
+
+        <TextView
+            android:id="@+id/popupZajmij"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="107dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:background="#E2D6BF"
+            android:textSize="22sp" />
+
+        <Button
+            android:id="@+id/popupButtonZajmij"
+            android:layout_width="250dp"
+            android:layout_height="150dp"
+            android:layout_marginStart="75dp"
+            android:layout_marginTop="300dp"
+            android:text="Zajmij" />
+
+        <Button
+            android:id="@+id/popupCloseZajmij"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="50dp"
+            android:text="X" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/ramkaZwolnij"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible">
+
+
+        <TextView
+            android:id="@+id/popupZwolnij"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="107dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:background="#E2D6BF"
+            android:textSize="22sp" />
+
+        <Button
+            android:id="@+id/popupButtonZwolnij"
+            android:layout_width="250dp"
+            android:layout_height="150dp"
+            android:layout_marginStart="75dp"
+            android:layout_marginTop="300dp"
+            android:text="Zwolnij" />
+
+        <Button
+            android:id="@+id/popupCloseZwolnij"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="50dp"
+            android:text="X" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/ramkaZwolnijPrev"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible">
+        <TextView
+            android:id="@+id/popupZwolnijPrev2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="107dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:background="#E2D6BF"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/popupZwolnijPrev"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="107dp"
+            android:layout_marginTop="110dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:background="#E2D6BF"
+            android:text="W celu zajęcia nowego stolika zwolnij dotychczasowo zajmowany stolik"
+            android:textSize="22sp" />
+
+        <Button
+            android:id="@+id/popupButtonZwolnijPrev"
+            android:layout_width="250dp"
+            android:layout_height="150dp"
+            android:layout_marginStart="75dp"
+            android:layout_marginTop="300dp"
+            android:text="Zwolnij poprzedni" />
+
+        <Button
+            android:id="@+id/popupCloseZwolnijPrev"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="50dp"
+            android:text="X" />
+
+    </FrameLayout>
+
+
+
+</RelativeLayout>
